@@ -17,6 +17,11 @@ class CasparProducerNET extends CasparProducer{
         this.tcpSend(req, function(){});
     }
 
+    stop(){
+        let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
+        this.tcpSend(req, function(){});
+    }
+
     getId(){
         return this.id;
     }

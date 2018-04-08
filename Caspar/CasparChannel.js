@@ -18,6 +18,7 @@ class CasparChannel {
         this.producers = new Map();
         this.casparCommon = null;
         this.backgroundLayer = 10;
+        this.selectedInput = 0;
     }
 
 
@@ -27,7 +28,8 @@ class CasparChannel {
      * @param {int} layer layer ID
      */
     switchLayer (producerId, layer = this.backgroundLayer) {
-        var req = `PLAY ${this.id}-${this.backgroundLayer} route://${this.getCasparCommon().getMvId()}-${producerId}`
+        var req = `PLAY ${this.id}-${this.backgroundLayer} route://${this.getCasparCommon().getMvId()}-${producerId}`;
+        this.selectedInput = producerId;
         this.tcpSend(req,function(){});
     }
 
@@ -64,6 +66,7 @@ class CasparChannel {
     getCasparCommon(){
         return this.casparCommon;
     }
+
 }
 
 module.exports = CasparChannel;

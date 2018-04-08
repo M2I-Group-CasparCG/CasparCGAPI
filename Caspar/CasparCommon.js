@@ -37,6 +37,7 @@ class CasparCommon {
         this.pvwId = null;
         this.mvId = null;
         this.online = false;
+        this.socket = settings['socket'] || null;
         
     }
 
@@ -62,6 +63,7 @@ class CasparCommon {
                     console.log(msg);
                     console.log(data.toString());
                     callback(data.toString());
+                    // this.socket.emit('message','test');
                     client.destroy();
                 });
     
@@ -110,6 +112,9 @@ class CasparCommon {
 
     }
 
+    // socketSend (msg){
+    //     this.socket.emit('message','test');
+    // }
 
     /** 
      * Permet de générer le fichier caspar.conf
@@ -140,6 +145,9 @@ class CasparCommon {
     }
     setOnline (online){
         this.online = online;
+    }
+    setIpAddr(ipAddr){
+        this.ipAddr = ipAddr;
     }
 }
 

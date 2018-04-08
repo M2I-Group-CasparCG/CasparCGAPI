@@ -1,0 +1,30 @@
+{
+  "name": "casparcgapi",
+  "version": "1.0.0",
+  "description": "CasparCG API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M2I-Group-CasparCG/CasparCGAPI.git"
+  },
+  "author": "M2i-Group-CasparCG",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M2I-Group-CasparCG/CasparCGAPI/issues"
+  },
+  "homepage": "https://github.com/M2I-Group-CasparCG/CasparCGAPI#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "jwt-simple": "^0.5.1",
+    "morgan": "^1.9.0",
+    "socket.io": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.1"
+  }
+}

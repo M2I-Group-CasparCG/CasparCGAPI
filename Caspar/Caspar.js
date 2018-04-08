@@ -49,6 +49,19 @@ class Caspar {
     */
     ini(){     
 
+        if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
+        let pgmSettings = new Array();
+            let mvSettings = new Array();
+            mvSettings['name'] = 'MVW';
+            let mv = new ChannelMultiview(mvSettings,this.producers)
+            this.addChannel(mv);
+            this.casparCommon.setMvId(mv.getId());
+            mv.ini();
+        }else{
+            let mv = this.channels.get(this.getCasparCommon().getMvId());
+            mv.ini();
+        }
+
         if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
             let pgmSettings = new Array();
             pgmSettings['name'] = 'PGM';
@@ -67,18 +80,7 @@ class Caspar {
             this.casparCommon.setPvwId(pvw.getId());
         }
 
-        if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
-        let pgmSettings = new Array();
-            let mvSettings = new Array();
-            mvSettings['name'] = 'Multiview';
-            let mv = new ChannelMultiview(mvSettings,this.producers)
-            this.addChannel(mv);
-            this.casparCommon.setMvId(mv.getId());
-            mv.ini();
-        }else{
-            let mv = this.channels.get(this.getCasparCommon().getMvId());
-            mv.ini();
-        }
+        
 
 
 
@@ -271,6 +273,9 @@ class Caspar {
     }
     getCasparCommon(){
         return this.casparCommon;
+    }
+    setCasparCommon(casparCommon){
+        this.casparCommon = casparCommon;
     }
     getId(){
         return this.id;

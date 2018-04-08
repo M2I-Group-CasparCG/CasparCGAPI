@@ -2,13 +2,14 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var casparApi = express();
+
  
-var app = express();
- 
-    app.use(logger('dev'));
-    app.use(bodyParser.json());
-    
-    app.all('/*', function(req, res, next) {
+    casparApi.use(logger('dev'));
+    casparApi.use(bodyParser.json());
+    casparApi.disable('etag');
+    casparApi.all('/*', function(req, res, next) {
         // CORS headers
         res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -25,20 +26,24 @@ var app = express();
     // Only the requests that start with /api/v1/* will be checked for the token.
     // Any URL's that do not follow the below pattern should be avoided unless you 
     // are sure that authentication is not needed
-    app.all('/api/v1/*', [require('./middlewares/validateRequest')]);
+
+    // ligne à décommenter pour activer authentification par token
+    // casparApi.all('/api/v1/*', [require('./middlewares/validateRequest')]);
  
-    app.use('/', require('./routes'));
+    casparApi.use('/', require('./routes'));
  
     // If no route is matched by now, it must be a 404
-    app.use(function(req, res, next) {
+    casparApi.use(function(req, res, next) {
         var err = new Error('Not Found');
         err.status = 404;
-        next(err);
+        err.message = "no route";
+        res.send(err);
     });
  
     // Start the server
-    app.set('port', process.env.PORT || 3000);
+    casparApi.set('port', process.env.PORT || 3000);
  
-    var server = app.listen(app.get('port'), function() {
+    var server = casparApi.listen(casparApi.get('port'), function() {
         console.log('Express server listening on port ' + server.address().port);
     });
+

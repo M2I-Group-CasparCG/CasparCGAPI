@@ -3,15 +3,12 @@ var CasparProducer = require('./CasparProducer.js');
 
 class CasparProducerDECKLINK extends CasparProducer{
 
-
     constructor(settings, casparCommon){
         CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
         super(settings, casparCommon);
         this.decklinkNb = settings['decklinkNb'] || 0;
         this.casparCommon = casparCommon;
         this.id = CasparProducer.totalInstances;
-    
-
     }
 
     run(){

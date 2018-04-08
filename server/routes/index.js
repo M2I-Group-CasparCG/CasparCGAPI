@@ -1,60 +1,74 @@
+
+var http = require('http');
 var express = require('express');
 var router = express.Router();
  
 var auth = require('./auth.js');
-var products = require('./products.js');
-var user = require('./users.js');
 var caspar = require('./caspar.js');
+
+
+/**
+ * instanciation socket.io
+ */
+
+var socketServer = http.createServer();
+
+var io = require('socket.io').listen(socketServer);
+    io.sockets.on('connection', function (socketIo) {           
+        console.log("Browser connected...");	
+    });
+
+    socketServer.listen(3001);
+
+    var caspar = require('./caspar.js')(io);
 
 /*
  * Routes that can be accessed by any one
  */
-router.post('/login', auth.login);
 
-// /*
-//  * Routes that can be accessed only by autheticated users
-//  */
-// router.get('/api/v1/products', products.getAll);
-// router.get('/api/v1/product/:id', products.getOne);
-// router.post('/api/v1/product/', products.create);
-// router.put('/api/v1/product/:id', products.update);
-// router.delete('/api/v1/product/:id', products.delete);
- 
-// /*
-//  * Routes that can be accessed only by authenticated & authorized users
-//  */
-// router.get('/api/v1/admin/users', user.getAll);
-// router.get('/api/v1/admin/user/:id', user.getOne);
-// router.post('/api/v1/admin/user/', user.create);
-// router.put('/api/v1/admin/user/:id', user.update);
-// router.delete('/api/v1/admin/user/:id', user.delete);
+    router.post('/login', auth.login);
 
+    /**
+     *  Caspar Settings
+     */
+    router.get('/api/v1/caspars/', caspar.getAll);
+    router.post('/api/v1/caspars/connect/', caspar.connect);
+    router.all('/api/v1/caspars/:casparId/*', caspar.check);
+    router.get('/api/v1/caspars/:casparId/', caspar.get);
+    // router.put('/api/v1/casparcg/:casparId/', caspar.edit);
+    router.post('/api/v1/caspars/:casparId/ini/', caspar.ini);
+    router.delete('/api/v1/caspars/:casparId/', caspar.delete);
 
-/**
- *  Caspar Settings
- */
-router.post('/api/v1/casparcg/connect/', caspar.connect);
-router.post('/api/v1/casparcg/:casparId/*', caspar.check);
-router.post('/api/v1/casparcg/:casparId/ini/', caspar.ini);
+    /**
+     * Consumers
+     */
+    router.get('/api/v1/caspars/:casparId/consumers/', caspar.consumerGetAll)
+    router.post('/api/v1/caspars/:casparId/consumers/screen', caspar.consumerAdd);
+    router.all('/api/v1/caspars/:casparId/consumers:consumerId/*', caspar.consumerCheck);
+    // router.put('/api/v1/casparcg/:casparId/producer/:producerId/', caspar.consumerEdit);
+    router.post('/api/v1/caspars/:casparId/consumers/:consumerId/start', caspar.consumerStart);
+    router.post('/api/v1/caspars/:casparId/consumers/:consumerId/stop', caspar.consumerStop);
+    router.delete('/api/v1/caspars/:casparId/consumers/:consumerId/', caspar.consumerDelete);
 
-/**
- * Consumers
- */
-router.post('/api/v1/casparcg/:casparId/consumer/screen', caspar.consumerAdd);
-router.post('/api/v1/casparcg/:casparId/consumer:consumerId/*', caspar.consumerCheck);
-router.post('/api/v1/casparcg/:casparId/consumer/:consumerId/start', caspar.consumerStart);
+    /**
+     * Producers
+     */
+    router.get('/api/v1/caspars/:casparId/producers/', caspar.producerGetAll)
+    router.post('/api/v1/caspars/:casparId/producers/:type', caspar.producerAdd);
+    router.all('/api/v1/caspars/:casparId/producers:producerId/*', caspar.producerCheck);
+    // router.put('/api/v1/casparcg/:casparId/producer/:producerId/', caspar.producerEdit);
+    router.post('/api/v1/caspars/:casparId/producers/:producerId/start', caspar.producerStart);
+    router.post('/api/v1/caspars/:casparId/producers/:producerId/stop', caspar.producerStop);
+    router.delete('/api/v1/caspars/:casparId/producers/:producerId/', caspar.producerDelete);
 
-/**
- * Producers
- */
-router.post('/api/v1/casparcg/:casparId/producer/:type', caspar.producerAdd);
-router.post('/api/v1/casparcg/:casparId/producer:producerId/*', caspar.producerCheck);
-router.post('/api/v1/casparcg/:casparId/producer/:producerId/start', caspar.producerStart);
-
-/**
- * Channels
- */
-router.post('/api/v1/casparcg/:casparId/channel:channelId/*', caspar.channelCheck);
-router.post('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelSwitch);
+    /**
+     * Channels
+     */
+    router.get('/api/v1/caspars/:casparId/channels/', caspar.channelGetAll)
+    // router.post('/api/v1/caspars/:casparId/channels/', caspar.channelAdd)
+    router.all('/api/v1/caspars/:casparId/channels:channelId/*', caspar.channelCheck);
+    // router.put('/api/v1/casparcg/:casparId/channel/:channelId/', caspar.channelEdit);
+    router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
+    // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);
 
 module.exports = router;
