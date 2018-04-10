@@ -5,6 +5,7 @@ var router = express.Router();
  
 var auth = require('./auth.js');
 var caspar = require('./caspar.js');
+var xmlhandler = require('./xmlhandler.js');
 
 
 /**
@@ -71,4 +72,8 @@ var io = require('socket.io').listen(socketServer);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
     // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);
 
+    /**
+     * XMLHandler
+     */
+    router.post('/api/v1/caspars/:casparId/settings/send', xmlhandler.setSettings);
 module.exports = router;
