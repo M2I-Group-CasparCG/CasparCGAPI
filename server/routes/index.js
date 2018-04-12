@@ -71,4 +71,8 @@ var io = require('socket.io').listen(socketServer);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
     // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);
 
+    /**
+     * XMLHandler
+     */
+    router.post('/api/v1/caspars/:casparId/settings/send', caspar.setXmlValues);
 module.exports = router;
