@@ -345,6 +345,12 @@ module.exports = function(socket) {
        
         
     }
+    
+    caspar.setXmlValues = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        caspars.get(casparId).setXmlValues(req.body);
+        res.sendStatus('202');
+    };
 
     return caspar;
 }

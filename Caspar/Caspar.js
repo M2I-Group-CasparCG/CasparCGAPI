@@ -15,13 +15,17 @@ var ConsumerScreen =    require('./Consumers/CasparConsumerScreen.js');
 var ConsumerFile =      require('./Consumers/CasparConsumerFile.js');
 var ConsumerNet =       require('./Consumers/CasparConsumerNet.js');
 
+var XMLHelper =         require('./../XMLHandler/bin/xmlhelper.js');
+
+var appRoot =           require('app-root-path');
+
 
 class Caspar {
 
     /**
      * CasparCG Constructor
      * @param {Array} settings All the CasparCG Settings
-     * ['name'] Nom unique du serveur Casapr
+     * ['name'] Nom unique du serveur Caspar
      * ['ipAddr'] Adresse IP du serveur
      * ['amcpPort'] Port AMCP du servur
      * ['oscDefaultPort'] Port OSC par défaut du serveur
@@ -39,7 +43,8 @@ class Caspar {
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
-        this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
+        this.XmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config'); // Création de l'objet qui gère le fichier de config
+        this.casparCommon = new CasparCommon(this.XmlHandler.getSettingsArray());     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
     }  
 
 
@@ -234,6 +239,8 @@ class Caspar {
     tcpSend (msg, callback) {
         this.casparCommon.tcpSend(msg, callback);
     }
+
+
 
 
     
