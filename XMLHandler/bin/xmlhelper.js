@@ -139,7 +139,7 @@ class XMLHelper{
 
     getServerIPValue(document){
         var customSettingsBlock = document.getElementsByTagName('ClydeSettings')[0];
-        return customSettingsBlock.getElementsByTagName('server-ip')[0].textContent = value;
+        return customSettingsBlock.getElementsByTagName('server-ip')[0].textContent;
     }
 
     setServerNameValue(document, value){
@@ -150,7 +150,21 @@ class XMLHelper{
 
     getServerNameValue(document){
         var customSettingsBlock = document.getElementsByTagName('ClydeSettings')[0];
-        return customSettingsBlock.getElementsByTagName('server-name')[0].textContent = value;
+        return customSettingsBlock.getElementsByTagName('server-name')[0].textContent;
+    }
+
+    getSettingsArray(){
+        var returnArray = new Array();
+        var document = this.openConfigFile();
+        returnArray['name'] = this.getServerNameValue(document);
+        returnArray['ipAddr'] = this.getServerIPValue(document);
+        returnArray['amcpPort'] = this.getACMPPortValue(document);
+        returnArray['oscDefaultPort'] = this.getOSCPortValue(document);
+        returnArray['mediaPath'] = this.getMediaPathValue(document);
+        returnArray['logPath'] = this.getLogPathValue(document);
+        returnArray['templatePath'] = this.getTemplatePathValue(document);
+        returnArray['thumbnailsPath'] = this.getThumbnailsPathValue(document);
+        return returnArray;
     }
 
     setXmlValues(jsonValues){
