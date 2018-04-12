@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-    stage('Install appli') {
+    stage('Testing project') {
       parallel {
         stage('Install appli') {
           steps {
@@ -13,11 +13,11 @@ pipeline {
             sh 'npm test'
           }
         }
-        stage('Launch appli') {
-          steps {
-            sh 'npm start run'
-          }
-        }
+      }
+    }
+    stage('Launch appli') {
+      steps {
+        sh 'npm start run'
       }
     }
   }
