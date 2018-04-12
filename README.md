@@ -8,5 +8,8 @@ You can use Postman runner and run the "ini" bin to initialize CasparCG with the
 
 The api documentation is available at https://documenter.getpostman.com/view/3948879/RVnZgd9U
 
+# Jenkins CI
+
+Test pour Jenkins
 
 
