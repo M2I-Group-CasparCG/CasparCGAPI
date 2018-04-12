@@ -15,10 +15,9 @@ var ConsumerScreen =    require('./Consumers/CasparConsumerScreen.js');
 var ConsumerFile =      require('./Consumers/CasparConsumerFile.js');
 var ConsumerNet =       require('./Consumers/CasparConsumerNet.js');
 
-var XMLHelper =         require('./../XMLHandler/bin/xmlhelper.js');
-
 var appRoot =           require('app-root-path');
 
+var XMLHelper =         require(appRoot + '/XMLHandler/bin/xmlhelper.js');
 
 class Caspar {
 
