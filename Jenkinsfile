@@ -27,9 +27,10 @@ pipeline {
             sh 'npm start run'
           }
         }
-        stage('') {
+        stage('error') {
           steps {
             sleep 30
+            sh 'npm stop'
           }
         }
       }
