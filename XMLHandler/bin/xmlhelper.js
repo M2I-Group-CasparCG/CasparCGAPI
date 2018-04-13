@@ -3,7 +3,7 @@ const XML = require('xml');
 const fs = require('fs');
 const XMLParser = require('xml2js');
 const XMLDOM = require('xmldom');
-const appRoot =           require('app-root-path');
+const appRoot = require('app-root-path');
 
 class XMLHelper{
     constructor(XMLFilePath){
@@ -201,4 +201,4 @@ module.exports = XMLHelper;
 //         'ServerName': 'test'
 //     }
 // }
-// helper.setXmlValues(jsonValues)
+// console.log(helper.getXMLValue('default-port'));
