@@ -14,21 +14,21 @@ try {
 
 describe('getXmlValue()', function (){
     it("The function should return an xml value of 6250", function(){
-        var value = new Helper(appRoot + '/spec/caspar.config').getXMLValue('default-port');
+        var value = new Helper(appRoot + '/spec/caspar.config', true).getXMLValue('default-port');
         expect(value).toBe('6250');
     })
 });
 
 describe('checkCustomSettingsNode()', function(){
     it("The function should return true as the custom settings node is set during new Helper()", function(){
-        var value = new Helper(appRoot + '/spec/caspar.config').checkCustomSettingsNode();
+        var value = new Helper(appRoot + '/spec/caspar.config', true).checkCustomSettingsNode();
         expect(value).toBeTruthy();
     })
 });
 
 describe('getSettingsArray()', function(){
     it("The function should return an array of values", function() {
-        var valuesArray = new Helper(appRoot + '/spec/caspar.config').getSettingsArray();
+        var valuesArray = new Helper(appRoot + '/spec/caspar.config', true).getSettingsArray();
         function testArray(valuesArray) {
             if(valuesArray['amcpPort']!=='5250'){
                 return new String("amcpPort value is " + valuesArray['amcpPort'] + " should be 5250");
