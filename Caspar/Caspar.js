@@ -1,4 +1,8 @@
+
+
 "use strict";
+
+const fs =              require('fs');
 
 var CasparCommon =      require('./CasparCommon.js');
 var Channel =           require('./CasparChannel');
@@ -18,6 +22,9 @@ var ConsumerNet =       require('./Consumers/CasparConsumerNet.js');
 var appRoot =           require('app-root-path');
 
 var XMLHelper =         require(appRoot + '/XMLHandler/bin/xmlhelper.js');
+var dgram =             require('dgram');
+
+var onlineTimeout = null;
 
 class Caspar {
 
@@ -42,25 +49,28 @@ class Caspar {
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
-        this.XmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config'); // Création de l'objet qui gère le fichier de config
-        this.casparCommon = new CasparCommon(this.XmlHandler.getSettingsArray());     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
-    }  
+        this.xmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config'); // Création de l'objet qui gère le fichier de config
+        // this.casparCommon = new CasparCommon(this.XmlHandler.getSettingsArray());     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
+        settings['id'] = this.id;
+        this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
+
+      }  
 
 
     /** 
      * initialise le serveur
      * Instanciation des channels PGM PVW et MULTIVIEW
     */
-    ini(){     
-
+    async ini(){     
+    
         if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
-        let pgmSettings = new Array();
             let mvSettings = new Array();
-            mvSettings['name'] = 'MVW';
+                mvSettings['name'] = 'MVW';
+                mvSettings['id'] = 1;
             let mv = new ChannelMultiview(mvSettings,this.producers)
             this.addChannel(mv);
             this.casparCommon.setMvId(mv.getId());
-            mv.ini();
+            // mv.ini();
         }else{
             let mv = this.channels.get(this.getCasparCommon().getMvId());
             mv.ini();
@@ -69,26 +79,131 @@ class Caspar {
         if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
             let pgmSettings = new Array();
             pgmSettings['name'] = 'PGM';
+            pgmSettings['id'] = 2;
             let pgm = new Channel(pgmSettings);
             this.addChannel(pgm);
             this.casparCommon.setPgmId(pgm.getId());
         }
-
         
         if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
         let pgmSettings = new Array();
             let pvwSettings = new Array();
             pvwSettings['name'] = 'PVW';
+            pvwSettings['id'] = 3;
             let pvw = new Channel(pvwSettings);
             this.addChannel(pvw);
             this.casparCommon.setPvwId(pvw.getId());
         }
-
-        
-
-
-
     }
+
+    /**
+     * Retrieving informations form the casaparCG server
+     */
+    async getInfo() {
+        const casparId = this.id;
+        const casparCommon = this.getCasparCommon();
+        const caspar = this;
+        const xmlHandler = this.xmlHandler;
+
+        // récupération des informations.
+        console.log('retrieving informations from the server...');
+        await this.getCasparCommon().tcpPromise('VERSION')
+                .then(
+                    function(resolveResult){
+                        // console.log(resolveResult);
+                        casparCommon.setCasparVersion(resolveResult['data']);
+                    },  
+                    function(rejectResult){
+                        console.log(rejectResult);
+                    }
+                )
+        await this.getCasparCommon().tcpPromise('INFO')
+                .then(
+                    function(resolveResult){
+                        // console.log(resolveResult);
+                        casparCommon.setChannelsNb(resolveResult['dataLines']);
+                        resolveResult['data'].forEach(element => {
+                            element = element.split(' ');
+                            let settings = new Array();
+                                settings['id'] = parseInt(element[0]);
+                                settings['name'] = 'default';
+                                settings['videoMode'] = element[1];
+                                settings['state'] = element[2];
+                            let channel = new Channel(settings);
+                            caspar.addChannel(channel);
+                        });
+
+                    },  
+                    function(rejectResult){
+                        console.log(rejectResult);
+                    }
+                )
+        await this.getCasparCommon().tcpPromise('INFO CONFIG')
+            .then(
+                function(resolveResult){
+                    console.log(resolveResult);
+                    /**
+                     * Récupération des infos suivant du XML : 
+                     * media-path
+                     * log-path
+                     * data-path
+                     * template-path
+                     * thumbnails-path
+                     * tcp -> port
+                     * osc -> predefined-clients -> predefined-client -> address
+                     * osc -> predefined-clients -> predefined-client -> port
+                     */
+                    // console.log(xmlHandler.getOSCPortValue(resolveResult));
+                    // // getOSCPortValue
+                    // // getACMPPortValue
+                    // // getThumbnailsPathValue
+                    // // getTemplatePathValue
+                    // // getLogPathValue
+                    // // getMediaPathValue
+                    // // getXMLValue
+                },  
+                function(rejectResult){
+                    console.log(rejectResult);
+                }
+            )
+    
+        await this.getCasparCommon().tcpPromise('INFO PATHS')
+            .then(
+                function(resolveResult){
+                    console.log(resolveResult);
+                    /**
+                     * Récupération de l'élément initial-path
+                     */
+                    // fs.writeFile('casparcg'+casparId+'_paths.xml', resolveResult['data'], (err) => {
+                    //     if(err){
+                    //         console.log(err);
+                    //     }
+                    // });
+                },  
+                function(rejectResult){
+                    console.log(rejectResult);
+                }
+            )
+
+            await this.getCasparCommon().tcpPromise('INFO SYSTEM')
+            .then(
+                function(resolveResult){
+                    console.log(resolveResult);
+                    /**
+                     * Récupération des élements
+                     * name
+                     * os -> description
+                     * 
+                     */
+                },  
+                function(rejectResult){
+                    console.log(rejectResult);
+                }
+            )
+
+
+    
+        }
 
     /**
      * Ajout d'un channel au serveur CasaprCG
@@ -240,9 +355,107 @@ class Caspar {
     }
 
 
+    oscAnalyzer(oscData){
+
+        
+        let caspar = this;
+
+        const reChannelFormat                       = /\/channel\/\d{1,3}\/format/;
+        const reChannelLayerFilePath                = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/file\/path/;
+        const reChannelLayerLoop                    = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/loop/;
+        const reChannelLayerPaused                  = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/paused/;
+        const reChannelLayerFileTime                = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/file\/time/;
+        const reChannelLayerFileFrame               = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/file\/frame/;
+        const reChannelLayerFileFps                 = /\/channel\/\d{1,3}\/stage\/layer\/\d{1,3}\/file\/fps/;
+
+        const reChannelMixerAudioChannelsnb         = /\/channel\/\d{1,3}\/mixer\/audio\/nb_channels/;
+        const reChannelMixerAudioDbfs               = /\/channel\/\d{1,3}\/mixer\/audio\/\d{1,3}\/dBFS/;
+
+        clearTimeout(onlineTimeout);
+        caspar.getCasparCommon().setOnline(true);
+
+        let returnVal = null;
+
+        oscData.forEach(function(value, key, map){
+
+            if ( key.match(reChannelFormat)){
+                const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
+                if (caspar.getChannels().get(channelNb) instanceof Channel ){
+                    caspar.getChannels().get(channelNb).setVideoMode(value);
+                }
+                returnVal = null;
+            }else if ( key.match(reChannelLayerFilePath)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                return null;
+            }else if ( key.match(reChannelLayerLoop)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelLayerPaused)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelLayerFileTime)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelLayerFileFrame)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelLayerFileFps)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelLayerFilePath)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                returnVal = null;
+            }else if ( key.match(reChannelMixerAudioChannelsnb)){
+                const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
+                returnVal = null;
+            }else if ( key.match(reChannelMixerAudioDbfs)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const audioChannelNb = parseInt(result[1]);
+                if (caspar.getChannels().get(channelNb) instanceof Channel ){
+                    caspar.getChannels().get(channelNb).setAudioLevel(audioChannelNb, value);
+                }
+                let state = new Object();
+                    state.type = 'audioLevel';
+                    state.casparId = caspar.getCasparCommon().getId();
+                    state.channelId = channelNb;
+                    state.audioChannelNb = audioChannelNb;
+                    state.audioLevel = value;
+                returnVal =  state;
+            }else{
+                returnVal = null;
+            }
+        });
+
+        onlineTimeout = this.startOnlineTimeout();
+        return returnVal;
+    }
 
 
-    
+    startOnlineTimeout(){
+        const caspar = this;
+        let timeout = setTimeout(
+            function(){
+                caspar.getCasparCommon().setOnline(false);
+            },
+            1000);
+        return timeout;
+    }
+
     /**
      *   Getters / Setters
      */
@@ -285,6 +498,12 @@ class Caspar {
     }
     getId(){
         return this.id;
+    }
+    getUdpServerStarted(){
+        return this.updServerStarted;
+    }
+    setUdpServerStarder(bool){
+        this.updServerStarted = bool;
     }
 
 }

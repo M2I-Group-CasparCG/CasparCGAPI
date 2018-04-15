@@ -12,7 +12,7 @@ class CasparChannelMultiview extends CasparChannel{
      */
     constructor(settings, producers){
         super(settings);
-        this.id = CasparChannel.totalInstances;
+        this.id = settings['id'] || CasparChannel.totalInstances;
         this.casparCommon = null;
         this.patterId = settings['patternId'] || 0;
         this.producers = producers;

@@ -31,28 +31,19 @@ module.exports = function(socket) {
      */
     caspar.connect = function(req, res){
         let casparSettings = req.body;
+
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
-            caspar.getCasparCommon().tcpPromise('CLEAR 1-1000')
-                .then(function(result){// test de connection au serveur caspar
-                    // si la requête est un succès
-                    if(result.indexOf('202') === 0){
-                        caspar.getCasparCommon().setOnline(true);
-                    }else if (result == 'timeout'){
-                        caspar.getCasparCommon().setOnline(false);
-                    }else{
-                        caspar.getCasparCommon().setOnline(false);
-                    }
+            caspar.getInfo()
+                .then(function(){
                     res.json(caspar);
-                    
-                    if(socket){
-                        socket.emit('message',JSON.stringify(caspar));
-                        // socket.broadcast('message',JSON.stringify(caspar));
-                    }
                 })
                 .catch(error => {
+                    console.log('error');
                     console.log(error);
+                    res.json(error);
                 });
+          
     },
 
     /**
@@ -111,12 +102,21 @@ module.exports = function(socket) {
         console.log('ini');
         const casparId = req.params.casparId;
         let caspar = caspars.get(parseInt(casparId));
-            caspar.ini();
-            res.sendStatus('202');
-        
+            if (caspar.getCasparCommon().getChannelsNb() >= 3){
+                caspar.ini();
+                let array =  [...caspar.getChannels()];
+                res.json(array);
+            }
+            else{
+                var result = new Error();
+                    result.status = 403;
+                    result.message = "3 channels are required for initialization";
+                res.json(result);
+            }
         let crtChannels = caspar.getChannels();
         crtChannels.forEach(function (item, key, mapObj) {  
             if(socket){
+                // console.log(mapObj);
                 socket.emit('channelAdded',JSON.stringify(item));
                 // socket.broadcast('channelAdded',JSON.stringify(mapObj));
             }  
@@ -278,8 +278,21 @@ module.exports = function(socket) {
         const producerId = parseInt(req.params.producerId);
 
         let producer = caspars.get(casparId).getProducer(producerId);
-            producer.run();
-            res.sendStatus('202'); 
+            producer.run().then(
+                function(msg){
+                    res.sendStatus(202);
+                },
+                function(msg){
+                    res.sendStatus(404);
+                }
+            )
+                // .then(function(){
+                //     res.sendStatus('202'); 
+                // },
+                // function(){
+                //     res.sendStatus('404'); 
+                // });
+           
     },
     
     caspar.producerStop = function(req,res,next){
@@ -319,15 +332,22 @@ module.exports = function(socket) {
 
     caspar.channelCheck = function(req,res,next){
         const channelId = parseInt(req.params.channelId);
+        console.log('channelCheck');
         next();
-
+    },
+    caspar.channelGetAudioLevels = function(req,res,next){
+        console.log('channelGetAudioLevels');
+        const casparId = parseInt(req.params.casparId);
+        const channelId = parseInt(req.params.channelId);
+        const audioLevels = caspars.get(casparId).getChannel(channelId).getAudioLevels();
+        let array =  [...audioLevels];
+        res.json(array);
+    
     },
     caspar.channelSwitch = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
         const producerId = parseInt(req.params.producerId);
-        console.log(producerId);
-        console.log(producers.get(producerId));
         if (producers.get(producerId) instanceof Producer){
             caspars.get(casparId).getChannel(channelId).switchLayer(producerId);
             res.sendStatus('202');
@@ -351,6 +371,88 @@ module.exports = function(socket) {
         caspars.get(casparId).setXmlValues(req.body);
         res.sendStatus('202');
     };
+
+
+    caspar.oscParser = function (buffer, rinfo){
+
+        /*
+            OSC BUNDLE STRING : 
+                8 bytes : OSC String #bundle
+                8 bytes : OSC-timetag
+                4 bytes : size of first element
+                x bytes : first element
+                4 bytes : size of next element
+                x bytes : next element
+    
+                element :
+                xx bytes    separator   value Type (1 byte)    value
+                valueName   ,           x                      xxxxx
+         
+         */
+    
+        var result = new Map();                                                            // dictionnaire contenant les données récoltées.
+        var bufferLength = buffer.length;                                           //longeur totale du buffer
+        var cursor = 16;                                                            // on place le curseur à la taille de premier élément
+        while(cursor < bufferLength){                                               // tant qu'il reste des données dans le buffer
+            var elementSize = buffer.readInt32BE(cursor);                           // on récupère la longueur de l'élément
+            var cursor = cursor + 4;                                                // on place le curseur au début de l'élément
+            var element = buffer.slice(cursor, cursor+elementSize);                 // on récupère l'élément en entier
+            // traitement de l'élément
+            var valName = element.toString('utf-8').split(',')[0];
+            var valNameLength = valName.length;
+                valName = valName.replace(/\0/g,'');
+            var valType = element.slice(valNameLength+1, valNameLength+2).toString();
+            var valData = element.slice(valNameLength+2);
+    
+            switch(valType){                                                        // formattage des valeurs en fonction des types
+                case 'i' :      // int32
+                    valData = valData.readInt32BE(2);
+                break;
+                case 'f' :      // float32
+                    valData = valData.readFloatBE(2);
+                break;
+                case 's' :      // string
+                    valData = valData.toString('utf-8').replace(/\0/g,'');
+                break;
+                case 'b' :      // OSC-blob
+                break;
+                case 'h' :{      // 64bits BE float);
+                    if(valData.length == 18){
+                        valData = valData.readInt32BE(2+4) + '|' + valData.readInt32BE(6+8);
+                    }else{
+                        valData = valData.readInt32BE(2+4);
+                    }
+                }
+                break;
+                case 'T' :      // True
+                    valData = true;
+                break;
+                case 'F' : {     // False
+                    valData = false;
+                }
+                break;
+            }
+            result.set(valName,valData);
+            // debug(valName+' : '+valData);
+            cursor = cursor + elementSize;                                          // incrémentation du curseur 
+        }
+        this.oscRouter(result, rinfo['address']);
+        return result;
+    }
+
+    caspar.oscRouter = function (msg, sourceIpAddr){
+        // console.log(msg);
+        // console.log(sourceIpAddr);
+        caspars.forEach(function(caspar, casparId, map){
+            const ipAddr = caspar.getCasparCommon().getIpAddr();
+            if (ipAddr == sourceIpAddr){
+                let result = caspar.oscAnalyzer(msg);
+                if (result){                                            // envoi de socketIO
+                    socket.emit('state',JSON.stringify(result));
+                }
+            }
+        });
+    }
 
     return caspar;
 }

@@ -1,5 +1,6 @@
 
-var http = require('http');
+var http =  require('http');
+var dgram =             require('dgram');
 var express = require('express');
 var router = express.Router();
  
@@ -12,8 +13,8 @@ var caspar = require('./caspar.js');
  */
 
 var socketServer = http.createServer();
-
 var io = require('socket.io').listen(socketServer);
+
     io.sockets.on('connection', function (socketIo) {           
         console.log("Browser connected...");	
     });
@@ -21,6 +22,29 @@ var io = require('socket.io').listen(socketServer);
     socketServer.listen(3001);
 
     var caspar = require('./caspar.js')(io);
+
+/**
+ * socket UDP pour CasparOSC
+ */
+
+let udpServer = dgram.createSocket('udp4');
+    udpServer.on('error', (err) => {
+        console.log(`server error:\n${err.stack}`);
+        udpServer.close();
+    });
+
+    udpServer.on('message', (msg, rinfo) => {
+        let oscData = caspar.oscParser(msg, rinfo);
+    });
+
+    udpServer.on('listening', () => {
+        const address = udpServer.address();
+        console.log(`udp server listening on ${address.address}:${address.port}`);
+    });
+
+    udpServer.bind(5253);
+
+
 
 /*
  * Routes that can be accessed by any one
@@ -67,6 +91,7 @@ var io = require('socket.io').listen(socketServer);
     router.get('/api/v1/caspars/:casparId/channels/', caspar.channelGetAll)
     // router.post('/api/v1/caspars/:casparId/channels/', caspar.channelAdd)
     router.all('/api/v1/caspars/:casparId/channels:channelId/*', caspar.channelCheck);
+    router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', caspar.channelGetAudioLevels);
     // router.put('/api/v1/casparcg/:casparId/channel/:channelId/', caspar.channelEdit);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
     // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);

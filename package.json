@@ -20,6 +20,7 @@
   "dependencies": {
     "app-root-path": "^2.0.1",
     "body-parser": "^1.18.2",
+    "dgram": "^1.0.1",
     "express": "^4.16.3",
     "jwt-simple": "^0.5.1",
     "morgan": "^1.9.0",

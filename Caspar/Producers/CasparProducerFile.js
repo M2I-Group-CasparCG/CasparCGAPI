@@ -17,10 +17,11 @@ class CasparProducerFILE extends CasparProducer{
         
     }
 
-    run(){
+    run() {
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.getFileName()} ${this.getPlayMode()}`;
-        this.tcpSend(req, function(){});
+        return this.tcpPromise(req);
     }
+
     stop(){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         this.tcpSend(req, function(){});
@@ -38,6 +39,9 @@ class CasparProducerFILE extends CasparProducer{
 
     tcpSend(msg, callback){
         this.casparCommon.tcpSend(msg, callback);
+    }
+    tcpPromise(msg){
+        return this.casparCommon.tcpPromise(msg);
     }
 
 }

@@ -10,15 +10,17 @@ class CasparChannel {
      */
     constructor(settings){
         CasparChannel.totalInstances = (CasparChannel.totalInstances || 0) + 1;
-        this.id = CasparChannel.totalInstances;
+        this.id = settings['id'] || CasparChannel.totalInstances;
         this.name = settings['name'] || 'Channel';
-        this.videoMode = settings['videoMode'] || 'PAL';
+        this.videoMode = settings['videoMode'] || null;
         this.consumers = new Map();
         this.consumersNb = 0;
         this.producers = new Map();
         this.casparCommon = null;
         this.backgroundLayer = 10;
         this.selectedInput = 0;
+        this.state = settings['state'] || 'unknown';
+        this.audioLevels = new Map();
     }
 
 
@@ -66,7 +68,15 @@ class CasparChannel {
     getCasparCommon(){
         return this.casparCommon;
     }
-
+    setVideoMode(videoMode){
+        this.videoMode = videoMode;
+    }
+    setAudioLevel(channelNb, level){
+        this.audioLevels.set(channelNb, level);
+    }
+    getAudioLevels(){
+        return this.audioLevels;
+    }
 }
 
 module.exports = CasparChannel;
