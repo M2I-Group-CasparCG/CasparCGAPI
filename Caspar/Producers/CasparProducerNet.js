@@ -14,20 +14,19 @@ class CasparProducerNET extends CasparProducer{
 
     run(){
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.url}`;
-        this.tcpSend(req, function(){});
+        return this.tcpPromise(req);
     }
 
     stop(){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.tcpSend(req, function(){});
+        return this.tcpPromise(req);
     }
 
     getId(){
         return this.id;
     }
-    
-    tcpSend(msg, callback){
-        this.casparCommon.tcpSend(msg, callback);
+    tcpPromise(msg){
+        return this.casparCommon.tcpPromise(msg);
     }
 }
 

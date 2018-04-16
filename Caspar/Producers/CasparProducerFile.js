@@ -24,7 +24,7 @@ class CasparProducerFILE extends CasparProducer{
 
     stop(){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.tcpSend(req, function(){});
+        return this.tcpPromise(req);
     }
 
     getId(){
@@ -35,10 +35,6 @@ class CasparProducerFILE extends CasparProducer{
     }
     getPlayMode(){
         return this.playMode;
-    }
-
-    tcpSend(msg, callback){
-        this.casparCommon.tcpSend(msg, callback);
     }
     tcpPromise(msg){
         return this.casparCommon.tcpPromise(msg);

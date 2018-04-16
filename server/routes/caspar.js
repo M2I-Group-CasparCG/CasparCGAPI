@@ -25,6 +25,18 @@ module.exports = function(socket) {
     var caspar = {};
 
     /**
+     * Message d'erreur envoyé quand 
+     * @param {*} amcpMessage 
+     */
+    caspar.errorMessage = function(amcpMessage){
+        let error = new Error();
+            error.code = 500;
+            error.type = 'AMCP protocol error';
+            error.description = amcpMessage;
+        return error;
+    },
+
+    /**
      * Create a new caspar object. Try to connect. 
      * @param {*} req 
      * @param {*} res 
@@ -278,21 +290,17 @@ module.exports = function(socket) {
         const producerId = parseInt(req.params.producerId);
 
         let producer = caspars.get(casparId).getProducer(producerId);
-            producer.run().then(
-                function(msg){
-                    res.sendStatus(202);
-                },
-                function(msg){
-                    res.sendStatus(404);
-                }
-            )
-                // .then(function(){
-                //     res.sendStatus('202'); 
-                // },
-                // function(){
-                //     res.sendStatus('404'); 
-                // });
-           
+            producer.run()
+                .then(
+                    function(msg){
+                        res.sendStatus(202);
+                    },
+                    function(msg){
+                        res.json(caspar.errorMessage(msg));
+                    }
+                ).catch(function(error){
+                    console.log(error);
+                });           
     },
     
     caspar.producerStop = function(req,res,next){
@@ -300,22 +308,37 @@ module.exports = function(socket) {
         const producerId = parseInt(req.params.producerId);
 
         let producer = caspars.get(casparId).getProducer(producerId);
-            producer.stop();
-            res.sendStatus('202'); 
+            producer.stop().then(
+                function(msg){
+                    res.sendStatus(202);
+                },
+                function(msg){
+                    res.json(caspar.errorMessage(msg));
+                }
+            ).catch(function(error){
+                console.log(error);
+            });
 
     },
     caspar.producerDelete = function(req,res){
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
-        caspars.get(casparId).getProducer(producerId).stop();
-        caspars.get(casparId).removeProducer(producerId);
-        producers.delete(producerId);
-        res.sendStatus('202');
-        if(socket){
-            socket.emit('producerRemoved',JSON.stringify(producerId));
-            // socket.broadcast('producerRemoved',JSON.stringify(producerId));
-        }
-
+        caspars.get(casparId).getProducer(producerId).stop()
+            .then(
+                function(msg){
+                    caspars.get(casparId).removeProducer(producerId);
+                    producers.delete(producerId);
+                    res.send('deleted');
+                    if(socket){
+                        socket.emit('producerRemoved',JSON.stringify(producerId));
+                        // socket.broadcast('producerRemoved',JSON.stringify(producerId));
+                    }
+                },
+                function(msg){
+                    res.json(caspar.errorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
     },
 
      /**
@@ -456,5 +479,3 @@ module.exports = function(socket) {
 
     return caspar;
 }
-
-// module.exports = caspar;

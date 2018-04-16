@@ -95,7 +95,7 @@ class CasparCommon {
     tcpPromise (msg){
         
         let client = new net.Socket();
-            client.setTimeout(1000);
+            client.setTimeout(2000);
 
         let amcpPort = this.amcpPort;
         let ipAddr = this.ipAddr;

@@ -286,7 +286,6 @@ class Caspar {
         var producer = this.producers.get(producerId);
         if (producer instanceof Producer) {
             this.producers.delete(producerId);
-            this.tcpSend(producer.remove(),function(){});
             return producer;
         }else{
             return false
