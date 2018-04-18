@@ -9,7 +9,7 @@ class XMLHelper{
     constructor(XMLStringParam, isFileParam){
         this.XMLStringParam = XMLStringParam;
         this.isFile = isFileParam || false;
-        this.XMLDocument = this.openConfigFile();
+        // this.XMLDocument = this.openConfigFile();
         if(this.isFile){
             if(!this.checkCustomSettingsNode()){
                 this.createCustomSettingsNode();
@@ -236,22 +236,22 @@ class XMLHelper{
 }
 module.exports = XMLHelper;
 
-var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
-var jsonValues = {
-    'settings' : {
-        'ACMPPort' : '5250',
-        'LogPath': 'log',
-        'MediaPath': 'media',
-        'OSCPort': '6250',
-        'TemplatePath': 'template',
-        'ThumbnailsPath': 'thumbnails',
-        'ServerIP': '127.0.0.1',
-        'ServerName': 'default'
-    }
-}
+// var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
+// var jsonValues = {
+//     'settings' : {
+//         'ACMPPort' : '5250',
+//         'LogPath': 'log',
+//         'MediaPath': 'media',
+//         'OSCPort': '6250',
+//         'TemplatePath': 'template',
+//         'ThumbnailsPath': 'thumbnails',
+//         'ServerIP': '127.0.0.1',
+//         'ServerName': 'default'
+//     }
+// }
 //helper.setXmlValues(jsonValues);
 //console.log(helper.getXMLValue('default-port'))document
-console.log(helper.getXMLValue('default-port'));
+// console.log(helper.getXMLValue('default-port'));
 // //helper.removeChannelNodeById(1);
 // fs.writeFileSync('test.txt', "test");
 // var test = fs.readFileSync('test.txt', 'utf-8');
