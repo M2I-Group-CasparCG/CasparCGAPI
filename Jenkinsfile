@@ -24,7 +24,7 @@ pipeline {
       parallel {
         stage('Npm stop') {
           steps {
-            sleep 40
+            sleep(time: 2, unit: 'MINUTES')
             sh 'npm stop'
           }
         }
