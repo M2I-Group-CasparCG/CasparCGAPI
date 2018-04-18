@@ -22,22 +22,17 @@ pipeline {
     }
     stage('Launch appli') {
       parallel {
-        stage('Launch appli') {
+        stage('Npm stop') {
+          steps {
+            sleep 40
+            sh 'npm stop'
+          }
+        }
+        stage('Start appli') {
           steps {
             sh 'npm start run'
           }
         }
-        stage('error') {
-          steps {
-            sleep 30
-            sh 'npm stop'
-          }
-        }
-      }
-    }
-    stage('npm stop') {
-      steps {
-        sh 'npm stop'
       }
     }
   }
