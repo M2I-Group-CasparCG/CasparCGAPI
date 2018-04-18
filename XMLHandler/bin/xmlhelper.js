@@ -52,7 +52,7 @@ class XMLHelper{
     }
     
     getMediaPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('media-path')[0].textContent;
     }
 
@@ -66,7 +66,7 @@ class XMLHelper{
     }
     
     getLogPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('log-path')[0].textContent;
     }
 
@@ -80,7 +80,7 @@ class XMLHelper{
     }
     
     getTemplatePathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('template-path')[0].textContent;
     }
 
@@ -94,7 +94,7 @@ class XMLHelper{
     }
     
     getThumbnailsPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('thumbnails-path')[0].textContent;
     }
 
@@ -108,7 +108,7 @@ class XMLHelper{
     }
     
     getACMPPortValue(){
-        var tcpBlock = this.XMLDocument.getElementsByTagName('tcp')[0];
+        var tcpBlock = this.openConfigFile().getElementsByTagName('tcp')[0];
         return tcpBlock.getElementsByTagName('port')[0].textContent;
     }
 
@@ -122,7 +122,7 @@ class XMLHelper{
     }
     
     getOSCPortValue(){
-        var oscPort = this.XMLDocument.getElementsByTagName('osc')[0];
+        var oscPort = this.openConfigFile().getElementsByTagName('osc')[0];
         return oscPort.getElementsByTagName('default-port')[0].textContent;
     }
 
@@ -167,7 +167,7 @@ class XMLHelper{
     }
 
     getServerIPValue(){
-        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
+        var customSettingsBlock = this.openConfigFile().getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-ip')[0].textContent;
     }
 
@@ -181,7 +181,7 @@ class XMLHelper{
     }
 
     getServerNameValue(){
-        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
+        var customSettingsBlock = this.openConfigFile().getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-name')[0].textContent;
     }
 
@@ -217,39 +217,44 @@ class XMLHelper{
         fs.writeFileSync(this.XMLStringParam, new XMLDOM.XMLSerializer().serializeToString(document));
     }
 
-    // getChannelNodeById(id){
-    //     var document = this.openConfigFile();
-    //     var channelsNode = document.getElementsByTagName('channels');
-    //     return channelsNode[0].childNodes[id];
-    // }
+    getChannelNodeById(id){
+        var document = this.openConfigFile();
+        var channelsNode = document.getElementsByTagName('channels');
+        return channelsNode[0].childNodes[id];
+    }
 
-    // removeChannelNodeById(id){
-    //     var channelNode = this.getChannelNodeById(id);
-    //     var document = this.openConfigFile();
-    //     document.getElementsByTagName('channels')[0].removeChild(channelNode);
-    //     this.writeChangesToFile(document);
-    // }
+    removeChannelNodeById(id){
+        var channelNode = this.getChannelNodeById(id);
+        var document = this.openConfigFile();
+        document.getElementsByTagName('channels')[0].removeChild(channelNode);
+        this.writeChangesToFile(document);
+    }
 
-    // addNewChannelNode(id){
+    addNewChannelNode(id){
 
-    // }
+    }
 }
 module.exports = XMLHelper;
 
-// var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
-// var jsonValues = {
-//     'settings' : {
-//         'ACMPPort' : '5250',
-//         'LogPath': 'log',
-//         'MediaPath': 'media',
-//         'OSCPort': '6250',
-//         'TemplatePath': 'template',
-//         'ThumbnailsPath': 'thumbnails',
-//         'ServerIP': '127.0.0.1',
-//         'ServerName': 'default'
-//     }
-// }
-// //helper.setXmlValues(jsonValues);
-// //console.log(helper.getXMLValue('default-port'))document
-// console.log(helper.getServerNameValue());
+var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
+var jsonValues = {
+    'settings' : {
+        'ACMPPort' : '5250',
+        'LogPath': 'log',
+        'MediaPath': 'media',
+        'OSCPort': '6250',
+        'TemplatePath': 'template',
+        'ThumbnailsPath': 'thumbnails',
+        'ServerIP': '127.0.0.1',
+        'ServerName': 'default'
+    }
+}
+//helper.setXmlValues(jsonValues);
+//console.log(helper.getXMLValue('default-port'))document
+console.log(helper.getXMLValue('default-port'));
 // //helper.removeChannelNodeById(1);
+// fs.writeFileSync('test.txt', "test");
+// var test = fs.readFileSync('test.txt', 'utf-8');
+// console.log(test)
+// fs.writeFileSync('test.txt', "totalement différenct", 'utf-8');
+// console.log(test)
