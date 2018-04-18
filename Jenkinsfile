@@ -25,7 +25,7 @@ pipeline {
         stage('Npm stop') {
           steps {
             sleep(time: 2, unit: 'MINUTES')
-            sh 'npm stop'
+            sh 'pkill npm'
           }
         }
         stage('Start appli') {
