@@ -66,7 +66,7 @@ class XMLHelper{
     }
     
     getLogPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('log-path')[0].textContent;
     }
 
@@ -80,7 +80,7 @@ class XMLHelper{
     }
     
     getTemplatePathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('template-path')[0].textContent;
     }
 
@@ -94,7 +94,7 @@ class XMLHelper{
     }
     
     getThumbnailsPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('thumbnails-path')[0].textContent;
     }
 
@@ -108,7 +108,7 @@ class XMLHelper{
     }
     
     getACMPPortValue(){
-        var tcpBlock = this.XMLDocument.getElementsByTagName('tcp')[0];
+        var tcpBlock = this.openConfigFile().getElementsByTagName('tcp')[0];
         return tcpBlock.getElementsByTagName('port')[0].textContent;
     }
 
@@ -122,7 +122,7 @@ class XMLHelper{
     }
     
     getOSCPortValue(){
-        var oscPort = this.XMLDocument.getElementsByTagName('osc')[0];
+        var oscPort = this.openConfigFile().getElementsByTagName('osc')[0];
         return oscPort.getElementsByTagName('default-port')[0].textContent;
     }
 
@@ -167,7 +167,7 @@ class XMLHelper{
     }
 
     getServerIPValue(){
-        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
+        var customSettingsBlock = this.openConfigFile().getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-ip')[0].textContent;
     }
 
@@ -181,7 +181,7 @@ class XMLHelper{
     }
 
     getServerNameValue(){
-        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
+        var customSettingsBlock = this.openConfigFile().getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-name')[0].textContent;
     }
 
