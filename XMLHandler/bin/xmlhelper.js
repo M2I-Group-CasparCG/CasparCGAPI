@@ -9,6 +9,7 @@ class XMLHelper{
     constructor(XMLStringParam, isFileParam){
         this.XMLStringParam = XMLStringParam;
         this.isFile = isFileParam || false;
+        this.XMLDocument = this.openConfigFile();
         if(this.isFile){
             if(!this.checkCustomSettingsNode()){
                 this.createCustomSettingsNode();
@@ -50,8 +51,8 @@ class XMLHelper{
         return document;
     }
     
-    getMediaPathValue(document){
-        var pathsBlock = document.getElementsByTagName('paths')[0];
+    getMediaPathValue(){
+        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('media-path')[0].textContent;
     }
 
@@ -64,8 +65,8 @@ class XMLHelper{
         return document;
     }
     
-    getLogPathValue(document){
-        var pathsBlock = document.getElementsByTagName('paths')[0];
+    getLogPathValue(){
+        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('log-path')[0].textContent;
     }
 
@@ -78,8 +79,8 @@ class XMLHelper{
         return document;
     }
     
-    getTemplatePathValue(document){
-        var pathsBlock = document.getElementsByTagName('paths')[0];
+    getTemplatePathValue(){
+        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('template-path')[0].textContent;
     }
 
@@ -92,8 +93,8 @@ class XMLHelper{
         return document;
     }
     
-    getThumbnailsPathValue(document){
-        var pathsBlock = document.getElementsByTagName('paths')[0];
+    getThumbnailsPathValue(){
+        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('thumbnails-path')[0].textContent;
     }
 
@@ -106,8 +107,8 @@ class XMLHelper{
         return document;
     }
     
-    getACMPPortValue(document){
-        var tcpBlock = document.getElementsByTagName('tcp')[0];
+    getACMPPortValue(){
+        var tcpBlock = this.XMLDocument.getElementsByTagName('tcp')[0];
         return tcpBlock.getElementsByTagName('port')[0].textContent;
     }
 
@@ -120,8 +121,8 @@ class XMLHelper{
         return document;
     }
     
-    getOSCPortValue(document){
-        var oscPort = document.getElementsByTagName('osc')[0];
+    getOSCPortValue(){
+        var oscPort = this.XMLDocument.getElementsByTagName('osc')[0];
         return oscPort.getElementsByTagName('default-port')[0].textContent;
     }
 
@@ -165,8 +166,8 @@ class XMLHelper{
         return document;
     }
 
-    getServerIPValue(document){
-        var customSettingsBlock = document.getElementsByTagName('ClydeSettings')[0];
+    getServerIPValue(){
+        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-ip')[0].textContent;
     }
 
@@ -179,8 +180,8 @@ class XMLHelper{
         return document;
     }
 
-    getServerNameValue(document){
-        var customSettingsBlock = document.getElementsByTagName('ClydeSettings')[0];
+    getServerNameValue(){
+        var customSettingsBlock = this.XMLDocument.getElementsByTagName('ClydeSettings')[0];
         return customSettingsBlock.getElementsByTagName('server-name')[0].textContent;
     }
 
@@ -236,19 +237,20 @@ class XMLHelper{
 }
 module.exports = XMLHelper;
 
-var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
-var jsonValues = {
-    'settings' : {
-        'ACMPPort' : '5250',
-        'LogPath': 'log',
-        'MediaPath': 'media',
-        'OSCPort': '6250',
-        'TemplatePath': 'template',
-        'ThumbnailsPath': 'thumbnails',
-        'ServerIP': '127.0.0.1',
-        'ServerName': 'default'
-    }
-}
-//helper.setXmlValues(jsonValues);
-//console.log(helper.getXMLValue('default-port'))
-//helper.removeChannelNodeById(1);
+// var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
+// var jsonValues = {
+//     'settings' : {
+//         'ACMPPort' : '5250',
+//         'LogPath': 'log',
+//         'MediaPath': 'media',
+//         'OSCPort': '6250',
+//         'TemplatePath': 'template',
+//         'ThumbnailsPath': 'thumbnails',
+//         'ServerIP': '127.0.0.1',
+//         'ServerName': 'default'
+//     }
+// }
+// //helper.setXmlValues(jsonValues);
+// //console.log(helper.getXMLValue('default-port'))document
+// console.log(helper.getLogPathValue());
+// //helper.removeChannelNodeById(1);
