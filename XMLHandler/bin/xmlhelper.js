@@ -187,15 +187,14 @@ class XMLHelper{
 
     getSettingsArray(){
         var returnArray = new Array();
-        var document = this.openConfigFile();
-        returnArray['name'] = this.getServerNameValue(document);
-        returnArray['ipAddr'] = this.getServerIPValue(document);
-        returnArray['amcpPort'] = this.getACMPPortValue(document);
-        returnArray['oscDefaultPort'] = this.getOSCPortValue(document);
-        returnArray['mediaPath'] = this.getMediaPathValue(document);
-        returnArray['logPath'] = this.getLogPathValue(document);
-        returnArray['templatePath'] = this.getTemplatePathValue(document);
-        returnArray['thumbnailsPath'] = this.getThumbnailsPathValue(document);
+        returnArray['name'] = this.getServerNameValue();
+        returnArray['ipAddr'] = this.getServerIPValue();
+        returnArray['amcpPort'] = this.getACMPPortValue();
+        returnArray['oscDefaultPort'] = this.getOSCPortValue();
+        returnArray['mediaPath'] = this.getMediaPathValue();
+        returnArray['logPath'] = this.getLogPathValue();
+        returnArray['templatePath'] = this.getTemplatePathValue();
+        returnArray['thumbnailsPath'] = this.getThumbnailsPathValue();
         return returnArray;
     }
 
@@ -252,5 +251,5 @@ module.exports = XMLHelper;
 // }
 // //helper.setXmlValues(jsonValues);
 // //console.log(helper.getXMLValue('default-port'))document
-// console.log(helper.getLogPathValue());
+// console.log(helper.getServerNameValue());
 // //helper.removeChannelNodeById(1);
