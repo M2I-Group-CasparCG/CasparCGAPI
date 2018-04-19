@@ -1,43 +1,15 @@
 pipeline {
   agent any
   stages {
-    stage('Install appli') {
-      parallel {
-        stage('Install appli') {
-          steps {
-            sh 'npm install'
-          }
-        }
-        stage('git pull') {
-          steps {
-            sh 'git pull'
-          }
-        }
-      }
-    }
-    stage('Test appli') {
+    stage('sonar-scan') {
       steps {
-        sh 'npm test'
+        sh '''/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner
+ -Dproject.settings=/etc/sonar-scanner-3.1.0.1141-linux/casparCGAPI.properties'''
       }
     }
-    stage('Launch appli') {
-      parallel {
-        stage('Launch appli') {
-          steps {
-            sh 'npm start run'
-          }
-        }
-        stage('error') {
-          steps {
-            sleep 30
-            sh 'npm stop'
-          }
-        }
-      }
-    }
-    stage('npm stop') {
+    stage('npm-install') {
       steps {
-        sh 'npm stop'
+        sh 'npm install'
       }
     }
   }
