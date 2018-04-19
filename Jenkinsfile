@@ -24,8 +24,8 @@ pipeline {
       parallel {
         stage('Npm stop') {
           steps {
-            sleep(time: 2, unit: 'MINUTES')
-            sh 'pkill npm'
+            sleep(time: 40, unit: 'SECONDS')
+            sh 'npm stop'
           }
         }
         stage('Start appli') {
