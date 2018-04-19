@@ -35,10 +35,5 @@ pipeline {
         }
       }
     }
-    stage('Hello World') {
-      steps {
-        sh 'echo "coucou"'
-      }
-    }
   }
 }
