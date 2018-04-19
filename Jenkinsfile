@@ -12,19 +12,10 @@ pipeline {
       }
     }
     stage('npm start') {
-      parallel {
-        stage('npm start') {
-          steps {
-            sh 'npm start run'
-            sleep 20
-            sh 'pkill node'
-          }
-        }
-        stage('error') {
-          steps {
-            sleep 20
-          }
-        }
+      steps {
+        sh 'npm start run'
+        sleep 20
+        sh 'pkill node'
       }
     }
   }
