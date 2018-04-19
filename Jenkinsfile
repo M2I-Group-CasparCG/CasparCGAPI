@@ -20,7 +20,7 @@ pipeline {
             sh 'pkill node'
           }
         }
-        stage('') {
+        stage('error') {
           steps {
             sleep 20
           }
