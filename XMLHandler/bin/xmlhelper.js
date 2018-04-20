@@ -9,7 +9,6 @@ class XMLHelper{
     constructor(XMLStringParam, isFileParam){
         this.XMLStringParam = XMLStringParam;
         this.isFile = isFileParam || false;
-        this.XMLDocument = this.openConfigFile();
         if(this.isFile){
             if(!this.checkCustomSettingsNode()){
                 this.createCustomSettingsNode();
@@ -42,6 +41,10 @@ class XMLHelper{
         return document;
     }
 
+    /**
+     * document passed to setters MUST be a parsed XML DOM
+     */
+
     setMediaPathValue(document, value){
         var pathsBlock = document.getElementsByTagName('paths')[0];
         pathsBlock.getElementsByTagName('media-path')[0].textContent = value;
@@ -52,7 +55,7 @@ class XMLHelper{
     }
     
     getMediaPathValue(){
-        var pathsBlock = this.XMLDocument.getElementsByTagName('paths')[0];
+        var pathsBlock = this.openConfigFile().getElementsByTagName('paths')[0];
         return pathsBlock.getElementsByTagName('media-path')[0].textContent;
     }
 
@@ -209,7 +212,9 @@ class XMLHelper{
         document = this.setThumbnailsPathValue(document, jsonSettings['ThumbnailsPath']);
         document = this.setServerIPValue(document, jsonSettings['ServerIP']);
         document = this.setServerNameValue(document, jsonSettings['ServerName']);
-        this.writeChangesToFile(document)
+        if(this.isFile){
+            this.writeChangesToFile(document);
+        }
         return true;
     }
 
@@ -224,9 +229,15 @@ class XMLHelper{
     // }
 
     // removeChannelNodeById(id){
-    //     var channelNode = this.getChannelNodeById(id);
+    //     var channelNode = this.getChannelNodeById(2*id-1);
     //     var document = this.openConfigFile();
-    //     document.getElementsByTagName('channels')[0].removeChild(channelNode);
+    //     // document.getElementsByTagName('channels')[0].childNodes[2*id-1].removeChild();
+    //     // document.getElementsByTagName('channels')[0].childNodes[2*id-1].removeChild();
+    //     // console.log(id + new XMLDOM.XMLSerializer().serializeToString(channelNode))
+    //     document.getElementsByTagName('channels')[0].removeChild(channelNode)
+    //     // var string = new XMLDOM.XMLSerializer().serializeToString();
+    //     var string = new XMLDOM.XMLSerializer().serializeToString(document.getElementsByTagName('channels')[0])
+    //     console.log(string)
     //     this.writeChangesToFile(document);
     // }
 
@@ -235,21 +246,3 @@ class XMLHelper{
     // }
 }
 module.exports = XMLHelper;
-
-// var helper = new XMLHelper(appRoot + '/utilities/API/caspar.config', true);
-// var jsonValues = {
-//     'settings' : {
-//         'ACMPPort' : '5250',
-//         'LogPath': 'log',
-//         'MediaPath': 'media',
-//         'OSCPort': '6250',
-//         'TemplatePath': 'template',
-//         'ThumbnailsPath': 'thumbnails',
-//         'ServerIP': '127.0.0.1',
-//         'ServerName': 'default'
-//     }
-// }
-// //helper.setXmlValues(jsonValues);
-// //console.log(helper.getXMLValue('default-port'))document
-// console.log(helper.getServerNameValue());
-// //helper.removeChannelNodeById(1);
