@@ -7,7 +7,7 @@
     "test": "istanbul cover --include-all-sources -x '*/spec/' jasmine",
     "start": "node ./server/server.js",
     "//": "nodemon ./server/server.js",
-    "stopping": "pkill node"
+    "stop": "pkill node"
   },
   "repository": {
     "type": "git",
