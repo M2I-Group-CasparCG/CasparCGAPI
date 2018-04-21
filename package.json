@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "istanbul cover --include-all-sources -x '*/spec/' jasmine",
-    "start": "node ./server/server.js",
-    "//": "nodemon ./server/server.js",
+    "run_prod": "node ./server/server.js",
+    "run_dev": "nodemon ./server/server.js",
     "stop": "pkill node"
   },
   "repository": {
