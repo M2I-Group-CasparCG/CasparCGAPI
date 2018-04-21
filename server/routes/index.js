@@ -56,20 +56,23 @@ let udpServer = dgram.createSocket('udp4');
      *  Caspar Settings
      */
     router.get('/api/v1/caspars/', caspar.getAll);
-    router.post('/api/v1/caspars/connect/', caspar.connect);
+    router.post('/api/v1/caspars/connect/', caspar.add);
     router.all('/api/v1/caspars/:casparId/*', caspar.check);
     router.get('/api/v1/caspars/:casparId/', caspar.get);
-    // router.put('/api/v1/casparcg/:casparId/', caspar.edit);
+    router.put('/api/v1/caspars/:casparId/', caspar.edit);
     router.post('/api/v1/caspars/:casparId/ini/', caspar.ini);
     router.delete('/api/v1/caspars/:casparId/', caspar.delete);
+
+    router.put('/api/v1/caspars/:casparId/:objectType/:objectId/', caspar.editObject);
+    router.get('/api/v1/caspars/:casparId/:objectType/:objectId/', caspar.getObject);
+    router.get('/api/v1/caspars/:casparId/:objectType/', caspar.getAllObjects);
+
 
     /**
      * Consumers
      */
-    router.get('/api/v1/caspars/:casparId/consumers/', caspar.consumerGetAll)
-    router.post('/api/v1/caspars/:casparId/consumers/screen', caspar.consumerAdd);
-    router.all('/api/v1/caspars/:casparId/consumers:consumerId/*', caspar.consumerCheck);
-    // router.put('/api/v1/casparcg/:casparId/producer/:producerId/', caspar.consumerEdit);
+    router.post('/api/v1/caspars/:casparId/consumers/:consumerType', caspar.consumerAdd);
+    router.all('/api/v1/caspars/:casparId/consumers/:consumerId/*', caspar.consumerCheck);
     router.post('/api/v1/caspars/:casparId/consumers/:consumerId/start', caspar.consumerStart);
     router.post('/api/v1/caspars/:casparId/consumers/:consumerId/stop', caspar.consumerStop);
     router.delete('/api/v1/caspars/:casparId/consumers/:consumerId/', caspar.consumerDelete);
@@ -77,10 +80,8 @@ let udpServer = dgram.createSocket('udp4');
     /**
      * Producers
      */
-    router.get('/api/v1/caspars/:casparId/producers/', caspar.producerGetAll)
     router.post('/api/v1/caspars/:casparId/producers/:type', caspar.producerAdd);
-    router.all('/api/v1/caspars/:casparId/producers:producerId/*', caspar.producerCheck);
-    // router.put('/api/v1/casparcg/:casparId/producer/:producerId/', caspar.producerEdit);
+    router.all('/api/v1/caspars/:casparId/producers/:producerId/*', caspar.producerCheck);
     router.post('/api/v1/caspars/:casparId/producers/:producerId/start', caspar.producerStart);
     router.post('/api/v1/caspars/:casparId/producers/:producerId/stop', caspar.producerStop);
     router.delete('/api/v1/caspars/:casparId/producers/:producerId/', caspar.producerDelete);
@@ -88,13 +89,14 @@ let udpServer = dgram.createSocket('udp4');
     /**
      * Channels
      */
-    router.get('/api/v1/caspars/:casparId/channels/', caspar.channelGetAll)
     // router.post('/api/v1/caspars/:casparId/channels/', caspar.channelAdd)
     router.all('/api/v1/caspars/:casparId/channels:channelId/*', caspar.channelCheck);
     router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', caspar.channelGetAudioLevels);
-    // router.put('/api/v1/casparcg/:casparId/channel/:channelId/', caspar.channelEdit);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
     // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);
+
+
+  
 
     /**
      * XMLHandler

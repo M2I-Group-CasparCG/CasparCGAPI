@@ -26,6 +26,11 @@ class CasparProducer {
     setCasparCommon(casparCommon){
         this.casparCommon = casparCommon;
     }
+
+    getName() { return this.name; }
+    setName(name) { this.name = name; }
+
+    tcpPromise(msg){ return this.casparCommon.tcpPromise(msg); }
 }
 
 module.exports = CasparProducer;

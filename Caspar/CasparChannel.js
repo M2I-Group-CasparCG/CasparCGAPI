@@ -43,40 +43,48 @@ class CasparChannel {
 
     }
 
-    getName(){
-        return this.name;
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            case 'videoMode' : {
+                this.setVideoMode(value);
+                response[setting] = this.getVideoMode();
+            }
+            break;
+            default : {
+                response['error'] = 'Setting not found : '+setting;
+            }
+        }
+        console.log(response);
+        return response;
     }
 
-    getConsumersNb(){
-        return this.consumersNb;
-    }
+    getName(){ return this.name; }
+    setName(name){ this.name = name; }
 
-    getId(){
-        return this.id;
-    }
+    getVideoMode(){ return this.videoMode; }
+    setVideoMode(videoMode){ this.videoMode = videoMode; }
 
-    getBackgroudLayer(){
-        return this.backgroundLayer;
-    }
 
-    tcpSend(msg, callback){
-        this.casparCommon.tcpSend(msg, callback);
-    }
-    setCasparCommon(casparCommon){
-        this.casparCommon = casparCommon;
-    }
-    getCasparCommon(){
-        return this.casparCommon;
-    }
-    setVideoMode(videoMode){
-        this.videoMode = videoMode;
-    }
-    setAudioLevel(channelNb, level){
-        this.audioLevels.set(channelNb, level);
-    }
-    getAudioLevels(){
-        return this.audioLevels;
-    }
+    getConsumersNb(){ return this.consumersNb; }
+
+    getId(){ return this.id; }
+
+    getBackgroudLayer(){ return this.backgroundLayer; }
+
+    tcpSend(msg, callback){ this.casparCommon.tcpSend(msg, callback); }
+
+    setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
+    getCasparCommon(){ return this.casparCommon; }
+
+    
+
+    setAudioLevel(channelNb, level){ this.audioLevels.set(channelNb, level); }
+    getAudioLevels(){ return this.audioLevels; }
 }
 
 module.exports = CasparChannel;

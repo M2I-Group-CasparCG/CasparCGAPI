@@ -260,7 +260,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"ipAddr\":\"127.0.0.1\",\n\t\"name\":\"Caspar_Modifié\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
@@ -430,6 +430,61 @@
 								"{{casparId}}",
 								"producers",
 								"net"
+							]
+						},
+						"description": "Add a Stream producer to CasparCG Server"
+					},
+					"response": []
+				},
+				{
+					"name": "producerDecklinkAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6f0bddbb-39da-44fa-8e76-0c0af2d88e3e",
+								"type": "text/javascript",
+								"exec": [
+									"let producer = JSON.parse(responseBody)",
+									"pm.globals.set(\"producerId\", producer['id']);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"DECKLINK 1\",\n\t\"decklinkId\" : 2\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/decklink",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"producers",
+								"decklink"
 							]
 						},
 						"description": "Add a Stream producer to CasparCG Server"
@@ -621,7 +676,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"name\":\"FILE_modifié\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
@@ -722,7 +777,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"videoMode\": null\n}"
+							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"bufferDepth\": null,\n\t\"displayName\":\"Consumer 1 !\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/screen",
@@ -736,6 +791,61 @@
 								"{{casparId}}",
 								"consumers",
 								"screen"
+							]
+						},
+						"description": "Adding a screen consumer to casparCG"
+					},
+					"response": []
+				},
+				{
+					"name": "consumerDecklinkAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fe6ed87e-9dfd-4f22-8b4f-35e8158ecd04",
+								"type": "text/javascript",
+								"exec": [
+									"let consumer = JSON.parse(responseBody)",
+									"pm.globals.set(\"consumerId\", consumer['id']);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"bufferDepth\": null,\n\t\"decklinkId\":4,\n\t\"latency\":null\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/decklink",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"consumers",
+								"decklink"
 							]
 						},
 						"description": "Adding a screen consumer to casparCG"
@@ -934,7 +1044,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"name\":\"Screen Edited\",\n\t\"displayName\":\"Edited\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
@@ -1260,7 +1370,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"videoMode\": null\n}"
+							"raw": "{\n\t\"name\":\"Edited Channel\"\n\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/channels/{{channelId}}",
@@ -1541,7 +1651,7 @@
 					"response": []
 				},
 				{
-					"name": "producerStreamAdd",
+					"name": "producerFileAdd 2",
 					"event": [
 						{
 							"listen": "test",
@@ -1575,10 +1685,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"STREAM 3\",\n\t\"url\":\"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov\"\n}"
+							"raw": "{\n\t\"name\":\"FILE 2\",\n\t\"fileName\":\"GO1080P25\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/net",
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/file",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -1588,7 +1698,7 @@
 								"caspars",
 								"{{casparId}}",
 								"producers",
-								"net"
+								"file"
 							]
 						},
 						"description": "Add a Stream producer to CasparCG Server"
@@ -1673,10 +1783,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"videoMode\": null\n}"
+							"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"bufferDepth\": null,\n\t\"decklinkId\":4,\n\t\"latency\":null\n}"
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/screen",
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/decklink",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -1686,7 +1796,7 @@
 								"caspars",
 								"{{casparId}}",
 								"consumers",
-								"screen"
+								"decklink"
 							]
 						},
 						"description": "Adding a screen consumer to casparCG"

@@ -49,8 +49,6 @@ class Caspar {
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
-        this.xmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config'); // Création de l'objet qui gère le fichier de config
-        // this.casparCommon = new CasparCommon(this.XmlHandler.getSettingsArray());     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
         settings['id'] = this.id;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
 
@@ -103,14 +101,13 @@ class Caspar {
         const casparId = this.id;
         const casparCommon = this.getCasparCommon();
         const caspar = this;
-        const xmlHandler = this.xmlHandler;
+        
 
         // récupération des informations.
         console.log('retrieving informations from the server...');
         await this.getCasparCommon().tcpPromise('VERSION')
                 .then(
                     function(resolveResult){
-                        // console.log(resolveResult);
                         casparCommon.setCasparVersion(resolveResult['data']);
                     },  
                     function(rejectResult){
@@ -120,7 +117,6 @@ class Caspar {
         await this.getCasparCommon().tcpPromise('INFO')
                 .then(
                     function(resolveResult){
-                        // console.log(resolveResult);
                         casparCommon.setChannelsNb(resolveResult['dataLines']);
                         resolveResult['data'].forEach(element => {
                             element = element.split(' ');
@@ -132,63 +128,49 @@ class Caspar {
                             let channel = new Channel(settings);
                             caspar.addChannel(channel);
                         });
-
+                        
                     },  
                     function(rejectResult){
                         console.log(rejectResult);
+                        
                     }
                 )
         await this.getCasparCommon().tcpPromise('INFO CONFIG')
             .then(
                 function(resolveResult){
-                    console.log(resolveResult);
-                    /**
-                     * Récupération des infos suivant du XML : 
-                     * media-path
-                     * log-path
-                     * data-path
-                     * template-path
-                     * thumbnails-path
-                     * tcp -> port
-                     * osc -> predefined-clients -> predefined-client -> address
-                     * osc -> predefined-clients -> predefined-client -> port
-                     */
-                    // console.log(xmlHandler.getOSCPortValue(resolveResult));
-                    // // getOSCPortValue
-                    // // getACMPPortValue
-                    // // getThumbnailsPathValue
-                    // // getTemplatePathValue
-                    // // getLogPathValue
-                    // // getMediaPathValue
-                    // // getXMLValue
+                    const xmlHandler = new XMLHelper(resolveResult['data']);
+                        casparCommon.setOscDefaultPort(parseInt(xmlHandler.getOSCPortValue()))
                 },  
                 function(rejectResult){
                     console.log(rejectResult);
                 }
             )
+            .catch(function(error){
+                console.log(error);
+            });
     
         await this.getCasparCommon().tcpPromise('INFO PATHS')
             .then(
                 function(resolveResult){
-                    console.log(resolveResult);
-                    /**
-                     * Récupération de l'élément initial-path
-                     */
-                    // fs.writeFile('casparcg'+casparId+'_paths.xml', resolveResult['data'], (err) => {
-                    //     if(err){
-                    //         console.log(err);
-                    //     }
-                    // });
+                    const xmlHandler = new XMLHelper(resolveResult['data']);
+                    casparCommon.setCasparPath(xmlHandler.getXMLValue('initial-path'));
+                    casparCommon.setThumbnailsPath(xmlHandler.getXMLValue('thumbnail-path'));
+                    casparCommon.setTemplatePath(xmlHandler.getTemplatePathValue());
+                    casparCommon.setLogPath(xmlHandler.getLogPathValue());
+                    casparCommon.setMediaPath(xmlHandler.getMediaPathValue());
                 },  
                 function(rejectResult){
                     console.log(rejectResult);
                 }
             )
+            .catch(function(error){
+                console.log(error);
+            });
 
             await this.getCasparCommon().tcpPromise('INFO SYSTEM')
             .then(
                 function(resolveResult){
-                    console.log(resolveResult);
+                    console.log(resolveResult['data']);
                     /**
                      * Récupération des élements
                      * name
@@ -211,6 +193,33 @@ class Caspar {
      * Nécessité un redémarrage de l'application casparCG pour pouvoir être appliquée
      * @param {Channel} channel Paramètres du channel à ajouter
      */
+
+    /**
+     * Permet d'éditer plusieurs paramètres de Caspar
+     * 
+     */
+    edit(settings){
+        let result = new Object();
+        for (let setting in settings){
+            let response =  this.getCasparCommon().edit(setting, settings[setting]);
+            for (let key in response){
+                result[key] = response[key];
+            }
+        }
+        return result;
+    }
+
+    editObject(settings, object){
+        let result = new Object();
+        for (let setting in settings){
+            let response =  object.edit(setting, settings[setting]);
+            for (let key in response){
+                result[key] = response[key];
+            }
+        }
+        return result;
+    }
+
     addChannel (channel) {
         if (channel instanceof Channel){
             channel.setCasparCommon(this.casparCommon);

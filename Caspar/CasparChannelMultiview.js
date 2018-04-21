@@ -31,11 +31,13 @@ class CasparChannelMultiview extends CasparChannel{
         var posX = 0;
         var posY = 0.58;
         var count = 0;
+        var producerCount = 0;
         for(var key of this.producers.keys()){
+            producerCount++;
             var producer = this.producers.get(key);
-            var req = `MIXER ${this.id}-${producer.getId()} FILL ${scale*count} ${posY} ${scale} ${scale}`;
+            var req = `MIXER ${this.id}-${producerCount} FILL ${scale*count} ${posY} ${scale} ${scale}`;
             this.tcpSend(req, function(){});
-            var req = `MIXER ${this.id}-${producer.getId()} VOLUME 0`;
+            var req = `MIXER ${this.id}-${producerCount} VOLUME 0`;
             this.tcpSend(req, function(){});
             count++;
         }

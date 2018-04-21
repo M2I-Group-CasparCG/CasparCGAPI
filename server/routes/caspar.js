@@ -13,6 +13,7 @@ const Consumer =          require('../../Caspar/Consumers/CasparConsumer.js');
 const ConsumerScreen =    require('../../Caspar/Consumers/CasparConsumerScreen.js');
 const ConsumerFile =      require('../../Caspar/Consumers/CasparConsumerFile.js');
 const ConsumerNet =       require('../../Caspar/Consumers/CasparConsumerNet.js');
+const ConsumerDecklink =  require('../../Caspar/Consumers/CasparConsumerDecklink.js');
 
 let count = 0;
 let caspars = new Map();
@@ -41,9 +42,8 @@ module.exports = function(socket) {
      * @param {*} req 
      * @param {*} res 
      */
-    caspar.connect = function(req, res){
+    caspar.add = function(req, res){
         let casparSettings = req.body;
-
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             caspar.getInfo()
@@ -51,8 +51,6 @@ module.exports = function(socket) {
                     res.json(caspar);
                 })
                 .catch(error => {
-                    console.log('error');
-                    console.log(error);
                     res.json(error);
                 });
           
@@ -136,39 +134,151 @@ module.exports = function(socket) {
            
         
     },
+
+    caspar.edit = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        let casparSettings = req.body;
+            console.log(casparSettings);
+        let caspar = caspars.get(parseInt(casparId));
+            res.send(caspar.edit(casparSettings))
+    },
+
+    caspar.editObject = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        const objectId = parseInt(req.params.objectId);
+        const objectType = req.params.objectType;
+        const settings = req.body;
+        let object = null;
+        console.log(objectType);
+        switch (objectType){
+            case 'consumers' :{
+                let consumer = caspar.getConsumer(objectId);
+                if (consumer instanceof Consumer ){
+                    object = consumer;
+                }
+            }break;
+            case 'producers' :{
+                console.log('producer');
+                let producer = caspar.getProducer(objectId);
+                if (producer instanceof Producer ){
+                    object = producer;
+                }
+            }break;
+            case 'channels' :{
+                let channel = caspar.getChannel(objectId);
+                if (channel instanceof Channel ){
+                    object = channel;
+                }
+            }break;
+        }
+
+        if (object){
+            let result = caspar.editObject(settings, object);
+            res.send(result);
+        }else{
+            res.sendStatus(404);
+        }
+    },
+
+    caspar.getObject = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        const objectId = parseInt(req.params.objectId);
+        const objectType = req.params.objectType;
+        let object = null;
+        console.log(objectType);
+        switch (objectType){
+            case 'consumers' :{
+                let consumer = caspar.getConsumer(objectId);
+                if (consumer instanceof Consumer ){
+                    object = consumer;
+                }
+            }break;
+            case 'producers' :{
+                console.log('producer');
+                let producer = caspar.getProducer(objectId);
+                if (producer instanceof Producer ){
+                    object = producer;
+                }
+            }break;
+            case 'channels' :{
+                let channel = caspar.getChannel(objectId);
+                if (channel instanceof Channel ){
+                    object = channel;
+                }
+            }break;
+        }
+
+        if (object){
+            res.json(object);
+        }else{
+            res.sendStatus(404);
+        }
+    },
     
+    caspar.getAllObjects = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        const objectType = req.params.objectType;
+        switch (objectType){
+            case 'consumers' :{
+                res.json([...caspar.getConsumers()]);
+            }break;
+            case 'producers' :{
+                res.json([...caspar.getProducers()]);
+            }break;
+            case 'channels' :{
+                res.json([...caspar.getChannels()]);
+            }break;
+            default : {
+                res.sendStatus(404);
+            }
+        }
+    },
+
     caspar.delete = function(req, res){
         const casparId = parseInt(req.params.casparId);
         caspars.delete(casparId);
         res.sendStatus('202');
     }
+
     /**
      * Consumers
      * 
      */
-    caspar.consumerGetAll = function(req,res,next){
-        console.log('consumerGetAll');
-        const casparId = parseInt(req.params.casparId);
-        let caspar = caspars.get(parseInt(casparId));
-        let array =  [...caspar.getConsumers()];
-        res.json(array);
-    },
 
     caspar.consumerAdd = function(req,res,next){
         console.log('addConsumer');
-        let consumerSettings = req.body;
-        let consumer = new ConsumerScreen(consumerSettings);
-        consumers.set(consumer.getId(), consumer);
         const casparId = req.params.casparId;
+        const consumerType = req.params.consumerType;
+        let consumerSettings = req.body;
+        let consumer = null;
+
+        console.log(consumerType);
+
+        switch(consumerType){
+            case 'screen' : {
+                consumer = new ConsumerScreen(consumerSettings);
+            }
+            break;
+            case 'decklink' : {
+                consumer = new ConsumerDecklink(consumerSettings);
+            }
+            break;
+        }
+        console.log(consumer);
+        consumers.set(consumer.getId(), consumer);
+       
         let caspar = caspars.get(parseInt(casparId));
             caspar.addConsumer(consumer);
         res.json(consumer);
     },
 
     caspar.consumerCheck = function(req,res,next){
-        console.log('check');
-        const consumerId = req.params.consumerId;
-        let consumer = caspars.get(parseInt(casparId)).getCasparCommon().getConsumer(parseInt(consumerId));
+        const casparId = parseInt(req.params.casparId);
+        const consumerId = parseInt(req.params.consumerId);
+        let consumer = caspars.get(casparId).getConsumer(consumerId);
         if(consumer instanceof Consumer){
             next();
         }else{
@@ -180,25 +290,30 @@ module.exports = function(socket) {
         console.log('startConsumer');
 
         const casparId = parseInt(req.params.casparId);
-        const consumerId = parseInt(req.params.consumerId);
+        const consumerId = parseInt(req.params.consumerId);    
+
 
         let consumer = caspars.get(casparId).getConsumer(consumerId);
-            if (consumer instanceof Consumer){
+            
                 if (caspars.get(casparId).getChannel(consumer.getChannelId()) instanceof Channel){
-                    consumer.run();
-                    res.json(consumer);
+                    consumer.run()
+                        .then(
+                                function(msg){
+                                res.sendStatus(202);
+                            },
+                            function(msg){
+                                res.json(caspar.errorMessage(msg));
+                            }
+                        ).catch(function(error){
+                          console.log(error);
+                          });           
                 }else{
                     let error = new Error();
                         error.code = 404;
                         error.message = "consumer not assigned to an existing channel";
                         res.send(error);
                 }        
-            }else{
-                let error = new Error();
-                    error.code = 404;
-                    error.message = "consumer not assigned to an existing channel";
-                    res.send(error);
-            }
+
            
     },
 
@@ -225,13 +340,6 @@ module.exports = function(socket) {
      * Producers
      * 
      */
-    caspar.producerGetAll = function(req, res){
-        console.log('producerGetAll');
-        const casparId = parseInt(req.params.casparId);
-        let caspar = caspars.get(parseInt(casparId));
-        let array =  [...caspar.getProducers()];
-        res.json(array);
-    },
     
     caspar.producerAdd = function(req, res){
         console.log('producerAdd');
@@ -273,16 +381,20 @@ module.exports = function(socket) {
             res.json(error);
         }
     },
-    caspar. producerCheck = function(req,res,next){
-        console.log('check');
-        const producerId = req.params.producerId;
-        let producer = caspars.get(parseInt(casparId)).getCasparCommon().getProducer(parseInt(producerId));
+
+    caspar.producerCheck = function(req,res,next){
+        console.log('producerCheck');
+        const casparId = parseInt(req.params.casparId);
+        const producerId = parseInt(req.params.producerId);
+        let producer = caspars.get(casparId).getProducer(producerId);
         if(producer instanceof Producer){
             next();
+            console.log('producerCheck ok')
         }else{
             res.sendStatus('404');
         }
     },
+
     caspar.producerStart = function(req,res,next){
         console.log('startConsumer');
 
@@ -323,40 +435,47 @@ module.exports = function(socket) {
     caspar.producerDelete = function(req,res){
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
-        caspars.get(casparId).getProducer(producerId).stop()
-            .then(
-                function(msg){
-                    caspars.get(casparId).removeProducer(producerId);
-                    producers.delete(producerId);
-                    res.send('deleted');
-                    if(socket){
-                        socket.emit('producerRemoved',JSON.stringify(producerId));
-                        // socket.broadcast('producerRemoved',JSON.stringify(producerId));
-                    }
-                },
-                function(msg){
-                    res.json(caspar.errorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        const producer = caspars.get(casparId).getProducer(producerId);
+        if (producer instanceof Producer){
+            producer.stop()
+                .then(
+                    function(msg){
+                        caspars.get(casparId).removeProducer(producerId);
+                        producers.delete(producerId);
+                        res.json(producer);
+                        if(socket){
+                            socket.emit('producerRemoved',JSON.stringify(producerId));
+                            // socket.broadcast('producerRemoved',JSON.stringify(producerId));
+                        }
+                    },
+                    function(msg){
+                        res.json(caspar.errorMessage(msg));
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+        }else{
+            let error = new Error();
+            error.code = 404;
+            error.message = 'producer not found';
+            res.send(error);
+        }
     },
 
      /**
      * Channels
      * 
      */
-    caspar.channelGetAll = function(req, res){
-        console.log('consumerGetAll');
-        const casparId = parseInt(req.params.casparId);
-        let caspar = caspars.get(parseInt(casparId));
-        let array =  [...caspar.getChannels()];
-        res.json(array);
-    },
-
     caspar.channelCheck = function(req,res,next){
-        const channelId = parseInt(req.params.channelId);
         console.log('channelCheck');
-        next();
+        const casparId = parseInt(req.params.casparId);
+        const channelId = parseInt(req.params.channelId);
+        let channel = caspars.get(casparId).getProducer(channelId);
+        if(channel instanceof Channel){
+            next();
+            console.log('channelCheck ok')
+        }else{
+            res.sendStatus('404');
+        }
     },
     caspar.channelGetAudioLevels = function(req,res,next){
         console.log('channelGetAudioLevels');

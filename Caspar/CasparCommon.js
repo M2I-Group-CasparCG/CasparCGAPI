@@ -31,20 +31,21 @@ class CasparCommon {
         this.id = settings['id'] || new Int();
         this.ipAddr = settings['ipAddr'] || '127.0.0.1';
         this.amcpPort = settings['amcpPort'] || 5250;
-        this.oscDefaultPort = settings['oscDefaultPort'] || 6250;
+        this.oscDefaultPort = settings['oscDefaultPort'] || null;
         this.oscPredefinedClient = settings['oscPredefinedClient'] || new Array();
         this.logLevel = settings['logLevel'] || null;
         this.mediaPath = settings['mediaPath'] || null;
         this.logPath = settings['logPath'] || null;
         this.templatePath = settings['templatePath'] || null;
-        this.thumbnailsPath = settings['thumbnailsPaths'] || null;
+        this.thumbnailsPath = settings['thumbnailsPath'] || null;
         this.pgmId = null;
         this.pvwId = null;
         this.mvId = null;
         this.online = false;
         this.socket = settings['socket'] || null;
-        this.XmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config');
+        this.xmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config');
         this.casparVersion = null;
+        this.casparPath = null;
         this.channelsNb = 0;
 
     }
@@ -238,55 +239,123 @@ class CasparCommon {
 
     }
 
-
-    
-
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            break;
+            case 'ipAddr' : {
+                this.setIpAddr(value);
+                response[setting] = this.getIpAddr();
+            }
+            break;
+            case 'oscDefaultPort' : {
+                this.setOscDefaultPort(value);
+                response[setting] = this.getOscDefaultPort();
+            }
+            break;
+            case 'oscPredefinedClient' : {
+                this.oscPredefinedClient(value['address'], value['port']);
+                response[setting] = this.oscPredefinedClient();
+            }
+            break;
+            case 'logLevel' : {
+                this.setLogLevel(value);
+                response[setting] = this.getLogLevel();
+            }
+            break;
+            case 'logPath' : {  
+                this.setLogPath(value);
+                response[setting] = this.getLogPat();
+            }
+            break;
+            case 'mediaPath' : {
+                this.setMediaPath(value);
+                response[setting] = this.getMediaPath();
+            }
+            break;
+            case 'templatePath' : { 
+                this.setTemplatePath(value);
+                response[setting] = this.getTemplatePath();
+            }
+            break;
+            case 'thumbnailsPath' : {
+                this.setThumbnailsPath(value);
+                response[setting] = this.getThumbnailsPath();
+            }
+            break;
+            default : {
+                response['error'] = 'Setting not found : '+setting;
+            }
+        }
+        console.log(response);
+        return response;
+    }
     /**
      *  SETTERS / GETTERS
      */
 
-    setPgmId(id){
-        this.pgmId = id;
+    setPgmId(id){  this.pgmId = id; }
+    getPgmId() { return this.pgmId; }
+
+    setPvwId(id) { this.pvwId = id; }
+    getPvwId() { return this.pvwId; }
+
+    setMvId(id){ this.mvId = id; }
+    getMvId(){ return this.mvId; }
+
+    getOnline (){ return this.online; }
+    setOnline (online){ this.online = online; }
+
+    getIpAddr(){ return this.ipAddr; }
+    setIpAddr(ipAddr){ this.ipAddr = ipAddr; }
+
+    setCasparVersion(version){ this.casparVersion = version; }
+
+    getChannelsNb(){ return this.channelsNb; }
+    setChannelsNb(channelsNb){ this.channelsNb = channelsNb; }
+
+    getName() { return this.name; }
+    setName(name) { this.name = name; }
+
+    getAmcpPort() { return this.amcpPort; }
+    setAmcpPort(amcpPort) { this.amcpPort = amcpPort; }
+
+    getOscDefaultPort() { return this.oscDefaultPort; }
+    setOscDefaultPort(oscDefaultPort) { this.oscDefaultPort = oscDefaultPort; }
+
+    getOscPredefinedClient() { return this.oscPredefinedClient; }
+    setOscPredefinedClient(ipAddr, oscPort){
+        let predefinedClient = new Array();
+            predefinedClient['address'] = ipAddr;
+            predefinedClient['port'] = oscPort;
+        this.oscPredefinedClient = predefinedClient;
     }
-    getPgmId(){
-        return this.pgmId;
-    }
-    setPvwId(id){
-        this.pvwId = id;
-    }
-    getPvwId(){
-        return this.pvwId;
-    }
-    setMvId(id){
-        this.mvId = id;
-    }
-    getMvId(){
-        return this.mvId;
-    }
-    getOnline (){
-        return this.online;
-    }
-    setOnline (online){
-        this.online = online;
-    }
-    setIpAddr(ipAddr){
-        this.ipAddr = ipAddr;
-    }
-    setCasparVersion(version){
-        this.casparVersion = version;
-    }
-    setChannelsNb(channelsNb){
-        this.channelsNb = channelsNb;
-    }
-    getChannelsNb(){
-        return this.channelsNb;
-    }
-    getIpAddr(){
-        return this.ipAddr;
-    }
-    getId(){
-        return this.id;
-    }
+
+    getLogLevel() { return this.logLevel; }
+    setLogLevel(logLevel) { this.logLevel = logLevel; }
+
+    getLogPath() { return this.logPath; }
+    setLogPath(logPath) { this.logPath = logPath; }
+
+    getMediaPath() { return this.mediaPath; }
+    setMediaPath(mediaPath) { this.mediaPath = mediaPath; }
+
+    getTemplatePath() { return this.templatePath; }
+    setTemplatePath(templatePath) { this.templatePath = templatePath; }
+
+    getThumbnailsPath() { return this.templatePath; }
+    setThumbnailsPath(thumbnailsPath) { this.thumbnailsPath = thumbnailsPath; }
+
+    getCasparPath() { return this.casparPath; }
+    setCasparPath(casparPath) { this.casparPath = casparPath; }
+
+    getId(){ return this.id; }
+
+    getXmlHandler(){ return this.xmlHandler; }
 }
 
 module.exports = CasparCommon;

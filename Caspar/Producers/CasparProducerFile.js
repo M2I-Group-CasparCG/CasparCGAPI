@@ -19,26 +19,53 @@ class CasparProducerFILE extends CasparProducer{
 
     run() {
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.getFileName()} ${this.getPlayMode()}`;
+        console.log(req);
         return this.tcpPromise(req);
     }
 
     stop(){
+       
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
+        console.log(req);
         return this.tcpPromise(req);
     }
 
-    getId(){
-        return this.id;
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            case 'fileName' : {
+                this.setFileName(value);
+                response[setting] = this.getFileName();
+            }
+            break;
+            case 'playMode' : {
+                this.setPlayMode(value);
+                response[setting] = this.getPlayMode();
+            }
+            break;
+            default : {
+                response['error'] = 'Setting not found : '+setting;
+            }
+        }
+        console.log(response);
+        return response;
     }
-    getFileName(){
-        return this.fileName;
-    }
-    getPlayMode(){
-        return this.playMode;
-    }
-    tcpPromise(msg){
-        return this.casparCommon.tcpPromise(msg);
-    }
+
+
+    getId(){ return this.id; }
+
+    getFileName(){ return this.fileName; }
+    setFileName(fileName) { this.fileName = fileName; }
+
+    getPlayMode(){ return this.playMode; }
+    setPlayMode(playMode){ this.playMode = playMode; }
+
+
+    
 
 }
 
