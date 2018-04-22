@@ -1,5 +1,6 @@
 "use strict";
 var Consumer = require('./Consumers/CasparConsumer');
+var Layer = require('./CasparLayer');
 class CasparChannel {
 
     /**
@@ -21,6 +22,9 @@ class CasparChannel {
         this.selectedInput = 0;
         this.state = settings['state'] || 'unknown';
         this.audioLevels = new Map();
+        this.layers = new Map();
+        this.lastLayerId = 20;          // début des layers à la couche 20. 
+        this.state = new Array();        
     }
 
 
@@ -29,18 +33,52 @@ class CasparChannel {
      * @param {int} producerId producer to switch
      * @param {int} layer layer ID
      */
-    switchLayer (producerId, layer = this.backgroundLayer) {
+    setInput (producerId) {
         var req = `PLAY ${this.id}-${this.backgroundLayer} route://${this.getCasparCommon().getMvId()}-${producerId}`;
         this.selectedInput = producerId;
-        this.tcpSend(req,function(){});
+        return this.tcpPromise(req);
     }
 
-    addLayer () {
+    addLayer(layer) {
 
+        layer.edit('layerId', this.lastLayerId++);
+        this.layers.set(layer.getId(), layer);
+        return layer;
     }
 
-    removeLayer () {
+    removeLayer (layerId){ 
 
+        if (this.layers.get(layerId) instanceof Layer){
+            let layer = this.layers.get(layerId);
+            layer.stop();
+            this.layers.delete(layer.getId());
+            return layer;
+        }
+    }
+
+    getLayer (layerId){
+        if (this.layers.get(layerId) instanceof Layer){
+            return this.layers.get(layerId);
+        }else{
+            return false;
+        }
+    }
+
+    getLayers (){
+        return this.layers;
+    }
+
+    startLayer (layerId){
+        if (this.layers.get(layerId) instanceof Layer){
+            return this.layers.get(layerId).start();
+        }
+        
+    }
+
+    stopLayer (layerId){
+        if (this.layers.get(layerId) instanceof Layer){
+            return this.layers.get(layerId).stop();
+        }
     }
 
     edit(setting, value){
@@ -77,11 +115,10 @@ class CasparChannel {
     getBackgroudLayer(){ return this.backgroundLayer; }
 
     tcpSend(msg, callback){ this.casparCommon.tcpSend(msg, callback); }
+    tcpPromise(msg){return this.casparCommon.tcpPromise(msg);}
 
     setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
-    getCasparCommon(){ return this.casparCommon; }
-
-    
+    getCasparCommon(){ return this.casparCommon; } 
 
     setAudioLevel(channelNb, level){ this.audioLevels.set(channelNb, level); }
     getAudioLevels(){ return this.audioLevels; }

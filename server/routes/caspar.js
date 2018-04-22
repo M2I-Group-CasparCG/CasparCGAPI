@@ -2,6 +2,7 @@
 const Caspar =            require('../../Caspar/Caspar.js');
 const Channel =           require('../../Caspar/CasparChannel');
 const ChannelMultiview =  require('../../Caspar/CasparChannelMultiview.js');
+const Layer =             require('../../Caspar/CasparLayer.js')
 
 const Producer =          require('../../Caspar/Producers/CasparProducer.js');
 const ProducerDdr =       require('../../Caspar/Producers/CasparProducerDdr.js');
@@ -150,7 +151,7 @@ module.exports = function(socket) {
         const objectType = req.params.objectType;
         const settings = req.body;
         let object = null;
-        console.log(objectType);
+
         switch (objectType){
             case 'consumers' :{
                 let consumer = caspar.getConsumer(objectId);
@@ -169,6 +170,12 @@ module.exports = function(socket) {
                 let channel = caspar.getChannel(objectId);
                 if (channel instanceof Channel ){
                     object = channel;
+                }
+            }break;
+            case 'layers' :{
+                let layer = caspar.getLayer(objectId);
+                if (layer instanceof Layer ){
+                    object = layer;
                 }
             }break;
         }
@@ -208,6 +215,12 @@ module.exports = function(socket) {
                     object = channel;
                 }
             }break;
+            case 'layers' :{
+                let layer = caspar.getLayer(objectId);
+                if (layer instanceof Layer ){
+                    object = layer;
+                }
+            }break;
         }
 
         if (object){
@@ -231,10 +244,28 @@ module.exports = function(socket) {
             case 'channels' :{
                 res.json([...caspar.getChannels()]);
             }break;
+            case 'layers' :{
+                res.json([...caspar.getLayers()]);
+            }break;
             default : {
                 res.sendStatus(404);
             }
         }
+    },
+    caspar.restart = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        caspar.restart()
+            .then(
+                 function(msg){
+                        res.sendStatus(202);
+                    },
+                    function(msg){
+                        res.json(caspar.errorMessage(msg));
+                    }
+            ).catch(function(error){
+                console.log(error);
+                });           
     },
 
     caspar.delete = function(req, res){
@@ -486,27 +517,124 @@ module.exports = function(socket) {
         res.json(array);
     
     },
-    caspar.channelSwitch = function(req,res,next){
+    caspar.channelSetInput = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
         const producerId = parseInt(req.params.producerId);
-        if (producers.get(producerId) instanceof Producer){
-            caspars.get(casparId).getChannel(channelId).switchLayer(producerId);
-            res.sendStatus('202');
-            if(socket){
-                socket.emit('inputSwitched',JSON.stringify({"channelId" : channelId, "inputId" : producerId}));
-                // socket.broadcast('producerRemoved',JSON.stringify(producerId));
-            }
-    
+        const channel = caspars.get(casparId).getChannel(channelId);
+
+        if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
+            channel.setInput(producerId)
+                .then(
+                    function(msg){
+                        res.sendStatus(202);
+                    },
+                    function(msg){
+                        res.json(caspar.errorMessage(msg));
+                    }).catch(function(error){
+                        console.log(error);
+                    });
         }else{
             let error = new Error();
             error.code = 404;
             error.message = 'producer not found';
             res.send(error);
         }
-       
         
-    }
+    
+    },
+
+
+    /**
+     * 
+     * LAYERS
+     * 
+     */
+
+
+    caspar.layerAdd = function(req,res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        const settings = req.body; 
+        res.json(caspar.addLayer(settings));
+    },
+
+    caspar.layerCheck = function (req, res, next){
+        console.log('layerCheck');
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        let layer = caspars.get(casparId).getLayer(layerId);
+        if(layer instanceof Layer){
+            next();
+            console.log('layerCheck ok')
+        }else{
+            res.sendStatus('404');
+        }
+    },  
+
+    caspar.layerDelete = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        let result = caspars.get(casparId).removeLayer(layerId)
+        res.json(result);
+
+    },
+
+    caspar.layerSetInput = function(req,res,next){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        const producerId = parseInt(req.params.producerId);
+        let layer = caspars.get(casparId).getLayer(layerId);
+        if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
+            layer.setInput(producerId)
+                .then(
+                    function(msg){
+                        res.sendStatus(202);
+                    },
+                    function(msg){
+                        res.json(caspar.errorMessage(msg));
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+        }else{
+            let error = new Error();
+            error.code = 404;
+            error.message = 'producer not found';
+            res.send(error);
+        }
+    },
+
+    caspar.layerStart = function(req,res,next){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        let layer = caspars.get(casparId).getLayer(layerId);
+        layer.start()
+            .then(
+                function(msg){
+                    res.sendStatus(202);
+                },
+                function(msg){
+                    res.json(caspar.errorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+    },
+
+    caspar.layerStop = function(req,res,next){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        let layer = caspars.get(casparId).getLayer(layerId);
+        layer.stop()
+            .then(
+                function(msg){
+                    res.sendStatus(202);
+                },
+                function(msg){
+                    res.json(caspar.errorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+    },
     
     caspar.setXmlValues = function(req, res){
         const casparId = parseInt(req.params.casparId);

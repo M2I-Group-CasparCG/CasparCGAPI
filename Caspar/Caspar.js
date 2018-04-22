@@ -7,6 +7,7 @@ const fs =              require('fs');
 var CasparCommon =      require('./CasparCommon.js');
 var Channel =           require('./CasparChannel');
 var ChannelMultiview =  require('./CasparChannelMultiview.js');
+var Layer =             require('./CasparLayer');
 
 var Producer =          require('./Producers/CasparProducer.js');
 var ProducerDdr =       require('./Producers/CasparProducerDdr.js');
@@ -48,6 +49,7 @@ class Caspar {
         this.producers = new Map();                         // Map contenant les différents producers disponibles sur le serveur
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
+        this.layers = new Map();
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
         settings['id'] = this.id;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
@@ -353,6 +355,51 @@ class Caspar {
         return this.consumers;
     }
 
+
+    /**
+     * LAYERS
+     */
+
+    addLayer (settings) {
+
+
+        settings['casparCommon'] = this.getCasparCommon();
+        let layer = new Layer(settings);
+        this.layers.set(layer.getId(), layer);
+
+        const channelId = layer.getChannelId();
+
+        return this.getChannel(channelId).addLayer(layer);      // ajout du layer au channel
+     
+    }
+
+    removeLayer (layerId){ 
+
+        let layer = this.layers.get(layerId);
+
+        this.layers.delete(layer.getId());
+        return this.channels.get(layer.getChannelId()).removeLayer(layerId);
+
+
+    }
+
+    getLayer (layerId){
+        if (this.layers.get(layerId) instanceof Layer){
+            return this.layers.get(layerId);
+        }else{
+            return false;
+        }
+    }
+
+    getLayers (){
+        return this.layers;
+    }
+
+    restart () {
+        const req = 'RESTART';
+        return this.tcpPromise(req);
+    }
+
     /**
      * Envoi d'un requête TCP au serveur CasparCG
      * @param {string} msg  
@@ -468,51 +515,24 @@ class Caspar {
      *   Getters / Setters
      */
     
-    getIpAddr () {
-        return this.ipAddr;
-    }
-    setIpAddr (ipAddr) {
-        this.casparCommon.ipAddr = ipAddr;
-    }
-    getName () {
-        return this.name;
-    }
-    setName (name) {
-        this.name = name;
-    }
-    getAmcpPort () {
-        return this.amcpPort;
-    }
-    setAmcpPort (amcPort) {
-        this.amcpPort = amcPort;
-    }
-    getOscPort () {
-        return this.oscPort;
-    }
-    setOscPort (oscPort) {
-        this.oscPort = oscPort;
-    }
-    getLogLevel () {
-        return logLevel;
-    }
-    setLogLevel (logLevel) {
-        this.logLevel = logLevel;
-    }
-    getCasparCommon(){
-        return this.casparCommon;
-    }
-    setCasparCommon(casparCommon){
-        this.casparCommon = casparCommon;
-    }
-    getId(){
-        return this.id;
-    }
-    getUdpServerStarted(){
-        return this.updServerStarted;
-    }
-    setUdpServerStarder(bool){
-        this.updServerStarted = bool;
-    }
+    // getIpAddr () { return this.ipAddr; }
+    // setIpAddr (ipAddr) { this.casparCommon.ipAddr = ipAddr; }
+    // getName () { return this.name; }
+    // setName (name) { this.name = name; }
+    // getAmcpPort () { return this.amcpPort; }
+    // setAmcpPort (amcPort) { this.amcpPort = amcPort; }
+    // getOscPort () { return this.oscPort; }
+    // setOscPort (oscPort) { this.oscPort = oscPort; }
+    // getLogLevel () { return logLevel; }
+    // setLogLevel (logLevel) { this.logLevel = logLevel; }
+
+    getCasparCommon(){ return this.casparCommon; }
+    setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
+    tcpPromise(req){ return this.getCasparCommon().tcpPromise(req); }
+
+    getId(){ return this.id; }
+    // getUdpServerStarted(){ return this.updServerStarted; }
+    // setUdpServerStarder(bool){ this.updServerStarted = bool; }
 
 }
 

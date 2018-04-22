@@ -62,6 +62,7 @@ let udpServer = dgram.createSocket('udp4');
     router.put('/api/v1/caspars/:casparId/', caspar.edit);
     router.post('/api/v1/caspars/:casparId/ini/', caspar.ini);
     router.delete('/api/v1/caspars/:casparId/', caspar.delete);
+    router.post('/api/v1/caspars/:casparId/restart', caspar.restart);
 
     router.put('/api/v1/caspars/:casparId/:objectType/:objectId/', caspar.editObject);
     router.get('/api/v1/caspars/:casparId/:objectType/:objectId/', caspar.getObject);
@@ -92,7 +93,24 @@ let udpServer = dgram.createSocket('udp4');
     // router.post('/api/v1/caspars/:casparId/channels/', caspar.channelAdd)
     router.all('/api/v1/caspars/:casparId/channels:channelId/*', caspar.channelCheck);
     router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', caspar.channelGetAudioLevels);
-    router.post('/api/v1/caspars/:casparId/channels/:channelId/:producerId', caspar.channelSwitch);
+    router.post('/api/v1/caspars/:casparId/channels/:channelId/producers/:producerId', caspar.channelSetInput);
+ 
+
+    /**
+     * Layers
+     */
+    router.post('/api/v1/caspars/:casparId/layers', caspar.layerAdd);
+    router.all('/api/v1/caspars/:casparId/layers/:layerId/*', caspar.layerCheck);
+    router.delete('/api/v1/caspars/:casparId/layers/:layerId', caspar.layerDelete);
+    router.post('/api/v1/caspars/:casparId/layers/:layerId/producers/:producerId', caspar.layerSetInput);
+    router.post('/api/v1/caspars/:casparId/layers/:layerId/start', caspar.layerStart);
+    router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', caspar.layerStop);
+    // router.delete('/api/v1/caspars/:casparId/layers/:layerId', caspar.channelRemoveLayer);
+    // router.post('/api/v1/caspars/:casparId/layers/:layerId/producers/:producerId', caspar.channelLayerSetInput);
+    // router.post('/api/v1/caspars/:casparId/layers/:layerId/start', caspar.channelLayerStart);
+    // router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', caspar.channelLayerStop);
+
+
     // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', caspar.channelDelete);
 
 

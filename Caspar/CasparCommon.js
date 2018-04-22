@@ -101,6 +101,7 @@ class CasparCommon {
         let amcpPort = this.amcpPort;
         let ipAddr = this.ipAddr;
 
+        console.log(msg);
 
         return new Promise(function(resolve,reject){
             let result = new Map();
