@@ -1,38 +1,39 @@
 pipeline {
   agent any
   stages {
-    stage('Install appli') {
-      parallel {
-        stage('Install appli') {
-          steps {
-            sh 'npm install'
-          }
-        }
-        stage('git pull') {
-          steps {
-            sh 'git pull'
-          }
-        }
+    stage('Init appli') {
+      steps {
+        sh 'npm install'
       }
     }
-    stage('Test appli') {
+    stage('Test cover code') {
       steps {
         sh 'npm test'
       }
     }
-    stage('Launch appli') {
+    stage('Test API') {
       parallel {
-        stage('Npm stop') {
+        stage('slepp 1min30') {
           steps {
-            sleep(time: 40, unit: 'SECONDS')
-            sh 'npm stop'
+            sleep(unit: 'SECONDS', time: 90)
           }
         }
-        stage('Start appli') {
+        stage('run dev') {
           steps {
-            sh 'npm start run'
+            sh 'npm run run_dev'
           }
         }
+        stage('sleep 10sec & newman run') {
+          steps {
+            sleep 10
+            sh 'newman run utilities/API/CasparCG\\ api.postman_collection.json'
+          }
+        }
+      }
+    }
+    stage('Stop node') {
+      steps {
+        sh 'pkill node'
       }
     }
   }
