@@ -46,6 +46,7 @@ class Caspar {
 
     constructor (settings) {
         Caspar.totalInstances = (Caspar.totalInstances || 0) + 1;
+        this.object = 'Caspar';
         this.producers = new Map();                         // Map contenant les différents producers disponibles sur le serveur
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
@@ -60,6 +61,7 @@ class Caspar {
     /** 
      * initialise le serveur
      * Instanciation des channels PGM PVW et MULTIVIEW
+     * Si des producers, channels ou consumer sont déjà configurés, les applique.
     */
     async ini(){     
     
@@ -70,7 +72,6 @@ class Caspar {
             let mv = new ChannelMultiview(mvSettings,this.producers)
             this.addChannel(mv);
             this.casparCommon.setMvId(mv.getId());
-            // mv.ini();
         }else{
             let mv = this.channels.get(this.getCasparCommon().getMvId());
             mv.ini();
@@ -94,6 +95,8 @@ class Caspar {
             this.addChannel(pvw);
             this.casparCommon.setPvwId(pvw.getId());
         }
+
+        
     }
 
     /**
@@ -103,7 +106,6 @@ class Caspar {
         const casparId = this.id;
         const casparCommon = this.getCasparCommon();
         const caspar = this;
-        
 
         // récupération des informations.
         console.log('retrieving informations from the server...');
@@ -205,9 +207,11 @@ class Caspar {
         for (let setting in settings){
             let response =  this.getCasparCommon().edit(setting, settings[setting]);
             for (let key in response){
+                console.log(response);
                 result[key] = response[key];
             }
         }
+        console.log(result);
         return result;
     }
 
@@ -274,7 +278,9 @@ class Caspar {
         if (producer instanceof Producer){
             producer.setCasparCommon(this.casparCommon);
             this.producers.set(producer.getId(), producer);
-            this.channels.get(this.getCasparCommon().getMvId()).ini();
+            if (this.getCasparCommon().getMvId()){
+                this.channels.get(this.getCasparCommon().getMvId()).ini();
+            }
             return true;
         }else{
             return false;

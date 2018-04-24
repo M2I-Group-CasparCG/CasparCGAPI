@@ -8,7 +8,8 @@ class CasparProducerNET extends CasparProducer{
         CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
         super(settings);
         this.id = CasparProducer.totalInstances;
-        this.url = settings['url'] || 'rtp://127.0.0.1:5004';        
+        this.name = settings['name'] || 'Stream';
+        this.url = settings['url'] || 'rtp://127.0.0.1:5004';       
         
     }
 
@@ -22,12 +23,35 @@ class CasparProducerNET extends CasparProducer{
         return this.tcpPromise(req);
     }
 
-    getId(){
-        return this.id;
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            case 'url' : {
+                this.setUrl(value);
+                response[setting] = this.getUrl();
+            }
+            break;
+            default : {
+                response['error'] = 'Setting not found : '+setting;
+            }
+        }
+        return response;
     }
-    tcpPromise(msg){
-        return this.casparCommon.tcpPromise(msg);
-    }
+
+    getId(){ return this.id; }
+
+    getName () { return this.name; }
+    setName (name) { this.name = name; }
+
+    getUrl () { return this.url; }
+    setUrl (url) { this.url = url; }
+
+
+
 }
 
 

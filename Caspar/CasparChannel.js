@@ -11,6 +11,7 @@ class CasparChannel {
      */
     constructor(settings){
         CasparChannel.totalInstances = (CasparChannel.totalInstances || 0) + 1;
+        this.object = 'channel'; 
         this.id = settings['id'] || CasparChannel.totalInstances;
         this.name = settings['name'] || 'Channel';
         this.videoMode = settings['videoMode'] || null;

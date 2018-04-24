@@ -49,17 +49,43 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5c05836f-844f-4054-8987-409bbe6eca7a",
+								"id": "5dc09c93-6088-4914-8191-0feb21ece198",
 								"type": "text/javascript",
 								"exec": [
-									"let caspar = JSON.parse(responseBody)",
-									"pm.globals.set(\"casparId\", caspar['id']);",
-									"",
-									"pm.test(\"response should be okay to process\", function () { ",
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
 									"    pm.response.to.not.be.error; ",
-									"    pm.response.to.have.jsonBody(\"\"); ",
-									"    pm.response.to.not.have.jsonBody(\"error\"); ",
-									"});"
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Caspar object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+									"});",
+									"",
+									"",
+									"",
+									"try {",
+									"    let caspar = JSON.parse(responseBody);",
+									"    pm.environment.set(\"casparId\", caspar['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									"",
+									"",
+									"",
+									""
 								]
 							}
 						}
@@ -84,7 +110,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"ipAddr\":\"192.168.1.231\",\n\t\"name\":\"Caspar1\"\n}"
+							"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/connect",
@@ -108,13 +134,27 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c34d685a-e3b8-4b15-93de-9004ad414958",
+								"id": "efea2ae5-abad-4b58-a865-64ca9011146a",
 								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response should be okay to process\", function () { ",
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
 									"    pm.response.to.not.be.error; ",
-									"    pm.response.to.have.jsonBody(\"\"); ",
-									"    pm.response.to.not.have.jsonBody(\"error\"); ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be success\", function(){",
+									"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+									"    pm.expect(pm.response.json().description).to.eql(\"successful restart\");",
 									"});"
 								]
 							}
@@ -161,6 +201,42 @@
 				},
 				{
 					"name": "casparIni",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1c0b5513-854a-48f8-82a9-c2bd750fe4e9",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Caspar object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    // initialisation des trois channels",
+									"    pm.expect(pm.response.json().length).to.eql(3);",
+									"    ",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -207,13 +283,29 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c7541185-96e8-4b59-9c62-2d40685e4cd2",
+								"id": "04ab995b-fd3a-4b22-a0cc-189b721da641",
 								"type": "text/javascript",
 								"exec": [
-									"pm.test(\"response should be okay to process\", function () { ",
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
 									"    pm.response.to.not.be.error; ",
-									"    pm.response.to.have.jsonBody(\"\"); ",
-									"    pm.response.to.not.have.jsonBody(\"error\"); ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Caspar object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
 									"});"
 								]
 							}
@@ -257,6 +349,30 @@
 				},
 				{
 					"name": "casparGetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "868a5779-950f-4d72-aed4-c64bc6e70993",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -297,6 +413,30 @@
 				},
 				{
 					"name": "casparEdit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d454b3a2-0a44-4555-86b1-0c9157de55a2",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -317,7 +457,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"ipAddr\":\"127.0.0.1\",\n\t\"name\":\"Caspar_Modifié\"\n}"
+							"raw": "{\n\t\"ipAddr\":\"127.0.0.1\",\n\t\"zdfihz\":\"eifjze\"\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
@@ -338,6 +478,30 @@
 				},
 				{
 					"name": "casparDelete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "503ae9bd-b1ff-4725-9462-d9877e9ddeaa",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -389,20 +553,43 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "54043d6d-073f-4656-b30d-4bbf0504167b",
+								"id": "94da2ede-609f-4d1c-935d-4e0de7f84588",
 								"type": "text/javascript",
 								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Producer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+									"});",
+									"",
+									"/**",
+									" *  environment variables update.",
+									" */",
 									"try {",
 									"    let producer = JSON.parse(responseBody);",
-									"    if ( prodducer['id'] != null){",
-									"        pm.globals.set(\"producerId\", producer['id']);",
-									"    }",
+									"    pm.environment.set(\"producerId\", producer['id']);",
 									"}catch (error){",
 									"    console.log('malformed JSON');",
 									"}",
 									"",
 									"",
-									""
+									" "
 								]
 							}
 						}
@@ -427,7 +614,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"FILE 1\",\n\t\"fileName\":\"AMB\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
+							"raw": "{\n\t\"name\":\"FILE 1\",\n\t\"fileName\":\"itescia\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/file",
@@ -453,11 +640,42 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6f0bddbb-39da-44fa-8e76-0c0af2d88e3e",
+								"id": "73361fe5-dc2c-43a9-a2d2-ab5da12e1dd4",
 								"type": "text/javascript",
 								"exec": [
-									"let producer = JSON.parse(responseBody)",
-									"pm.globals.set(\"producerId\", producer['id']);"
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Producer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+									"});",
+									"",
+									"/**",
+									" *  environment variables update.",
+									" */",
+									"try {",
+									"    let producer = JSON.parse(responseBody);",
+									"    pm.environment.set(\"producerId\", producer['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									"",
+									""
 								]
 							}
 						}
@@ -508,11 +726,42 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6f0bddbb-39da-44fa-8e76-0c0af2d88e3e",
+								"id": "2730e26c-5a09-4a57-8fa2-fc6a2463933b",
 								"type": "text/javascript",
 								"exec": [
-									"let producer = JSON.parse(responseBody)",
-									"pm.globals.set(\"producerId\", producer['id']);"
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Producer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+									"});",
+									"",
+									"/**",
+									" *  environment variables update.",
+									" */",
+									"try {",
+									"    let producer = JSON.parse(responseBody);",
+									"    pm.environment.set(\"producerId\", producer['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									"",
+									""
 								]
 							}
 						}
@@ -537,7 +786,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"DECKLINK 1\",\n\t\"decklinkId\" : 2\n}"
+							"raw": "{\n\t\"name\":\"DECKLINK 1\",\n\t\"decklinkId\" : 4\n}"
 						},
 						"url": {
 							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/decklink",
@@ -645,6 +894,38 @@
 				},
 				{
 					"name": "producerGet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5a446329-1c93-4493-9bff-86a07104f3b4",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Caspar object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+									"});"
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -685,6 +966,30 @@
 				},
 				{
 					"name": "producerGetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "43ed31c0-c371-4de4-97dc-02b72cccc0c3",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -724,6 +1029,30 @@
 				},
 				{
 					"name": "producerEdit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ddf51b3f-5332-479c-92b6-a884f592010c",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -764,6 +1093,30 @@
 				},
 				{
 					"name": "producerDelete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "31011aab-22dc-43df-83c1-7fea6dd369ea",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									""
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [

@@ -3,6 +3,7 @@
 class CasparProducer {
 
     constructor(settings){
+        this.object='Producer';
         this.name = settings['name'] || 'Producer';
         this.type = "";
         this.id = 0;
@@ -16,11 +17,11 @@ class CasparProducer {
         return this.id;
     }
     start(){
-        console.log('start');
+        console.log('start function not yet developped for '+this.type);
     }
 
-    remove(){
-        console.log('remove');
+    stop(){
+        console.log('stop function not yet developped for '+this.type);
     }
 
     setCasparCommon(casparCommon){

@@ -9,6 +9,8 @@ class CasparConsumerNet extends CasparConsumer {
         this.codec = settings['codec'] || 'libx264';
         this.pictureWidth = settings['pictureWidth'] || '1920';
         this.pictureHeight = settings['pictureHeight'] || '1080';
+
+         // -vcodec libx264 -tune zerolatency -preset ultrafast -crf 25 -format mpegts -vf scale=240:180
     }
 
 }
