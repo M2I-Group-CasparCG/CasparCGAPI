@@ -15,7 +15,7 @@ pipeline {
       parallel {
         stage('npm run') {
           steps {
-            sh 'npm run run_dev'
+            sh 'npm run dev'
           }
         }
         stage('newman tests') {
