@@ -1,29 +1,34 @@
 pipeline {
   agent any
   stages {
-    stage('sonar-scan') {
-      steps {
-        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=/etc/sonar-scanner-3.1.0.1141-linux/casparCGAPI.properties'
-      }
-    }
     stage('npm-install') {
       steps {
         sh 'npm install'
       }
     }
-    stage('npm start') {
+    stage('npm-test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+    stage('Api Tests') {
       parallel {
-        stage('npm start') {
+        stage('npm run') {
           steps {
-            sh 'npm start run'
+            sh 'npm run run_dev'
           }
         }
-        stage('') {
+        stage('newman tests') {
           steps {
-            sleep 20
-            sh 'pkill node'
+            sleep 10
+            sh 'newman run ./utilities/API/CasparCGAPI.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
           }
         }
+      }
+    }
+    stage('Sonar-Scan') {
+      steps {
+        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=sonar-project.properties'
       }
     }
   }
