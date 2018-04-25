@@ -26,21 +26,15 @@ let channels = new Map();
 
 module.exports = function(socket) {
 
-    var casparRoutes = {};
-    var apiReturn = new ApiReturn();
+    var casparRoutes = {};                      
+    var apiReturn = new ApiReturn();            // objet permettant de générer les messages API
+
 
     /**
-     * Message d'erreur envoyé quand 
-     * @param {*} amcpMessage 
+     * _____________________________________________________________________________________________________________________________
+     * 
+     * CASPAR instances manipulation
      */
-    casparRoutes.errorMessage = function(amcpMessage){
-        let error = new Error();
-            error.code = 500;
-            error.type = 'AMCP protocol error';
-            error.description = amcpMessage;
-        return error;
-    },
-
     
     /**
      * Create a new caspar object. Try to connect. 
@@ -56,15 +50,11 @@ module.exports = function(socket) {
                 .catch(error => {
                     res.json(apiReturn.customMessage(500, 'caspar error', 'error while retrieving server informations'));
                 });
-          
     },
 
     /**
      * 
      * Get all caspar objects
-     * @param {*} req 
-     * @param {*} res 
-     * @param {*} next 
      */
     casparRoutes.getAll = function(req, res, next){
         console.log('getAll');
@@ -74,9 +64,6 @@ module.exports = function(socket) {
 
     /**
      * Check the validity of a casparObject. 
-     * @param {*} req 
-     * @param {*} res 
-     * @param {*} next 
      */
     casparRoutes.check = function(req, res, next){
         console.log('check');
@@ -88,11 +75,9 @@ module.exports = function(socket) {
             res.json(apiReturn.notFoundMessage('caspar instance not found'));
         }
     },
+
     /**
-     * Get a caspar by ID
-     * @param {*} req 
-     * @param {*} res 
-     * @param {*} next 
+     * Get a caspar by ID 
      */
     casparRoutes.get = function(req, res, next){
         const casparId = parseInt(req.params.casparId);
@@ -148,9 +133,46 @@ module.exports = function(socket) {
             res.json(apiReturn.successMessage(result));
     },
 
-    casparRoutes.editObject = function (req, res){
+    /**
+     * Restart the caspar server
+     */
+    casparRoutes.restart = function (req, res){
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
+        caspar.restart()
+            .then(
+                 function(msg){
+                        res.json(apiReturn.successMessage('successful restart'))
+                    },
+                    function(msg){
+                        res.json(apiReturn.amcpErrorMessage(msg));
+                    }
+            ).catch(function(error){
+                console.log(error);
+                });           
+    },
+
+    /**
+     * Delete a caspar instance
+     */
+    casparRoutes.delete = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        caspars.delete(casparId);
+        res.json(apiReturn.successMessage('caspar instance deleted'))
+    },
+
+    /**
+     * _____________________________________________________________________________________________________________________________
+     * 
+     * CASPAR sub-objects manipulation
+     */
+
+    /**
+     * Edit caspar sub-object (producer, consumer, channel, layer, etc.)
+     */
+    casparRoutes.editObject = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);   
         const objectId = parseInt(req.params.objectId);
         const objectType = req.params.objectType;
         const settings = req.body;
@@ -196,6 +218,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     * Get a caspar sub-object (producer, consumer, channel, layer, etc.) by id.
+     */
     casparRoutes.getObject = function (req, res){
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
@@ -241,6 +266,9 @@ module.exports = function(socket) {
         }
     },
     
+    /**
+     * Get all the instances of a caspar sub-object (producer, consumer, channel, layer, etc.)
+     */
     casparRoutes.getAllObjects = function (req, res){
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
@@ -259,45 +287,28 @@ module.exports = function(socket) {
                 res.json([...caspar.getLayers()]);
             }break;
             default : {
-                res.sendStatus(404);
+                res.json(apiReturn.requestErrorMessage('unknown object type'));
             }
         }
     },
-    casparRoutes.restart = function (req, res){
-        const casparId = parseInt(req.params.casparId);
-        const caspar = caspars.get(casparId);
-        caspar.restart()
-            .then(
-                 function(msg){
-                        res.json(apiReturn.successMessage('successful restart'))
-                    },
-                    function(msg){
-                        res.json(apiReturn.amcpErrorMessage(msg));
-                    }
-            ).catch(function(error){
-                console.log(error);
-                });           
-    },
 
-    casparRoutes.delete = function(req, res){
-        const casparId = parseInt(req.params.casparId);
-        caspars.delete(casparId);
-        res.json(apiReturn.successMessage('caspar instance deleted'))
-    }
 
     /**
-     * Consumers
+     * _____________________________________________________________________________________________________________________________
      * 
+     * CONSUMERS manipulation
      */
 
+    /**
+     * Create a consumer instance into an capsar instance
+     */
     casparRoutes.consumerAdd = function(req,res,next){
         console.log('addConsumer');
-        const casparId = req.params.casparId;
+
+        const casparId = parseInt(req.params.casparId);
         const consumerType = req.params.consumerType;
         let consumerSettings = req.body;
         let consumer = null;
-
-        console.log(consumerType);
 
         switch(consumerType){
             case 'screen' : {
@@ -309,14 +320,20 @@ module.exports = function(socket) {
             }
             break;
         }
-        console.log(consumer);
-        consumers.set(consumer.getId(), consumer);
-       
-        let caspar = caspars.get(parseInt(casparId));
-            caspar.addConsumer(consumer);
-        res.json(consumer);
+
+        if (consumer instanceof Consumer){
+            consumers.set(consumer.getId(), consumer);
+            caspars.get(casparId).addConsumer(consumer);
+            res.json(consumer);
+        }else{
+            res.json(apiReturn.requestErrorMessage('unknown consumer type : '+consumerType));
+        }
+        
     },
 
+    /**
+     * Check if the requested consumer instance exists.
+     */
     casparRoutes.consumerCheck = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const consumerId = parseInt(req.params.consumerId);
@@ -328,6 +345,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     * Start the play a consumer instance
+     */
     casparRoutes.consumerStart = function(req,res,next){
         console.log('startConsumer');
 
@@ -344,7 +364,7 @@ module.exports = function(socket) {
                                 res.sendStatus(202);
                             },
                             function(msg){
-                                res.json(caspar.errorMessage(msg));
+                                res.json(apiReturn.amcpErrorMessage(msg));
                             }
                         ).catch(function(error){
                           console.log(error);
@@ -359,6 +379,9 @@ module.exports = function(socket) {
            
     },
 
+    /**
+     * Stop the play of a consumer instance
+     */
     casparRoutes.consumerStop = function(req, res, next){
         const casparId = parseInt(req.params.casparId);
         const consumerId = parseInt(req.params.consumerId);
@@ -369,6 +392,10 @@ module.exports = function(socket) {
             res.sendStatus(202);
 
     },
+
+    /**
+     * Stop and delete a consumer instance. 
+     */
     casparRoutes.consumerDelete = function(req, res, next){
         const casparId = parseInt(req.params.casparId);
         const consumerId = parseInt(req.params.consumerId);
@@ -378,14 +405,19 @@ module.exports = function(socket) {
         res.sendStatus('202');
 
     },
+
     /**
-     * Producers
+     * _____________________________________________________________________________________________________________________________
      * 
+     * PRODUCERS manipulation
      */
     
-    casparRoutes.producerAdd = function(req, res){
+    /**
+     * Create a producer instance into an capsar instance
+     */
+    casparRoutes.producerAdd = function(req, res, next){
         console.log('producerAdd');
-        let producerType = req.params.type;
+        let producerType = req.params.producerType;
         let consumerSettings = req.body;
         const casparId = req.params.casparId;
         let caspar = caspars.get(parseInt(casparId));
@@ -423,6 +455,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     * Check if the requested producer instance exists.
+     */
     casparRoutes.producerCheck = function(req,res,next){
         console.log('producerCheck');
         const casparId = parseInt(req.params.casparId);
@@ -436,12 +471,16 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     * Start playing a producer instance
+     */
     casparRoutes.producerStart = function(req,res,next){
         console.log('startConsumer');
 
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
         let producer = caspars.get(casparId).getProducer(producerId);
+
             producer.run()
                 .then(
                     function(msg){
@@ -455,6 +494,9 @@ module.exports = function(socket) {
                 });           
     },
     
+    /**
+     * Stop playing a producer instance. 
+     */
     casparRoutes.producerStop = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
@@ -472,6 +514,10 @@ module.exports = function(socket) {
             });
 
     },
+
+    /**
+     * Delete a producer instance
+     */
     casparRoutes.producerDelete = function(req,res){
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
@@ -498,9 +544,22 @@ module.exports = function(socket) {
         }
     },
 
-     /**
-     * Channels
+    
+    /**
+     * _____________________________________________________________________________________________________________________________
      * 
+     * CHANNELS manipulation
+     */
+
+    /**
+     * Create a consumer instance into an capsar instance
+     */
+    casparRoutes.channelAdd = function (res, req, next){
+
+    }
+
+    /**
+     * Check if the requested channel instance exists.
      */
     casparRoutes.channelCheck = function(req,res,next){
         console.log('channelCheck');
@@ -514,6 +573,11 @@ module.exports = function(socket) {
             res.sendStatus('404');
         }
     },
+
+    /**
+     * To be deleted (remplaced by osc send);
+     * Return the audio levels of a channel
+     */
     casparRoutes.channelGetAudioLevels = function(req,res,next){
         console.log('channelGetAudioLevels');
         const casparId = parseInt(req.params.casparId);
@@ -523,6 +587,10 @@ module.exports = function(socket) {
         res.json(array);
     
     },
+    
+    /**
+     * Set a producer to a channel 
+     */
     casparRoutes.channelSetInput = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
@@ -536,7 +604,7 @@ module.exports = function(socket) {
                         res.sendStatus(202);
                     },
                     function(msg){
-                        res.json(caspar.errorMessage(msg));
+                        res.json(apiReturn.amcpErrorMessage());
                     }).catch(function(error){
                         console.log(error);
                     });
@@ -550,14 +618,23 @@ module.exports = function(socket) {
     
     },
 
+    /**
+     * Delete a channel instance
+     */
+    casparRoutes.channelDelete = function (res, req, next){
+
+    }
+
 
     /**
+     * _____________________________________________________________________________________________________________________________
      * 
-     * LAYERS
-     * 
+     * LAYERS manipulation
      */
 
-
+    /**
+     * Create a layer instance into an capsar instance
+     */
     casparRoutes.layerAdd = function(req,res){
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
@@ -565,6 +642,9 @@ module.exports = function(socket) {
         res.json(caspar.addLayer(settings));
     },
 
+    /**
+     * Check if the requested layer instance exists.
+     */
     casparRoutes.layerCheck = function (req, res, next){
         console.log('layerCheck');
         const casparId = parseInt(req.params.casparId);
@@ -578,14 +658,9 @@ module.exports = function(socket) {
         }
     },  
 
-    casparRoutes.layerDelete = function (req, res){
-        const casparId = parseInt(req.params.casparId);
-        const layerId = parseInt(req.params.layerId);
-        let result = caspars.get(casparId).removeLayer(layerId)
-        res.json(result);
-
-    },
-
+    /**
+     * Set a producer to a layer
+     */
     casparRoutes.layerSetInput = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
@@ -610,6 +685,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     * Start the playing of a layer
+     */
     casparRoutes.layerStart = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
@@ -626,6 +704,9 @@ module.exports = function(socket) {
                 });
     },
 
+    /**
+     * Stop the playing of a layer
+     */
     casparRoutes.layerStop = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
@@ -642,12 +723,31 @@ module.exports = function(socket) {
                 });
     },
     
+    /**
+     * To be deleted ? Use on settings changes in caspar getters/setters
+     */
     casparRoutes.setXmlValues = function(req, res){
         const casparId = parseInt(req.params.casparId);
         caspars.get(casparId).setXmlValues(req.body);
         res.sendStatus('202');
     };
 
+    /**
+     * Delete a layer instance
+     */
+    casparRoutes.layerDelete = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        let result = caspars.get(casparId).removeLayer(layerId)
+        res.json(result);
+
+    },
+
+    /**
+     * _____________________________________________________________________________________________________________________________
+     * 
+     * API Utilities
+     */
 
     casparRoutes.oscParser = function (buffer, rinfo){
 
@@ -709,7 +809,6 @@ module.exports = function(socket) {
                 break;
             }
             result.set(valName,valData);
-            // debug(valName+' : '+valData);
             cursor = cursor + elementSize;                                          // incrémentation du curseur 
         }
         this.oscRouter(result, rinfo['address']);
@@ -717,8 +816,6 @@ module.exports = function(socket) {
     }
 
     casparRoutes.oscRouter = function (msg, sourceIpAddr){
-        // console.log(msg);
-        // console.log(sourceIpAddr);
         caspars.forEach(function(caspar, casparId, map){
             const ipAddr = caspar.getCasparCommon().getIpAddr();
             if (ipAddr == sourceIpAddr){

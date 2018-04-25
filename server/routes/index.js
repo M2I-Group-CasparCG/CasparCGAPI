@@ -80,7 +80,7 @@ let udpServer = dgram.createSocket('udp4');
     /**
      * Producers
      */
-    router.post('/api/v1/caspars/:casparId/producers/:type', casparRoutes.producerAdd);
+    router.post('/api/v1/caspars/:casparId/producers/:producerType', casparRoutes.producerAdd);
     router.all('/api/v1/caspars/:casparId/producers/:producerId/*', casparRoutes.producerCheck);
     router.post('/api/v1/caspars/:casparId/producers/:producerId/start', casparRoutes.producerStart);
     router.post('/api/v1/caspars/:casparId/producers/:producerId/stop', casparRoutes.producerStop);

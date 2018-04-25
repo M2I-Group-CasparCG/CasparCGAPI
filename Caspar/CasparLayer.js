@@ -5,6 +5,7 @@ class CasparLayer {
     constructor(settings){
 
         CasparLayer.totalInstances = (CasparLayer.totalInstances || 0) + 1;
+        this.object = 'Layer';
         this.id = CasparLayer.totalInstances;
         this.name = settings['name'] || 'layer';
         this.layerId = settings['layerId'] || 0;
