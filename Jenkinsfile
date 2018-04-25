@@ -22,7 +22,6 @@ pipeline {
           steps {
             sleep 10
             sh 'newman run utilities/API/CasparCG\\ api.postman_collection.json'
-            sleep 10
             sh 'pkill node'
           }
         }
