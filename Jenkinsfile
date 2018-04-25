@@ -13,11 +13,6 @@ pipeline {
     }
     stage('Test API') {
       parallel {
-        stage('slepp 1min30') {
-          steps {
-            sleep(unit: 'SECONDS', time: 90)
-          }
-        }
         stage('run dev') {
           steps {
             sh 'npm run run_dev'
