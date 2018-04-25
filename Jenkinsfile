@@ -18,7 +18,7 @@ pipeline {
             sh 'npm run run_dev'
           }
         }
-        stage('sleep 10sec, newman run & pkill node') {
+        stage('newman run') {
           steps {
             sleep 10
             sh 'newman run utilities/API/CasparCG\\ api.postman_collection.json'
