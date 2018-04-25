@@ -22,6 +22,7 @@ pipeline {
           steps {
             sleep 10
             sh 'newman run ./utilities/API/CasparCGAPI.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
+            sh 'pkill node'
           }
         }
       }
