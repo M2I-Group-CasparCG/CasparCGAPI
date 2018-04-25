@@ -1,19 +1,19 @@
 pipeline {
   agent any
   stages {
-    stage('Init appli') {
+    stage('npm install') {
       steps {
         sh 'npm install'
       }
     }
-    stage('Test cover code') {
+    stage('npm test') {
       steps {
         sh 'npm test'
       }
     }
-    stage('Test API') {
+    stage('API test') {
       parallel {
-        stage('run dev') {
+        stage('npm run dev') {
           steps {
             sh 'npm run run_dev'
           }
@@ -26,6 +26,11 @@ pipeline {
             sh 'pkill node'
           }
         }
+      }
+    }
+    stage('sonarQube') {
+      steps {
+        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=sonar-project.properties'
       }
     }
   }
