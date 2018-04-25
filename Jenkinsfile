@@ -30,7 +30,7 @@ pipeline {
     }
     stage('sonarQube') {
       steps {
-        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=sonar-project.properties'
+        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=../CasparCGAPI_master_sonar-project.properties'
       }
     }
   }
