@@ -28,5 +28,10 @@ pipeline {
         }
       }
     }
+    stage('Sonar-Scan') {
+      steps {
+        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=../CasparCGAPI_master_sonar-project.properties'
+      }
+    }
   }
 }
