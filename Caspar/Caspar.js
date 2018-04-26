@@ -103,7 +103,6 @@ class Caspar {
      */
     async getInfo() {
         const casparCommon = this.getCasparCommon();
-        const caspar = this;
 
         // récupération des informations.
         console.log('retrieving informations from the server...');

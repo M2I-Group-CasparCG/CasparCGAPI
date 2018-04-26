@@ -46,6 +46,7 @@ class CasparLayer {
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'layerId' : {
                 this.setLayerId(value);
                 response[setting] = this.getLayerId();
@@ -55,6 +56,7 @@ class CasparLayer {
                 this.setProducerId(value);
                 response[setting] = this.getProducerId();
             }
+            break;
             case 'channelId' : {
                 this.setChannelId(value);
                 response[setting] = this.getChannelId();

@@ -30,6 +30,7 @@ class CasparProducerNET extends CasparProducer{
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'url' : {
                 this.setUrl(value);
                 response[setting] = this.getUrl();

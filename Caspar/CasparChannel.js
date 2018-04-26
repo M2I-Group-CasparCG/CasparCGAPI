@@ -89,6 +89,7 @@ class CasparChannel {
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'videoMode' : {
                 this.setVideoMode(value);
                 response[setting] = this.getVideoMode();

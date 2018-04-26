@@ -37,6 +37,7 @@ class CasparProducerFILE extends CasparProducer{
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'fileName' : {
                 this.setFileName(value);
                 response[setting] = this.getFileName();
