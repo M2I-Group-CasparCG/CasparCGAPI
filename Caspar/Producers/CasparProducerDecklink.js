@@ -94,7 +94,7 @@ class CasparProducerDECKLINK extends CasparProducer{
     setLatency (latency) { this.latency = latency; }
 
     getBufferDepth () { return this.bufferDepth; }
-    setBufferDepth () { this.bufferDepth = this.bufferDepth; }
+    setBufferDepth (bufferDepth) { this.bufferDepth = bufferDepth; }
 
 
 

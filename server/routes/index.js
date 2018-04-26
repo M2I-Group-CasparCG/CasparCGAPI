@@ -33,7 +33,7 @@ let udpServer = dgram.createSocket('udp4');
     });
 
     udpServer.on('message', (msg, rinfo) => {
-        let oscData = casparRoutes.oscParser(msg, rinfo);
+        casparRoutes.oscParser(msg, rinfo);
     });
 
     udpServer.on('listening', () => {

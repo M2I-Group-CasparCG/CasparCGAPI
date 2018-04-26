@@ -751,6 +751,8 @@ module.exports = function(socket) {
 
     casparRoutes.oscParser = function (buffer, rinfo){
 
+       
+
         /*
             OSC BUNDLE STRING : 
                 8 bytes : OSC String #bundle
@@ -771,7 +773,7 @@ module.exports = function(socket) {
         var cursor = 16;                                                            // on place le curseur à la taille de premier élément
         while(cursor < bufferLength){                                               // tant qu'il reste des données dans le buffer
             var elementSize = buffer.readInt32BE(cursor);                           // on récupère la longueur de l'élément
-            var cursor = cursor + 4;                                                // on place le curseur au début de l'élément
+            cursor = cursor + 4;                                                // on place le curseur au début de l'élément
             var element = buffer.slice(cursor, cursor+elementSize);                 // on récupère l'élément en entier
             // traitement de l'élément
             var valName = element.toString('utf-8').split(',')[0];

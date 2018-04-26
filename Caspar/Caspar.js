@@ -87,7 +87,6 @@ class Caspar {
         }
         
         if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
-        let pgmSettings = new Array();
             let pvwSettings = new Array();
             pvwSettings['name'] = 'PVW';
             pvwSettings['id'] = 3;
@@ -103,7 +102,6 @@ class Caspar {
      * Retrieving informations form the casaparCG server
      */
     async getInfo() {
-        const casparId = this.id;
         const casparCommon = this.getCasparCommon();
         const caspar = this;
 
@@ -438,18 +436,13 @@ class Caspar {
         let returnVal = null;
 
         oscData.forEach(function(value, key, map){
-
+            
             if ( key.match(reChannelFormat)){
                 const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
                 if (caspar.getChannels().get(channelNb) instanceof Channel ){
                     caspar.getChannels().get(channelNb).setVideoMode(value);
                 }
                 returnVal = null;
-            }else if ( key.match(reChannelLayerFilePath)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                return null;
             }else if ( key.match(reChannelLayerLoop)){
                 const result = key.match(/\d{1,3}/g);
                 const channelNb = parseInt(result[0]);

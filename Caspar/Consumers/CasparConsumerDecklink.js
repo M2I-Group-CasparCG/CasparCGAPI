@@ -66,7 +66,7 @@ class CasparConsumerDECKLINK extends CasparConsumer {
     setDecklinkId(decklinkId){ this.decklinkId = decklinkId; }
 
     getBufferDepth() { return this.bufferDepth; }
-    setBufferDepth() { this.bufferDepth = this.bufferDepth; }
+    setBufferDepth(bufferDepth) { this.bufferDepth = bufferDepth; }
 
     getLatency(){ return this.latency; }
     setLatency(latency){ this.latency = latency; }
