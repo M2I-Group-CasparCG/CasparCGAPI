@@ -1,5 +1,5 @@
 -- Creation des tables
-create table compte(
+create table if not exists compte(
   id_compte int auto_increment primary key,
   nom varchar(35) not null,
   prenom varchar(35) not null,
@@ -7,17 +7,17 @@ create table compte(
   password varchar(45) not null
 );
 
-create table type_media(
+create table if not exists type_media(
   id_type int auto_increment primary key,
   nom_type varchar(40) not null
 );
 
-create table extension(
+create table if not exists extension(
   id_extension int auto_increment primary key,
   nom_extension varchar(40) not null
 );
 
-create table medias(
+create table if not exists medias(
   id_media int auto_increment primary key,
   id_type int not null,
   id_extension int not null,
