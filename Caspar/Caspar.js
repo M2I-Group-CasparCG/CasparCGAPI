@@ -32,16 +32,16 @@ class Caspar {
     /**
      * CasparCG Constructor
      * @param {Array} settings All the CasparCG Settings
-     * ['name'] Nom unique du serveur Caspar
-     * ['ipAddr'] Adresse IP du serveur
-     * ['amcpPort'] Port AMCP du servur
-     * ['oscDefaultPort'] Port OSC par défaut du serveur
-     * ['oscPredefinedClient'] Tuple contenant l'IP et le port du client OSC prédéfini
-     * ['logLevel'] Niveau de logs du serveur
-     * ['mediaPath'] Emplacement du dossier Médias sur le serveur
-     * ['logPath'] Emplacement du dossier Log sur le serveur
-     * ['templatePath'] Emplacement du dossier Template sur le serveur
-     * ['thumbnailsPaths'] Emplacement du dossier Thumbnails sur le serveur
+     * ['name'] Displayed name of the caspar instance
+     * ['ipAddr'] IP Address of the caspar server
+     * ['amcpPort'] AMCP port of the caspar server
+     * ['oscDefaultPort'] OSC port of the caspar server
+     * ['oscPredefinedClient'] Tuple : client IP address and client port
+     * ['logLevel'] Log level of the caspar server
+     * ['mediaPath'] Media path of the caspar server
+     * ['logPath'] Log path of the caspar server
+     * ['templatePath'] Template path of the caspar server
+     * ['thumbnailsPaths'] Thumbnails path of the caspar server
      */
 
     constructor (settings) {
@@ -103,6 +103,7 @@ class Caspar {
      */
     async getInfo() {
         const casparCommon = this.getCasparCommon();
+        const caspar = this;
 
         // récupération des informations.
         console.log('retrieving informations from the server...');
@@ -125,7 +126,7 @@ class Caspar {
                                 settings['id'] = parseInt(element[0]);
                                 settings['name'] = 'default';
                                 settings['videoMode'] = element[1];
-                                settings['state'] = element[2];
+                                settings['statcaspare'] = element[2];
                             let channel = new Channel(settings);
                             caspar.addChannel(channel);
                         });
@@ -171,7 +172,7 @@ class Caspar {
             await this.getCasparCommon().tcpPromise('INFO SYSTEM')
             .then(
                 function(resolveResult){
-                    console.log(resolveResult['data']);
+                    // console.log(resolveResult['data']);
                     /**
                      * Récupération des élements
                      * name
@@ -189,40 +190,42 @@ class Caspar {
         }
 
     /**
-     * Ajout d'un channel au serveur CasaprCG
-     * Modification du nombre de channel dans le fichier caspar.config
-     * Nécessité un redémarrage de l'application casparCG pour pouvoir être appliquée
-     * @param {Channel} channel Paramètres du channel à ajouter
-     */
-
-    /**
-     * Permet d'éditer plusieurs paramètres de Caspar
-     * 
+     * Multiple settings edition
+     * @param {Array} settings key : setting to edit, value : value to apply to the setting
      */
     edit(settings){
         let result = new Object();
         for (let setting in settings){
             let response =  this.getCasparCommon().edit(setting, settings[setting]);
             for (let key in response){
+                result[key] = response[key];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Mutliple settings edition for caspar's objects 
+     * @param {Array} settings  key : setting to edit, value : value to apply to the setting
+     * @param {Object} object Object to edit (Producer, Consumer, Channel, Layer)
+     */
+    editObject(settings, object){
+        let result = new Object();
+        for (let setting in settings){
+            console.log(object);
+            let response =  object.edit(setting, settings[setting]);
+            for (let key in response){
                 console.log(response);
                 result[key] = response[key];
             }
         }
-        console.log(result);
         return result;
     }
 
-    editObject(settings, object){
-        let result = new Object();
-        for (let setting in settings){
-            let response =  object.edit(setting, settings[setting]);
-            for (let key in response){
-                result[key] = response[key];
-            }
-        }
-        return result;
-    }
-
+    /**
+     * Add a channel
+     * @param {Channel} channel 
+     */
     addChannel (channel) {
         if (channel instanceof Channel){
             channel.setCasparCommon(this.casparCommon);
@@ -234,8 +237,8 @@ class Caspar {
     }
 
     /**
-     * Retourne le channel demandé
-     * @param {int} channelId Id du channel à retourner
+     * Get a channel by id
+     * @param {int} channelId id of the channel to get.
      */
     getChannel (channelId) {
         return this.channels.get(channelId);
@@ -315,7 +318,7 @@ class Caspar {
 
     /**
      * 
-     * @param {*} consumer
+     * @param {Consumer} consumer
      */
     addConsumer (consumer) {
         if(consumer instanceof Consumer){
@@ -330,7 +333,7 @@ class Caspar {
 
     /**
      * 
-     * @param {*} consumerId 
+     * @param {int} consumerId 
      */
     getConsumer (consumerId) {
         return this.consumers.get(consumerId);
@@ -338,13 +341,13 @@ class Caspar {
 
     /**
      * 
-     * @param {*} consumerId 
+     * @param {int} consumerId 
      */
     removeConsumer (consumerId) {
         var consumer = this.consumers.get(consumerId);
         if (consumer instanceof Consumer) {
             this.consumers.delete(consumerId);
-            this.tcpSend(consumer.remove(),function(){});
+            consumer.stop();
             return consumer;
         }else{
             return false
@@ -363,29 +366,46 @@ class Caspar {
      * LAYERS
      */
 
+    /**
+     * Create a new layer instance
+     * Required setting : settings['channelId'] = (int) channelId   // must be an existing channel
+     * @param {Array} settings
+     * @return {}
+     */
     addLayer (settings) {
-
-
         settings['casparCommon'] = this.getCasparCommon();
         let layer = new Layer(settings);
         this.layers.set(layer.getId(), layer);
-
         const channelId = layer.getChannelId();
-
-        return this.getChannel(channelId).addLayer(layer);      // ajout du layer au channel
-     
+        const channel = this.getChannel(channelId);
+    
+        if (channel instanceof Channel){
+            return this.getChannel(channelId).addLayer(layer);      // ajout du layer au channel
+        }else{
+            false;
+        }
     }
 
+    /**
+     * 
+     * @param {int} layerId 
+     */
     removeLayer (layerId){ 
 
         let layer = this.layers.get(layerId);
+        let channel = this.channels.get(layer.getChannelId());
 
-        this.layers.delete(layer.getId());
-        return this.channels.get(layer.getChannelId()).removeLayer(layerId);
-
-
+        if (channel instanceof Channel ){
+            return channel.removeLayer(layerId);
+        }else{
+            return false;
+        }
     }
 
+    /**
+     * 
+     * @param {int} layerId 
+     */
     getLayer (layerId){
         if (this.layers.get(layerId) instanceof Layer){
             return this.layers.get(layerId);
@@ -394,10 +414,17 @@ class Caspar {
         }
     }
 
+    /**
+     * 
+     */
     getLayers (){
         return this.layers;
     }
 
+    /**
+     * Restart the casparCG server
+     * @return {Promise} tcpPromise with a JSON message (success or error description)
+     */
     restart () {
         const req = 'RESTART';
         return this.tcpPromise(req);
@@ -413,6 +440,11 @@ class Caspar {
     }
 
 
+    /**
+     * Analyze OSC message and update the caspar instance according to the result.
+     * @param {String} oscData 
+     * @return {Object} the object describing the OSC information analyzed 
+     */
     oscAnalyzer(oscData){
 
         
@@ -512,25 +544,14 @@ class Caspar {
     /**
      *   Getters / Setters
      */
-    
-    // getIpAddr () { return this.ipAddr; }
-    // setIpAddr (ipAddr) { this.casparCommon.ipAddr = ipAddr; }
-    // getName () { return this.name; }
-    // setName (name) { this.name = name; }
-    // getAmcpPort () { return this.amcpPort; }
-    // setAmcpPort (amcPort) { this.amcpPort = amcPort; }
-    // getOscPort () { return this.oscPort; }
-    // setOscPort (oscPort) { this.oscPort = oscPort; }
-    // getLogLevel () { return logLevel; }
-    // setLogLevel (logLevel) { this.logLevel = logLevel; }
 
     getCasparCommon(){ return this.casparCommon; }
+    
     setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
+    
     tcpPromise(req){ return this.getCasparCommon().tcpPromise(req); }
 
     getId(){ return this.id; }
-    // getUdpServerStarted(){ return this.updServerStarted; }
-    // setUdpServerStarder(bool){ this.updServerStarted = bool; }
 
 }
 

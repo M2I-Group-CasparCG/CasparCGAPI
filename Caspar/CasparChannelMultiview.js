@@ -33,7 +33,6 @@ class CasparChannelMultiview extends CasparChannel{
         var producerCount = 0;
         for(var key of this.producers.keys()){
             producerCount++;
-            let producer = this.producers.get(key);
             let req = `MIXER ${this.id}-${producerCount} FILL ${scale*count} ${posY} ${scale} ${scale}`;
             this.tcpSend(req, function(){});
             req = `MIXER ${this.id}-${producerCount} VOLUME 0`;
@@ -42,7 +41,7 @@ class CasparChannelMultiview extends CasparChannel{
         }
 
         // ajout de PGM / PVW
-        req = `PLAY ${this.id}-100 route://${this.getCasparCommon().getPgmId()}`;
+        let req = `PLAY ${this.id}-100 route://${this.getCasparCommon().getPgmId()}`;
         this.tcpSend(req, function(){}); 
         req = `MIXER ${this.id}-100 FILL 0.5 0 0.5 0.5`;
         this.tcpSend(req, function(){});
@@ -61,7 +60,6 @@ class CasparChannelMultiview extends CasparChannel{
     tcpSend(msg, callback){
         this.casparCommon.tcpSend(msg,callback);
     }
-
 }
 
 module.exports = CasparChannelMultiview;

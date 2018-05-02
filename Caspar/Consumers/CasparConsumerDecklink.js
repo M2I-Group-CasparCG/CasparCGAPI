@@ -54,7 +54,7 @@ class CasparConsumerDECKLINK extends CasparConsumer {
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         return response;

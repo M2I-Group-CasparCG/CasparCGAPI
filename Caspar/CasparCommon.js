@@ -52,7 +52,6 @@ class CasparCommon {
 
     /**
      * Permet d'envoyer une commande TCP au serveur
-     * 
      * @param {String} msg message à envoyer au serveur
      * @param {Function} callback fonction de callback à exécuter lors de la réponse du serveur
      */
@@ -91,7 +90,7 @@ class CasparCommon {
      *      'retrunMessage'     message returned with the return code
      *      'dataLines'         number of lines of data
      *      'data'              data
-     * @param {*} msg 
+     * @param {String} msg request to send
      */
     tcpPromise (msg){
         
@@ -222,6 +221,10 @@ class CasparCommon {
 
     }
 
+    /**
+     * @param {String} setting setting to edit 
+     * @param {*} value value of the setting
+     */
     edit(setting, value){
         let response = new Object();
         switch (setting){

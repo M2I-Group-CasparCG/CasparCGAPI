@@ -90,7 +90,7 @@ let udpServer = dgram.createSocket('udp4');
      * Channels
      */
     // router.post('/api/v1/caspars/:casparId/channels/', casparRoutes.channelAdd)
-    router.all('/api/v1/caspars/:casparId/channels:channelId/*', casparRoutes.channelCheck);
+    router.all('/api/v1/caspars/:casparId/channels/:channelId/*', casparRoutes.channelCheck);
     router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', casparRoutes.channelGetAudioLevels);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/producers/:producerId', casparRoutes.channelSetInput);
  

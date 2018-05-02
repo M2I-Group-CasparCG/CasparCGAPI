@@ -1,0 +1,6085 @@
+{
+	"info": {
+		"_postman_id": "46c2dd00-d169-4289-97a1-1e095e15bcbc",
+		"name": "CasparCGAPI_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Caspar_Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "Ressource not found",
+					"description": "",
+					"item": [
+						{
+							"name": "casparGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b961dfc8-6d3a-40bf-bd8f-3eb9161bca06",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar instance not found\", function(){",
+											"    pm.expect(pm.response.json().code).to.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Ressource not found\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "casparGetAll",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "74a94115-affd-43ab-8577-4e4612475962",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be empty array\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().length).to.eql(0);",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "casparRestart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1ded1099-5ef9-4fc9-93d8-42f9f40e734e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar instance not found\", function(){",
+											"    pm.expect(pm.response.json().code).to.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Ressource not found\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/restart",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"restart"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "77e0ef84-2840-47a1-87d1-4f396f6665ba",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar instance not found\", function(){",
+											"    pm.expect(pm.response.json().code).to.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Ressource not found\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						},
+						{
+							"name": "casparEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "88620fa6-8ee4-41b1-8549-e276557ea002",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar instance not found\", function(){",
+											"    pm.expect(pm.response.json().code).to.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Ressource not found\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"127.0.0.1\",\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"eifjze\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Ressource found",
+					"description": "",
+					"item": [
+						{
+							"name": "casparAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b025a2cd-6704-4a56-a279-f9d97a09aac5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let caspar = JSON.parse(responseBody);",
+											"    if (caspar.id !== undefined){",
+											"    pm.environment.set(\"casparId\", caspar.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"connect"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparRestart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3524a35d-b691-4046-9770-ffe743505dc8",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"successful restart\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/restart",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"restart"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fa8f8904-d427-4ef5-b91f-27adde7b9729",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response length should be 3 (MV, PGM, PVW)\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        // initialisation des trois channels",
+											"        pm.expect(pm.response.json().length).to.eql(3);",
+											"        ",
+											"    });",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						},
+						{
+							"name": "casparGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "553abfd5-5ecd-489f-884a-1aa5c2876672",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "casparGetAll",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c4e2bafc-7a6b-4819-94df-ab2df993f4a8",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be an array with 1 caspar instance\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().length).to.eql(1);",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "casparEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3c1a339e-5011-4bb1-931d-d0c8bb7f3a2c",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"127.0.0.1\",\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"eifjze\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "casparDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "961e2751-d663-463d-8ad0-052d2b5b41a7",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should return Caspar deleted\", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance deleted\");",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Producer_Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "_Test_ini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b025a2cd-6704-4a56-a279-f9d97a09aac5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let caspar = JSON.parse(responseBody);",
+											"    if (caspar.id !== undefined){",
+											"    pm.environment.set(\"casparId\", caspar.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"connect"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fa8f8904-d427-4ef5-b91f-27adde7b9729",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response length should be 3 (MV, PGM, PVW)\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        // initialisation des trois channels",
+											"        pm.expect(pm.response.json().length).to.eql(3);",
+											"        ",
+											"    });",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "ProducerStream",
+					"description": "",
+					"item": [
+						{
+							"name": "producerStreamAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "688ad681-3cfb-47a2-b3de-023cb44315df",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"   ",
+											"});",
+											"",
+											"pm.test(\"esponse should return producer NET instance\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"NET\");",
+											"});",
+											"",
+											"/**",
+											" *  environment variables update.",
+											" */",
+											"try {",
+											"    let producer = JSON.parse(responseBody);",
+											"    if (producer.id !== undefined ){",
+											"        pm.environment.set(\"producerId\", producer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"    pm.environment.set(\"producerId\", '1');",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"STREAM 3\",\n\t\"url\":\"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/net",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"net"
+									]
+								},
+								"description": "Add a Stream producer to CasparCG Server"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c45bb185-0f93-4024-8fb0-a7e68c04288e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"//if (pm.environment.get(\"fullTest\") === 'true'){",
+											"//    pm.test(\"response should be Success\", function(){",
+											"//        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        ",
+											"//    });",
+											"    ",
+											"//    pm.test(\"esponse should return producer started message\", function(){",
+											"//        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"//        pm.expect(pm.response.json().description).to.eql(\"producer started\");",
+											"//    });",
+											"//}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"start"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "601e34bb-ef74-44b9-b525-5f05422e5e5d",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return stopped message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer stoped\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/stop/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"stop",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "21b2802c-2a7e-4a75-97d5-f066182ddb5a",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"blo\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "producerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f4ac670d-b7cf-4489-80e9-5077d37e999e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"   pm.response.to.not.be.error; ",
+											"});",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"       pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7dd9f7aa-6c55-4607-95c2-e7cec744384e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return producer deleted message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer deleted\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "ProducerDecklink",
+					"description": "",
+					"item": [
+						{
+							"name": "producerDecklinkAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7a8a4f67-d9a1-47de-976b-0b6723ebef93",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    ",
+											"});",
+											"",
+											"pm.test(\"response should return producer Decklink instance\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"DECKLINK\");",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  environment variables update.",
+											" */",
+											"try {",
+											"    let producer = JSON.parse(responseBody);",
+											"    if (producer.id !== undefined ){",
+											"        pm.environment.set(\"producerId\", producer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"    pm.environment.set(\"producerId\", '1');",
+											"}",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"DECKLINK 1\",\n\t\"decklinkId\" : 4\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/decklink",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"decklink"
+									]
+								},
+								"description": "Add a Stream producer to CasparCG Server"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "72d6abc1-2fca-4378-98f8-b24f9250ebca",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"//if (pm.environment.get(\"fullTest\") === 'true'){",
+											"//    pm.test(\"response should be Success\", function(){",
+											"//        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        ",
+											"//    });",
+											"    ",
+											"//    pm.test(\"esponse should return producer started message\", function(){",
+											"//        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"//        pm.expect(pm.response.json().description).to.eql(\"producer started\");",
+											"//    });",
+											"//}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"start"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "601e34bb-ef74-44b9-b525-5f05422e5e5d",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return stopped message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer stoped\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/stop/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"stop",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "21b2802c-2a7e-4a75-97d5-f066182ddb5a",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"blo\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "producerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f4ac670d-b7cf-4489-80e9-5077d37e999e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"   pm.response.to.not.be.error; ",
+											"});",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"       pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7dd9f7aa-6c55-4607-95c2-e7cec744384e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return producer deleted message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer deleted\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8afd52a1-f031-4232-a3af-4b2bb68c29f6",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "59f096c7-f111-4252-8cfe-e0d57ec951a4",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "ProducerFile",
+					"description": "",
+					"item": [
+						{
+							"name": "producerFileAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f00019aa-fea6-4ddf-b223-88a2a2d5e052",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"});",
+											"",
+											"pm.test(\"response should return producer File instance\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"FILE\");",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  environment variables update.",
+											" */",
+											"try {",
+											"    let producer = JSON.parse(responseBody);",
+											"    if (producer.id !== undefined ){",
+											"        pm.environment.set(\"producerId\", producer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"    pm.environment.set(\"producerId\", '1');",
+											"}",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"FILE 1\",\n\t\"fileName\":\"itescia\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/file",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"file"
+									]
+								},
+								"description": "Add a file producer to CasparCG Server"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fff82c08-1950-4069-9bad-3e5691d337ed",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        ",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return producer started message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer started\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"start"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "601e34bb-ef74-44b9-b525-5f05422e5e5d",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return stopped message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer stoped\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/stop/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"stop",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "21b2802c-2a7e-4a75-97d5-f066182ddb5a",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"blo\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "producerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f4ac670d-b7cf-4489-80e9-5077d37e999e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"   pm.response.to.not.be.error; ",
+											"});",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"       pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "producerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7dd9f7aa-6c55-4607-95c2-e7cec744384e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return producer deleted message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer deleted\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8afd52a1-f031-4232-a3af-4b2bb68c29f6",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "59f096c7-f111-4252-8cfe-e0d57ec951a4",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "_Test_unini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "961e2751-d663-463d-8ad0-052d2b5b41a7",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should return Caspar deleted\", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance deleted\");",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d9d0e077-826d-4993-bb03-92b9711fcf0e",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3f5a8c5-5128-4c21-af87-464e5884979b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d73f2e6b-0302-444f-9484-dabe833c8b82",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "1c2457ee-7590-43dc-ad99-c617fff01230",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Consumer_Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "_Test_ini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b025a2cd-6704-4a56-a279-f9d97a09aac5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let caspar = JSON.parse(responseBody);",
+											"    if (caspar.id !== undefined){",
+											"    pm.environment.set(\"casparId\", caspar.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"connect"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fa8f8904-d427-4ef5-b91f-27adde7b9729",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response length should be 3 (MV, PGM, PVW)\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        // initialisation des trois channels",
+											"        pm.expect(pm.response.json().length).to.eql(3);",
+											"        ",
+											"    });",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7441a21a-1ba6-4943-bdf1-7e24601ff6b3",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "54841710-8cee-4e1b-a4c0-eec977d6f988",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "ConsumerDecklink",
+					"description": "",
+					"item": [
+						{
+							"name": "consumerDecklinkAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "11cdf7df-7e00-4bcc-89e3-130864b3e228",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    ",
+											"});",
+											"",
+											"pm.test(\"response should be Consumer object\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"DECKLINK\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let consumer = JSON.parse(responseBody);",
+											"     if (consumer.id !== undefined ){",
+											"        pm.environment.set(\"consumerId\", consumer.id);",
+											"     }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"bufferDepth\": null,\n\t\"decklinkId\":4,\n\t\"latency\":null\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/decklink",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"decklink"
+									]
+								},
+								"description": "Adding a screen consumer to casparCG"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6df6f7e9-e091-4f19-b3a0-905c478c461c",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"//if (pm.environment.get(\"fullTest\") === 'true'){",
+											"//    pm.test(\"response should be Success\", function(){",
+											"//        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"//        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"//    });",
+											"    ",
+											"//    pm.test(\"esponse should return consumer started message\", function(){",
+											"//        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"//        pm.expect(pm.response.json().description).to.eql(\"Consumer started\");",
+											"//    });",
+											"//}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}",
+										"start"
+									]
+								},
+								"description": "Starts a consumer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4a916c4a-eb44-4434-81ba-e067526155cc",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return consumer consumer stoped message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Consumer stoped\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}/stop",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}",
+										"stop"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "97d75b50-501b-4c6e-b473-c89f292dd27e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    ",
+											"});",
+											"",
+											"pm.test(\"response should be Consumer object\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cb2071c6-dd80-4448-842a-8a5afe247acf",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"displayName\":\"Edited\",\n\t\"unkownsetting\":\"iezopijfz\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1adae11b-8a4a-4e2e-9aec-34eeb62f31c6",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return consumer removed\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Consumer removed\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "ConsumerScreen",
+					"description": "",
+					"item": [
+						{
+							"name": "consumerScreenAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "342a3430-d6b1-4896-8713-3cf05eddd06d",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    ",
+											"});",
+											"",
+											"pm.test(\"response should be Consumer object\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"SCREEN\");",
+											"});",
+											"",
+											"try {",
+											"    let consumer = JSON.parse(responseBody);",
+											"    pm.environment.set(\"consumerId\", consumer['id']);",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Test Screen\",\n\t\"channelId\": 1,\n\t\"bufferDepth\": null,\n\t\"displayName\":\"Consumer 1 !\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/screen",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"screen"
+									]
+								},
+								"description": "Adding a screen consumer to casparCG"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "79cc41c8-e24c-4318-8fb0-44379f3b2a8e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return consumer started message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Consumer started\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}",
+										"start"
+									]
+								},
+								"description": "Starts a consumer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4a916c4a-eb44-4434-81ba-e067526155cc",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return consumer consumer stoped message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Consumer stoped\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}/stop",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}",
+										"stop"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "97d75b50-501b-4c6e-b473-c89f292dd27e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    ",
+											"});",
+											"",
+											"pm.test(\"response should be Consumer object\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cb2071c6-dd80-4448-842a-8a5afe247acf",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"displayName\":\"Edited\",\n\t\"unkownsetting\":\"iezopijfz\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "consumerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1adae11b-8a4a-4e2e-9aec-34eeb62f31c6",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return consumer removed\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Consumer removed\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/{{consumerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"consumers",
+										"{{consumerId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "633e3c5c-525b-4662-ac7b-3fc2a442e8a6",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1de84a3f-668a-43ff-988b-3c2800253c39",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "_Test_unini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "961e2751-d663-463d-8ad0-052d2b5b41a7",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should return Caspar deleted\", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance deleted\");",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d9d0e077-826d-4993-bb03-92b9711fcf0e",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3f5a8c5-5128-4c21-af87-464e5884979b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Layer_Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "_Test_ini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b025a2cd-6704-4a56-a279-f9d97a09aac5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let caspar = JSON.parse(responseBody);",
+											"    if (caspar.id !== undefined){",
+											"    pm.environment.set(\"casparId\", caspar.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"connect"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fa8f8904-d427-4ef5-b91f-27adde7b9729",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response length should be 3 (MV, PGM, PVW)\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        // initialisation des trois channels",
+											"        pm.expect(pm.response.json().length).to.eql(3);",
+											"        ",
+											"    });",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						},
+						{
+							"name": "producerFileAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f00019aa-fea6-4ddf-b223-88a2a2d5e052",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"});",
+											"",
+											"pm.test(\"response should return producer File instance\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"FILE\");",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  environment variables update.",
+											" */",
+											"try {",
+											"    let producer = JSON.parse(responseBody);",
+											"    if (producer.id !== undefined ){",
+											"        pm.environment.set(\"producerId\", producer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"    pm.environment.set(\"producerId\", '1');",
+											"}",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"FILE 1\",\n\t\"fileName\":\"GO1080P25\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/file",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"file"
+									]
+								},
+								"description": "Add a file producer to CasparCG Server"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fff82c08-1950-4069-9bad-3e5691d337ed",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        ",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return producer started message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer started\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"start"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7441a21a-1ba6-4943-bdf1-7e24601ff6b3",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "54841710-8cee-4e1b-a4c0-eec977d6f988",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Layer",
+					"description": "",
+					"item": [
+						{
+							"name": "layerAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "dfb6ef3a-d94b-4518-8f1c-ff7416aca07f",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should be layer object\", function(){",
+											"        pm.expect(pm.response.json().object).to.eql(\"Layer\");",
+											"    });",
+											"}",
+											"",
+											"try {",
+											"    let layer = JSON.parse(responseBody);",
+											"    if (layer.id !== undefined ){",
+											"        pm.environment.set(\"layerId\", layer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Layer 1\",\n\t\"channelId\": 2,\n\t\"producerId\":null,\n\t\"posX\":null,\n\t\"posY\":null,\n\t\"scaleX\":null,\n\t\"scaleY\":null\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerSetInput",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "73e22d78-db55-44fa-a9a8-600890ee2995",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response code should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response message should be layer's input switched \", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Layer's input switched\"); ",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0afff207-0504-48e8-a4c1-0546b43428f6",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response message should be Layer start\", function(){",
+											"        pm.expect(pm.response.json().description).to.eql(\"Layer started\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Layer 1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}",
+										"start"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerStop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f4eeceb4-ba3c-4ea9-9c66-097d6945a97e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response message should be Layer start\", function(){",
+											"        pm.expect(pm.response.json().description).to.eql(\"Layer stoped\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Layer 1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}/stop",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}",
+										"stop"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3c43b213-63fe-44f2-9611-a5d922144ad5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    ",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    ",
+											"    pm.test(\"response should be Layer object\", function(){",
+											"        pm.expect(pm.response.json().object).to.eql(\"Layer\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"Layer 1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4da1bfd2-c074-4b9a-804c-55d3ce22e6ce",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return edited settings\", function(){",
+											"        pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"        pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\t\n\t\"posX\":0.5,\n\t\"scaleX\":0.5,\n\t\"scaleY\":0.5,\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"bla\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "layerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6acf399d-1c40-4e13-a344-94368c46e126",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return consumer removed\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"Layer deleted\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/layers/{{layerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"layers",
+										"{{layerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "_Test_unini",
+					"description": "",
+					"item": [
+						{
+							"name": "producerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7dd9f7aa-6c55-4607-95c2-e7cec744384e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return producer deleted message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer deleted\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "casparDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "961e2751-d663-463d-8ad0-052d2b5b41a7",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should return Caspar deleted\", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance deleted\");",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d9d0e077-826d-4993-bb03-92b9711fcf0e",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3f5a8c5-5128-4c21-af87-464e5884979b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Channel_Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "_Test_ini",
+					"description": "",
+					"item": [
+						{
+							"name": "casparAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b025a2cd-6704-4a56-a279-f9d97a09aac5",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											"pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Caspar object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().object).to.eql(\"Caspar\");",
+											"});",
+											"",
+											"",
+											"try {",
+											"    let caspar = JSON.parse(responseBody);",
+											"    if (caspar.id !== undefined){",
+											"    pm.environment.set(\"casparId\", caspar.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@ClydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"connect"
+									]
+								},
+								"description": "Connecting to a casparCG server"
+							},
+							"response": []
+						},
+						{
+							"name": "casparIni",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fa8f8904-d427-4ef5-b91f-27adde7b9729",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response length should be 3 (MV, PGM, PVW)\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        // initialisation des trois channels",
+											"        pm.expect(pm.response.json().length).to.eql(3);",
+											"        ",
+											"    });",
+											"}",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ini/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"ini",
+										""
+									]
+								},
+								"description": "Initialize a CapsarCG Server\nCreate the pgm, preview and multiview Channel (if not already created).\ninitialize the multiview pattern"
+							},
+							"response": []
+						},
+						{
+							"name": "producerFileAdd",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f00019aa-fea6-4ddf-b223-88a2a2d5e052",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be Producer object\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"});",
+											"",
+											"pm.test(\"response should return producer File instance\", function(){",
+											"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+											"    pm.expect(pm.response.json().type).to.eql(\"FILE\");",
+											"});",
+											"",
+											"",
+											"/**",
+											" *  environment variables update.",
+											" */",
+											"try {",
+											"    let producer = JSON.parse(responseBody);",
+											"    if (producer.id !== undefined ){",
+											"        pm.environment.set(\"producerId\", producer.id);",
+											"    }",
+											"}catch (error){",
+											"    console.log('malformed JSON');",
+											"    pm.environment.set(\"producerId\", '1');",
+											"}",
+											"",
+											"",
+											"",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"FILE 1\",\n\t\"fileName\":\"GO1080P25\",\n\t\"playMode\":\"loop\",\n\t\"seek\":null,\n\t\"start\":0,\n\t\"length\":null\n}"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/file",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"file"
+									]
+								},
+								"description": "Add a file producer to CasparCG Server"
+							},
+							"response": []
+						},
+						{
+							"name": "producerStart",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fff82c08-1950-4069-9bad-3e5691d337ed",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"        ",
+											"    });",
+											"    ",
+											"    pm.test(\"esponse should return producer started message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer started\");",
+											"    });",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}/start",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}",
+										"start"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7441a21a-1ba6-4943-bdf1-7e24601ff6b3",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "54841710-8cee-4e1b-a4c0-eec977d6f988",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Channel",
+					"description": "",
+					"item": [
+						{
+							"name": "channelSetInput",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "af1cb4e8-6aa8-414d-84a6-2f5bb5ebe5bc",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response code should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"});",
+											"",
+											"pm.test(\"response message should be layer's input switched \", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"Channel's input switched\"); ",
+											"});",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/channels/2/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"channels",
+										"2",
+										"producers",
+										"{{producerId}}"
+									]
+								},
+								"description": "Switches an input on a channel"
+							},
+							"response": []
+						},
+						{
+							"name": "channelGet",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "188244ab-c5b7-4d9f-a002-2e26decbe928",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    /**",
+											"     *  Caspar Tests",
+											"     */",
+											"    ",
+											"    pm.test(\"response should be success\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    ",
+											"    pm.test(\"response should be Channel object\", function(){",
+											"        pm.expect(pm.response.json().object).to.eql(\"Channel\");",
+											"    });",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/channels/{{channelId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"channels",
+										"{{channelId}}"
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						},
+						{
+							"name": "channelEdit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e861d868-f351-4e1e-8982-2f388d27428a",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"});",
+											"",
+											"pm.test(\"response should return edited settings\", function(){",
+											"    pm.expect(pm.response.json().description.name).to.eql(\"edited\");",
+											"    pm.expect(pm.response.json().description.unkownsetting).to.eql(\"not found\");",
+											"});",
+											"",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"edited\",\n\t\"unkownsetting\":\"blo\"\n\n}\n\n\n"
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/channels/{{channelId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"channels",
+										"{{channelId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "_Test_unini",
+					"description": "",
+					"item": [
+						{
+							"name": "producerDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7dd9f7aa-6c55-4607-95c2-e7cec744384e",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"if (pm.environment.get(\"fullTest\") === 'true'){",
+											"    pm.test(\"response should be Producer object\", function(){",
+											"        pm.expect(pm.response.json().code).to.not.eql(500);",
+											"        pm.expect(pm.response.json().code).to.not.eql(400);",
+											"        pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    });",
+											"    ",
+											"    pm.test(\"response should return producer deleted message\", function(){",
+											"        pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"        pm.expect(pm.response.json().description).to.eql(\"producer deleted\");",
+											"    });",
+											"    ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw"
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/{{producerId}}",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										"producers",
+										"{{producerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "casparDelete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "961e2751-d663-463d-8ad0-052d2b5b41a7",
+										"type": "text/javascript",
+										"exec": [
+											"/**",
+											" *  API TESTS",
+											" */",
+											" ",
+											" pm.test(\"Response should not be error\", function(){",
+											"    pm.response.to.not.be.error; ",
+											" });",
+											" ",
+											"pm.test(\"response should be JSON\", function () { ",
+											"    pm.response.json();",
+											"});",
+											"",
+											"/**",
+											" *  Caspar Tests",
+											" */",
+											"pm.test(\"response should be success\", function(){",
+											"    pm.expect(pm.response.json().code).to.not.eql(500);",
+											"    pm.expect(pm.response.json().code).to.not.eql(400);",
+											"    pm.expect(pm.response.json().code).to.not.eql(404);",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    ",
+											"});",
+											"",
+											"",
+											"pm.test(\"response should return Caspar deleted\", function(){",
+											"    pm.expect(pm.response.json().type).to.eql(\"Success\");",
+											"    pm.expect(pm.response.json().description).to.eql(\"caspar instance deleted\");",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+										"disabled": true
+									},
+									{
+										"key": "x-key",
+										"value": "admin@clydeUI.com",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/",
+									"host": [
+										"{{apiUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"caspars",
+										"{{casparId}}",
+										""
+									]
+								},
+								"description": "Starts the playing of a producer"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d9d0e077-826d-4993-bb03-92b9711fcf0e",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3f5a8c5-5128-4c21-af87-464e5884979b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "41a92d11-1476-4275-81ca-93c6d4f488d8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3c3aca57-e10f-48c3-b590-3c7bd9522889",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

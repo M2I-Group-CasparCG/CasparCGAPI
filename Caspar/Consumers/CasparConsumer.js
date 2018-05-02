@@ -9,11 +9,13 @@ class CasparConsumer {
         this.casparCommon = null;
         this.channelId = settings['channelId'] || 0;
     }
-    
 
+    start(){
 
-    remove(){
-        
+    }
+
+    stop(){
+
     }
 
 

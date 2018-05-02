@@ -7,6 +7,7 @@ class CasparProducerNET extends CasparProducer{
     constructor(settings){
         CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
         super(settings);
+        this.type = 'NET';
         this.id = CasparProducer.totalInstances;
         this.name = settings['name'] || 'Stream';
         this.url = settings['url'] || 'rtp://127.0.0.1:5004';       
@@ -37,7 +38,7 @@ class CasparProducerNET extends CasparProducer{
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         return response;
