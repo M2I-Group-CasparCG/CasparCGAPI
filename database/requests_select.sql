@@ -49,3 +49,21 @@ select chemin, nom_media
 from medias, type_media
 where medias.id_type = 3
 and medias.id_type = type_media.id_type;
+
+-- Afficher le nom et leur description des medias qui sont des videos
+select nom_media, description
+from medias, type_media
+where medias.id_type = 1
+and medias.id_type = type_media.id_type;
+
+-- Afficher le nom et leur description des medias qui sont des images
+select nom_media, description
+from medias, type_media
+where medias.id_type = 2
+and medias.id_type = type_media.id_type;
+
+-- Afficher le nom et leur description des medias qui sont des sons
+select nom_media, description
+from medias, type_media
+where medias.id_type = 3
+and medias.id_type = type_media.id_type;
