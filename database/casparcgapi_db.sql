@@ -1,6 +1,6 @@
 -- Creation des tables
 create table if not exists compte(
-  id_compte int auto_increment primary key,
+  id_compte integer primary key autoincrement,
   nom varchar(35) not null,
   prenom varchar(35) not null,
   pseudo varchar(35) not null,
@@ -8,12 +8,12 @@ create table if not exists compte(
 );
 
 create table if not exists type_media(
-  id_type int auto_increment primary key,
+  id_type integer primary key autoincrement,
   nom_type varchar(40) not null
 );
 
 create table if not exists medias(
-  id_media int auto_increment primary key,
+  id_media integer primary key autoincrement,
   id_type int not null,
   nom_media varchar(40) not null,
   chemin varchar(100) not null,
