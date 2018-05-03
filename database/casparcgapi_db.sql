@@ -20,3 +20,14 @@ create table if not exists medias(
   description varchar(200),
   foreign key (id_type) references type_media(id_type)
 );
+
+-- Creer un compte
+insert into compte (nom,prenom,pseudo,password)
+values("FOTIA","Baptiste","zak","12345"),
+("WAYNE","Bruce","admin","admin");
+
+-- Creer les differents types de medias
+insert into type_media (nom_type)
+values("vidéos"),
+("images"),
+("sons");
