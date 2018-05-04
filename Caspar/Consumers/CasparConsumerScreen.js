@@ -13,18 +13,19 @@ class CasparConsumerSCREEN extends CasparConsumer {
         this.bufferDepth = settings['bufferDepth'] || 4;
         this.displayName = settings['displayName'] || 'Screen';
         this.channelId = settings['channelId'] || 0;
+        this.running = false;                               // à alimenter en OSC. 
         
     }
 
 
     run() {
         var req = `ADD ${this.channelId} ${this.type} ${this.id} name ${this.displayName}`;
-        return this.tcpPromise(req, function(){});
+        return this.tcpPromise(req);
     }
 
     stop(){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.id}`;
-        return this.tcpPromise(req, function(){});
+        return this.tcpPromise(req);
     }
 
     edit(setting, value){
@@ -49,9 +50,9 @@ class CasparConsumerSCREEN extends CasparConsumer {
                 this.setDisplayName(value);
                 response[setting] = this.getDisplayName();
             }
-            break;
+            break; 
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         return response;
@@ -61,9 +62,7 @@ class CasparConsumerSCREEN extends CasparConsumer {
     setDisplayName(displayName){ this.displayName = displayName; }
 
     getBufferDepth() { return this.bufferDepth; }
-    setBufferDepth() { this.bufferDepth = this.bufferDepth; }
-
-    
+    setBufferDepth(bufferDepth) { this.bufferDepth = bufferDepth; }
 
 }
 

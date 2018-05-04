@@ -41,7 +41,6 @@ class CasparChannel {
     }
 
     addLayer(layer) {
-
         layer.edit('layerId', this.lastLayerId++);
         this.layers.set(layer.getId(), layer);
         return layer;
@@ -54,6 +53,8 @@ class CasparChannel {
             layer.stop();
             this.layers.delete(layer.getId());
             return layer;
+        }else{
+            return false;
         }
     }
 
@@ -69,19 +70,6 @@ class CasparChannel {
         return this.layers;
     }
 
-    startLayer (layerId){
-        if (this.layers.get(layerId) instanceof Layer){
-            return this.layers.get(layerId).start();
-        }
-        
-    }
-
-    stopLayer (layerId){
-        if (this.layers.get(layerId) instanceof Layer){
-            return this.layers.get(layerId).stop();
-        }
-    }
-
     edit(setting, value){
         let response = new Object();
         switch (setting){
@@ -89,13 +77,14 @@ class CasparChannel {
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'videoMode' : {
                 this.setVideoMode(value);
                 response[setting] = this.getVideoMode();
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         console.log(response);

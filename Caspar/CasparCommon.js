@@ -27,7 +27,7 @@ class CasparCommon {
      */
     constructor(settings) {
 
-        this.name = settings['name'] || new String();
+        this.name = settings['name'] || 'Default Caspar';
         this.id = settings['id'] || new Int();
         this.ipAddr = settings['ipAddr'] || '127.0.0.1';
         this.amcpPort = settings['amcpPort'] || 5250;
@@ -52,7 +52,6 @@ class CasparCommon {
 
     /**
      * Permet d'envoyer une commande TCP au serveur
-     * 
      * @param {String} msg message à envoyer au serveur
      * @param {Function} callback fonction de callback à exécuter lors de la réponse du serveur
      */
@@ -91,7 +90,7 @@ class CasparCommon {
      *      'retrunMessage'     message returned with the return code
      *      'dataLines'         number of lines of data
      *      'data'              data
-     * @param {*} msg 
+     * @param {String} msg request to send
      */
     tcpPromise (msg){
         
@@ -185,22 +184,13 @@ class CasparCommon {
                                 result['data'] = dataArray[1];
                             }
                             break;
-                            case '401' : {      // Illegal video channel
-                                result['dataLines'] = 0;
-                            }       
-                            break; 
-                            case '402' : {       // Missing parameters
-                                result['dataLines'] = 0;
-                            }      
-                            break;
-                            case '403' : {       // Illegal parameter
-                                result['dataLines'] = 0;
-                            }      
-                            break; 
+                            case '401' :        // Illegal video channel
+                            case '402' :        // Missing parameters
+                            case '403' :        // Illegal parameter
                             case '404' : {      // Media file not found
                                 result['dataLines'] = 0;
                             }       
-                            break;
+                            break; 
                         }
                         reject(result);
                     }
@@ -208,19 +198,10 @@ class CasparCommon {
                     // SERVER ERROR
                     case '50' : {
                         switch (returnCode){
-                            case '500' : {      // FAILED
-                                result['dataLines'] = 0;
-                            }       
-                            break;
-                            case '501' : {      // FAILED - internal server error
-                                result['dataLines'] = 0;
-                            }      
-                            break;
-                            case '502' : {      // Failed - media unreachable
-                                result['dataLines'] = 0;
-                            }       
-                            break;
-                            case '503' : {      // failes - access error
+                            case '500' :        // FAILED
+                            case '501' :        // FAILED - internal server error
+                            case '502' :        // Failed - media unreachable
+                            case '503' :{       // failes - access error
                                 result['dataLines'] = 0;
                             }       
                             break;
@@ -240,6 +221,10 @@ class CasparCommon {
 
     }
 
+    /**
+     * @param {String} setting setting to edit 
+     * @param {*} value value of the setting
+     */
     edit(setting, value){
         let response = new Object();
         switch (setting){

@@ -37,6 +37,7 @@ class CasparProducerFILE extends CasparProducer{
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'fileName' : {
                 this.setFileName(value);
                 response[setting] = this.getFileName();
@@ -48,7 +49,7 @@ class CasparProducerFILE extends CasparProducer{
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         console.log(response);

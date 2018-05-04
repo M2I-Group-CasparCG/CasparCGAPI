@@ -33,7 +33,7 @@ let udpServer = dgram.createSocket('udp4');
     });
 
     udpServer.on('message', (msg, rinfo) => {
-        let oscData = casparRoutes.oscParser(msg, rinfo);
+        casparRoutes.oscParser(msg, rinfo);
     });
 
     udpServer.on('listening', () => {
@@ -56,7 +56,7 @@ let udpServer = dgram.createSocket('udp4');
      *  Caspar Settings
      */
     router.get('/api/v1/caspars/', casparRoutes.getAll);
-    router.post('/api/v1/caspars/connect/', casparRoutes.add);
+    router.post('/api/v1/caspars/', casparRoutes.add);
     router.all('/api/v1/caspars/:casparId/*', casparRoutes.check);
     router.get('/api/v1/caspars/:casparId/', casparRoutes.get);
     router.put('/api/v1/caspars/:casparId/', casparRoutes.edit);
@@ -91,7 +91,7 @@ let udpServer = dgram.createSocket('udp4');
      * Channels
      */
     // router.post('/api/v1/caspars/:casparId/channels/', casparRoutes.channelAdd)
-    router.all('/api/v1/caspars/:casparId/channels:channelId/*', casparRoutes.channelCheck);
+    router.all('/api/v1/caspars/:casparId/channels/:channelId/*', casparRoutes.channelCheck);
     router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', casparRoutes.channelGetAudioLevels);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/producers/:producerId', casparRoutes.channelSetInput);
  

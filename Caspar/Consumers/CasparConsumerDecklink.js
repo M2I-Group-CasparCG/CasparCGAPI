@@ -54,7 +54,7 @@ class CasparConsumerDECKLINK extends CasparConsumer {
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         return response;
@@ -66,7 +66,7 @@ class CasparConsumerDECKLINK extends CasparConsumer {
     setDecklinkId(decklinkId){ this.decklinkId = decklinkId; }
 
     getBufferDepth() { return this.bufferDepth; }
-    setBufferDepth() { this.bufferDepth = this.bufferDepth; }
+    setBufferDepth(bufferDepth) { this.bufferDepth = bufferDepth; }
 
     getLatency(){ return this.latency; }
     setLatency(latency){ this.latency = latency; }

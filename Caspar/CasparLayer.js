@@ -18,25 +18,42 @@ class CasparLayer {
         this.casparCommon = settings['casparCommon'] || null;
     }
 
+    /**
+     * Switch the input of a layer
+     * @param {int} producerId id of the producer to set in the Layer
+     * @return {Promise} tcpPromise
+     */
     setInput(producerId){
         let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${producerId}`;
         this.producerId = producerId;
         return this.tcpPromise(req);
     }
 
+    /**
+     * Start the play of the layer
+     * @return {Promise} tcpPromise
+     */
     start(){
         let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${this.producerId}`;
         return this.tcpPromise(req);
     }
 
+    /**
+     * Stop the play of the layer
+     * @return {Promise} tcpPromise
+     */
     stop(){
         let req = `STOP ${this.channelId}-${this.layerId}`;
         return this.tcpPromise(req);
     }
 
+    /**
+     * Update the mixer settings with the current layer instance properties
+     * @return {Promise} tcpPromise
+     */
     mixerFill(){
         let req = `MIXER ${this.channelId}-${this.layerId} FILL ${this.posX} ${this.posY} ${this.scaleX} ${this.scaleY}`;
-        this.tcpSend(req, function(){});
+        this.tcpPromise(req).then(function(){}, function(){}).catch(function(){});
     }
 
     edit(setting, value){
@@ -46,6 +63,7 @@ class CasparLayer {
                 this.setName(value);
                 response[setting] = this.getName();
             }
+            break;
             case 'layerId' : {
                 this.setLayerId(value);
                 response[setting] = this.getLayerId();
@@ -55,6 +73,7 @@ class CasparLayer {
                 this.setProducerId(value);
                 response[setting] = this.getProducerId();
             }
+            break;
             case 'channelId' : {
                 this.setChannelId(value);
                 response[setting] = this.getChannelId();
@@ -81,7 +100,7 @@ class CasparLayer {
             }
             break;
             default : {
-                response['error'] = 'Setting not found : '+setting;
+                response[setting] = "not found";
             }
         }
         return response;

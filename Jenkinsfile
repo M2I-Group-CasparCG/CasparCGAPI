@@ -21,7 +21,7 @@ pipeline {
         stage('newman tests') {
           steps {
             sleep 10
-            sh 'newman run ./utilities/API/test_scenario.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
+            sh 'newman run ./utilities/API/CasparCGAPI_tests.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
             sh 'pkill node'
           }
         }
@@ -29,7 +29,7 @@ pipeline {
     }
     stage('Sonar-Scan') {
       steps {
-        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=../CasparCGAPI_skg_master_sonar-project.properties'
+        sh '/etc/sonar-scanner-3.1.0.1141-linux/bin/sonar-scanner -Dproject.settings=../CasparCGAPI_skg_sonar-project.properties'
       }
     }
   }

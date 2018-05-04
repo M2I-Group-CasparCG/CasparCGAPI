@@ -1,3 +1,7 @@
+// ++ todo
+// add JSON validator
+// add url variables type validator. 
+
 
 const Caspar =            require('../../Caspar/Caspar.js');
 const Channel =           require('../../Caspar/CasparChannel');
@@ -39,7 +43,7 @@ module.exports = function(socket) {
     /**
      * Create a new caspar object. Try to connect. 
      */
-    casparRoutes.add = function(req, res){
+    casparRoutes.add = async function(req, res){
         let casparSettings = req.body;
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
@@ -48,6 +52,7 @@ module.exports = function(socket) {
                     res.json(caspar);
                 })
                 .catch(error => {
+                    console.log(error);
                     res.json(apiReturn.customMessage(500, 'caspar error', 'error while retrieving server informations'));
                 });
     },
@@ -207,9 +212,11 @@ module.exports = function(socket) {
         }
 
         if (object){
+
             let result = new Object();
             for (let setting in settings){
-                let response = object.edit(setting,settings[setting]);
+                console.log(setting+' '+settings[setting]);
+                let response = object.edit(setting, settings[setting]);
                 result[setting] = response[setting];
             }
             res.json(apiReturn.successMessage(result));
@@ -341,7 +348,7 @@ module.exports = function(socket) {
         if(consumer instanceof Consumer){
             next();
         }else{
-            res.sendStatus('404');
+            res.json(apiReturn.notFoundMessage('Consumer instance not found'));
         }
     },
 
@@ -361,7 +368,7 @@ module.exports = function(socket) {
                     consumer.run()
                         .then(
                                 function(msg){
-                                res.sendStatus(202);
+                                res.json(apiReturn.successMessage('Consumer started'));
                             },
                             function(msg){
                                 res.json(apiReturn.amcpErrorMessage(msg));
@@ -370,10 +377,7 @@ module.exports = function(socket) {
                           console.log(error);
                           });           
                 }else{
-                    let error = new Error();
-                        error.code = 404;
-                        error.message = "consumer not assigned to an existing channel";
-                        res.send(error);
+                        res.json(apiReturn.notFoundMessage('consumers channel not found'))
                 }        
 
            
@@ -387,10 +391,17 @@ module.exports = function(socket) {
         const consumerId = parseInt(req.params.consumerId);
         
         let consumer = caspars.get(casparId).getConsumer(consumerId);
-            consumer.stop();
-
-            res.sendStatus(202);
-
+            consumer.stop()
+                .then(
+                        function(msg){
+                        res.json(apiReturn.successMessage('Consumer stoped'));
+                    },
+                    function(msg){
+                        res.json(apiReturn.amcpErrorMessage(msg));
+                    }
+                ).catch(function(error){
+                    console.log(error);
+                });      
     },
 
     /**
@@ -399,11 +410,27 @@ module.exports = function(socket) {
     casparRoutes.consumerDelete = function(req, res, next){
         const casparId = parseInt(req.params.casparId);
         const consumerId = parseInt(req.params.consumerId);
-        caspars.get(casparId).getConsumer(consumerId).stop();
-        caspars.get(casparId).removeConsumer(consumerId);
-        consumers.delete(casparId);
-        res.sendStatus('202');
+        const consumer = caspars.get(casparId).getConsumer(consumerId);
 
+        if (consumer instanceof Consumer){
+            consumer.stop()
+            .then(
+                function(msg){
+                caspars.get(casparId).removeConsumer(consumerId);
+                consumers.delete(casparId);
+                res.json(apiReturn.successMessage('Consumer removed'));
+            },
+            function(msg){
+                res.json(apiReturn.amcpErrorMessage(msg));
+            }
+            ).catch(function(error){
+                console.log(error);
+            });      
+        }else{
+            res.json(apiReturn.notFoundMessage('Consumer instance not found'));
+        }
+
+       
     },
 
     /**
@@ -467,7 +494,7 @@ module.exports = function(socket) {
             next();
             console.log('producerCheck ok')
         }else{
-            res.sendStatus('404');
+            res.json(apiReturn.notFoundMessage('Producer instance not found'));
         }
     },
 
@@ -565,12 +592,12 @@ module.exports = function(socket) {
         console.log('channelCheck');
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
-        let channel = caspars.get(casparId).getProducer(channelId);
+        let channel = caspars.get(casparId).getChannel(channelId);
         if(channel instanceof Channel){
             next();
             console.log('channelCheck ok')
         }else{
-            res.sendStatus('404');
+            res.json(apiReturn.notFoundMessage('Channel instance not found'));
         }
     },
 
@@ -600,19 +627,18 @@ module.exports = function(socket) {
         if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
             channel.setInput(producerId)
                 .then(
-                    function(msg){
-                        res.sendStatus(202);
+                    function(msg){  
+                        res.json(apiReturn.successMessage('Channel\'s input switched'));
                     },
                     function(msg){
+                        console.log(msg);
                         res.json(apiReturn.amcpErrorMessage());
                     }).catch(function(error){
                         console.log(error);
                     });
         }else{
-            let error = new Error();
-            error.code = 404;
-            error.message = 'producer not found';
-            res.send(error);
+            console.log('Producer not found');
+            res.json(apiReturn.notFoundMessage('Producer not found'));
         }
         
     
@@ -639,7 +665,14 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
         const settings = req.body; 
-        res.json(caspar.addLayer(settings));
+
+        let result = caspar.addLayer(settings);
+        if (result){
+            res.json(result);
+        }else{
+            res.json(apiReturn.notFoundMessage('Channel instance not found'));
+        }
+       
     },
 
     /**
@@ -654,7 +687,7 @@ module.exports = function(socket) {
             next();
             console.log('layerCheck ok')
         }else{
-            res.sendStatus('404');
+            res.json(apiReturn.notFoundMessage('Layer instance not found'));
         }
     },  
 
@@ -670,18 +703,15 @@ module.exports = function(socket) {
             layer.setInput(producerId)
                 .then(
                     function(msg){
-                        res.sendStatus(202);
+                        res.json(apiReturn.successMessage('Layer\'s input switched'));
                     },
                     function(msg){
-                        res.json(caspar.errorMessage(msg));
+                        res.json(apiReturn.amcpErrorMessage(msg));
                     }).catch(function(error){
                         console.log(error);
                     });
         }else{
-            let error = new Error();
-            error.code = 404;
-            error.message = 'producer not found';
-            res.send(error);
+            res.json(apiReturn.notFoundMessage('producer not found'));
         }
     },
 
@@ -695,10 +725,10 @@ module.exports = function(socket) {
         layer.start()
             .then(
                 function(msg){
-                    res.sendStatus(202);
+                    res.json(apiReturn.successMessage('Layer started'))
                 },
                 function(msg){
-                    res.json(caspar.errorMessage(msg));
+                    res.json(apiReturn.amcpErrorMessage(msg));
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -714,13 +744,36 @@ module.exports = function(socket) {
         layer.stop()
             .then(
                 function(msg){
-                    res.sendStatus(202);
+                    res.json(apiReturn.successMessage('Layer stoped'))
                 },
                 function(msg){
-                    res.json(caspar.errorMessage(msg));
+                    res.json(apiReturn.amcpErrorMessage(msg));
                 }).catch(function(error){
                     console.log(error);
                 });
+    },
+
+        /**
+     * Delete a layer instance
+     */
+    casparRoutes.layerDelete = function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const layerId = parseInt(req.params.layerId);
+        const layer = caspars.get(casparId).getLayer(layerId);
+        console.log(layer);
+        if (layer instanceof Layer){
+            let result = caspars.get(casparId).removeLayer(layerId);
+            if (result){
+                res.json(apiReturn.successMessage('Layer deleted'));
+            }else{
+                res.json(apiReturn.notFoundMessage('Unable to delete layer'));
+            }
+        }else{
+            res.json(apiReturn.notFoundMessage('Layer instance not found'));
+        }
+       
+       
+
     },
     
     /**
@@ -732,16 +785,7 @@ module.exports = function(socket) {
         res.sendStatus('202');
     };
 
-    /**
-     * Delete a layer instance
-     */
-    casparRoutes.layerDelete = function (req, res){
-        const casparId = parseInt(req.params.casparId);
-        const layerId = parseInt(req.params.layerId);
-        let result = caspars.get(casparId).removeLayer(layerId)
-        res.json(result);
 
-    },
 
     /**
      * _____________________________________________________________________________________________________________________________
@@ -750,6 +794,8 @@ module.exports = function(socket) {
      */
 
     casparRoutes.oscParser = function (buffer, rinfo){
+
+       
 
         /*
             OSC BUNDLE STRING : 
@@ -771,7 +817,7 @@ module.exports = function(socket) {
         var cursor = 16;                                                            // on place le curseur à la taille de premier élément
         while(cursor < bufferLength){                                               // tant qu'il reste des données dans le buffer
             var elementSize = buffer.readInt32BE(cursor);                           // on récupère la longueur de l'élément
-            var cursor = cursor + 4;                                                // on place le curseur au début de l'élément
+            cursor = cursor + 4;                                                // on place le curseur au début de l'élément
             var element = buffer.slice(cursor, cursor+elementSize);                 // on récupère l'élément en entier
             // traitement de l'élément
             var valName = element.toString('utf-8').split(',')[0];
