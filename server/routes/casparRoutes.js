@@ -29,7 +29,7 @@ module.exports = function(socket) {
     var casparRoutes = {};                      
     var apiReturn = new ApiReturn();            // objet permettant de générer les messages API
 
-
+    
     /**
      * _____________________________________________________________________________________________________________________________
      * 

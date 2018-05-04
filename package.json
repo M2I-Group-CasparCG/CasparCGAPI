@@ -4,7 +4,7 @@
   "description": "CasparCG API",
   "main": "server.js",
   "scripts": {
-    "test": "istanbul cover --include-all-sources -x '*/spec/' jasmine",
+    "test": "istanbul cover --include-all-sources -x '*Spec.js' jasmine",
     "start": "node ./server/server.js",
     "dev": "nodemon ./server/server.js"
   },
@@ -33,6 +33,7 @@
   "devDependencies": {
     "istanbul": "^1.1.0-alpha.1",
     "jasmine": "^3.1.0",
-    "nodemon": "^1.17.1"
+    "nodemon": "^1.17.1",
+    "supertest": "^3.0.0"
   }
 }
