@@ -21,7 +21,7 @@ pipeline {
         stage('newman tests') {
           steps {
             sleep 10
-            sh 'newman run ./utilities/API/test_scenario.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
+            sh 'newman run ./utilities/API/CasparCGAPI_tests.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
             sh 'pkill node'
           }
         }
