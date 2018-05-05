@@ -17,12 +17,12 @@ class CasparConsumerDECKLINK extends CasparConsumer {
 
     run(){
         var req = `ADD ${this.channelId} ${this.type} ${this.decklinkId}`;
-        return this.tcpPromise(req, function(){});
+        return this.tcpPromise(req);
     }
 
     stop(){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.decklinkId}`;
-        return this.tcpPromise(req, function(){});
+        return this.tcpPromise(req);
     }
 
     edit(setting, value){
