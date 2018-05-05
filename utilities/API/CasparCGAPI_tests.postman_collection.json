@@ -1,17 +1,18 @@
 {
 	"info": {
-		"_postman_id": "46c2dd00-d169-4289-97a1-1e095e15bcbc",
 		"name": "CasparCGAPI_tests",
+		"_postman_id": "16315f40-fed9-4052-80e5-a4bd38d05eac",
+		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Caspar_Tests",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "Ressource not found",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparGet",
@@ -390,7 +391,7 @@
 				},
 				{
 					"name": "Ressource found",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",
@@ -463,7 +464,7 @@
 									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 								},
 								"url": {
-									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"raw": "{{apiUrl}}/api/v1/caspars/",
 									"host": [
 										"{{apiUrl}}"
 									],
@@ -471,7 +472,7 @@
 										"api",
 										"v1",
 										"caspars",
-										"connect"
+										""
 									]
 								},
 								"description": "Connecting to a casparCG server"
@@ -947,11 +948,11 @@
 		},
 		{
 			"name": "Producer_Tests",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "_Test_ini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",
@@ -1024,7 +1025,7 @@
 									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 								},
 								"url": {
-									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"raw": "{{apiUrl}}/api/v1/caspars/",
 									"host": [
 										"{{apiUrl}}"
 									],
@@ -1032,7 +1033,7 @@
 										"api",
 										"v1",
 										"caspars",
-										"connect"
+										""
 									]
 								},
 								"description": "Connecting to a casparCG server"
@@ -1126,7 +1127,7 @@
 				},
 				{
 					"name": "ProducerStream",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "producerStreamAdd",
@@ -1455,7 +1456,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -1605,7 +1607,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -1614,7 +1617,7 @@
 				},
 				{
 					"name": "ProducerDecklink",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "producerDecklinkAdd",
@@ -1946,7 +1949,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -2096,7 +2100,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -2127,7 +2132,7 @@
 				},
 				{
 					"name": "ProducerFile",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "producerFileAdd",
@@ -2462,7 +2467,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -2612,7 +2618,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -2643,7 +2650,7 @@
 				},
 				{
 					"name": "_Test_unini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparDelete",
@@ -2776,11 +2783,11 @@
 		},
 		{
 			"name": "Consumer_Tests",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "_Test_ini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",
@@ -2853,7 +2860,7 @@
 									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 								},
 								"url": {
-									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"raw": "{{apiUrl}}/api/v1/caspars/",
 									"host": [
 										"{{apiUrl}}"
 									],
@@ -2861,7 +2868,7 @@
 										"api",
 										"v1",
 										"caspars",
-										"connect"
+										""
 									]
 								},
 								"description": "Connecting to a casparCG server"
@@ -2977,7 +2984,7 @@
 				},
 				{
 					"name": "ConsumerDecklink",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "consumerDecklinkAdd",
@@ -3469,7 +3476,7 @@
 				},
 				{
 					"name": "ConsumerScreen",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "consumerScreenAdd",
@@ -3980,7 +3987,7 @@
 				},
 				{
 					"name": "_Test_unini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparDelete",
@@ -4091,11 +4098,11 @@
 		},
 		{
 			"name": "Layer_Tests",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "_Test_ini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",
@@ -4168,7 +4175,7 @@
 									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 								},
 								"url": {
-									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"raw": "{{apiUrl}}/api/v1/caspars/",
 									"host": [
 										"{{apiUrl}}"
 									],
@@ -4176,7 +4183,7 @@
 										"api",
 										"v1",
 										"caspars",
-										"connect"
+										""
 									]
 								},
 								"description": "Connecting to a casparCG server"
@@ -4472,7 +4479,7 @@
 				},
 				{
 					"name": "Layer",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "layerAdd",
@@ -4558,7 +4565,8 @@
 										"{{casparId}}",
 										"layers"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -4640,7 +4648,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -4721,7 +4730,8 @@
 										"{{layerId}}",
 										"start"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -4802,7 +4812,8 @@
 										"{{layerId}}",
 										"stop"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -4884,7 +4895,8 @@
 										"layers",
 										"{{layerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -4965,7 +4977,8 @@
 										"layers",
 										"{{layerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -5042,7 +5055,8 @@
 										"layers",
 										"{{layerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -5051,7 +5065,7 @@
 				},
 				{
 					"name": "_Test_unini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "producerDelete",
@@ -5124,7 +5138,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -5237,11 +5252,11 @@
 		},
 		{
 			"name": "Channel_Tests",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "_Test_ini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",
@@ -5314,7 +5329,7 @@
 									"raw": "{\n\t\"ipAddr\":\"{{casparIpAddr}}\",\n\t\"name\":\"Caspar1\"\n}"
 								},
 								"url": {
-									"raw": "{{apiUrl}}/api/v1/caspars/connect",
+									"raw": "{{apiUrl}}/api/v1/caspars/",
 									"host": [
 										"{{apiUrl}}"
 									],
@@ -5322,7 +5337,7 @@
 										"api",
 										"v1",
 										"caspars",
-										"connect"
+										""
 									]
 								},
 								"description": "Connecting to a casparCG server"
@@ -5618,7 +5633,7 @@
 				},
 				{
 					"name": "Channel",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "channelSetInput",
@@ -5866,7 +5881,8 @@
 										"channels",
 										"{{channelId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -5875,7 +5891,7 @@
 				},
 				{
 					"name": "_Test_unini",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "producerDelete",
@@ -5948,7 +5964,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
