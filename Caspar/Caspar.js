@@ -52,16 +52,10 @@ class Caspar {
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.layers = new Map();
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
-<<<<<<< HEAD
-        this.XmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config', true); // Création de l'objet qui gère le fichier de config
-        this.casparCommon = new CasparCommon(this.XmlHandler.getSettingsArray());     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
-    }  
-=======
         settings['id'] = this.id;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
 
       }  
->>>>>>> origin/skg
 
 
     /** 
