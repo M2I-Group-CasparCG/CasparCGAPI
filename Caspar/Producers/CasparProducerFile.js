@@ -17,28 +17,56 @@ class CasparProducerFILE extends CasparProducer{
         
     }
 
-    run(){
+    run() {
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.getFileName()} ${this.getPlayMode()}`;
-        this.tcpSend(req, function(){});
+        console.log(req);
+        return this.tcpPromise(req);
     }
+
     stop(){
+       
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.tcpSend(req, function(){});
+        console.log(req);
+        return this.tcpPromise(req);
     }
 
-    getId(){
-        return this.id;
-    }
-    getFileName(){
-        return this.fileName;
-    }
-    getPlayMode(){
-        return this.playMode;
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            break;
+            case 'fileName' : {
+                this.setFileName(value);
+                response[setting] = this.getFileName();
+            }
+            break;
+            case 'playMode' : {
+                this.setPlayMode(value);
+                response[setting] = this.getPlayMode();
+            }
+            break;
+            default : {
+                response[setting] = "not found";
+            }
+        }
+        console.log(response);
+        return response;
     }
 
-    tcpSend(msg, callback){
-        this.casparCommon.tcpSend(msg, callback);
-    }
+
+    getId(){ return this.id; }
+
+    getFileName(){ return this.fileName; }
+    setFileName(fileName) { this.fileName = fileName; }
+
+    getPlayMode(){ return this.playMode; }
+    setPlayMode(playMode){ this.playMode = playMode; }
+
+
+    
 
 }
 

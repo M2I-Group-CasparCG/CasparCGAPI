@@ -1,28 +1,27 @@
 pipeline {
   agent any
   stages {
-    stage('Init appli') {
+    stage('npm-install') {
       steps {
         sh 'npm install'
       }
     }
-    stage('Test cover code') {
+    stage('npm-test') {
       steps {
         sh 'npm test'
       }
     }
-    stage('Test API') {
+    stage('Api Tests') {
       parallel {
-        stage('run dev') {
+        stage('npm run') {
           steps {
-            sh 'npm run run_dev'
+            sh 'npm run dev'
           }
         }
-        stage('newman run') {
+        stage('newman tests') {
           steps {
             sleep 10
-            sh 'newman run utilities/API/CasparCG\\ api.postman_collection.json'
-            sleep 10
+            sh 'newman run ./utilities/API/CasparCGAPI_tests.postman_collection.json -e ./utilities/API/CasparCGAPI.postman_environment.json'
             sh 'pkill node'
           }
         }

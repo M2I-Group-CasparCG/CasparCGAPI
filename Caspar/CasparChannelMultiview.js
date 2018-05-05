@@ -12,7 +12,7 @@ class CasparChannelMultiview extends CasparChannel{
      */
     constructor(settings, producers){
         super(settings);
-        this.id = CasparChannel.totalInstances;
+        this.id = settings['id'] || CasparChannel.totalInstances;
         this.casparCommon = null;
         this.patterId = settings['patternId'] || 0;
         this.producers = producers;
@@ -26,26 +26,26 @@ class CasparChannelMultiview extends CasparChannel{
 
         // ajout des sources au channel
         // et mise en place du mutliview
-        var producerNb = this.producers.size;
         var scale = 0.333333;
         var posX = 0;
         var posY = 0.58;
         var count = 0;
+        var producerCount = 0;
         for(var key of this.producers.keys()){
-            var producer = this.producers.get(key);
-            var req = `MIXER ${this.id}-${producer.getId()} FILL ${scale*count} ${posY} ${scale} ${scale}`;
+            producerCount++;
+            let req = `MIXER ${this.id}-${producerCount} FILL ${scale*count} ${posY} ${scale} ${scale}`;
             this.tcpSend(req, function(){});
-            var req = `MIXER ${this.id}-${producer.getId()} VOLUME 0`;
+            req = `MIXER ${this.id}-${producerCount} VOLUME 0`;
             this.tcpSend(req, function(){});
             count++;
         }
 
         // ajout de PGM / PVW
-        req = `PLAY ${this.id}-100 route://${this.getCasparCommon().getPgmId()}`;
+        let req = `PLAY ${this.id}-100 route://${this.getCasparCommon().getPgmId()}`;
         this.tcpSend(req, function(){}); 
         req = `MIXER ${this.id}-100 FILL 0.5 0 0.5 0.5`;
         this.tcpSend(req, function(){});
-        var req = `MIXER ${this.id}-100 VOLUME 1`;
+        req = `MIXER ${this.id}-100 VOLUME 1`;
         this.tcpSend(req, function(){});
 
 
@@ -53,14 +53,13 @@ class CasparChannelMultiview extends CasparChannel{
         this.tcpSend(req, function(){});
         req = `MIXER ${this.id}-101 FILL 0 0 0.5 0.5`;
         this.tcpSend(req, function(){});
-        var req = `MIXER ${this.id}-101 VOLUME 0`;
+        req = `MIXER ${this.id}-101 VOLUME 0`;
         this.tcpSend(req, function(){});
     }
 
     tcpSend(msg, callback){
         this.casparCommon.tcpSend(msg,callback);
     }
-
 }
 
 module.exports = CasparChannelMultiview;

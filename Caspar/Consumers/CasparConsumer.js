@@ -4,35 +4,35 @@
 class CasparConsumer {
 
     constructor(settings){
+        this.object = 'Consumer';
         this.name = settings['name'] || 'Consumer';
-        this.id = 0;
         this.casparCommon = null;
-        this.channelId = 0;
-    }
-    
-
-    getName(){
-        return this.name;
-    }
-    getId(){
-        return this.id;
+        this.channelId = settings['channelId'] || 0;
     }
 
-    remove(){
-        
+    start(){
+
     }
-    getCasparCommon(){
-        return this.casparCommon;
+
+    stop(){
+
     }
-    setCasparCommon(casparCommon){
-        this.casparCommon = casparCommon;
-    }
-    getChannelId(){
-        return this.channelId;
-    }
-    setChannelId(channelId){
-        this.channelId = channelId;
-    }
+
+
+    getId(){ return this.id; }
+
+
+    getCasparCommon(){ return this.casparCommon; }
+    setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
+
+    getChannelId(){ return this.channelId; }
+    setChannelId(channelId){ this.channelId = channelId; }
+
+    getName() { return this.name; }
+    setName(name) { this.name = name; }
+
+    tcpSend(msg, callback){ this.getCasparCommon().tcpSend(msg, callback); }
+    tcpPromise(msg){ return this.casparCommon.tcpPromise(msg); }
 }
 
 module.exports = CasparConsumer;

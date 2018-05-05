@@ -4,10 +4,9 @@
   "description": "CasparCG API",
   "main": "server.js",
   "scripts": {
-    "test": "istanbul cover --include-all-sources -x '*/spec/' jasmine",
-    "run_prod": "node ./server/server.js",
-    "run_dev": "nodemon ./server/server.js",
-    "stop": "pkill node"
+    "test": "istanbul cover --include-all-sources -x '*Spec.js' jasmine",
+    "start": "node ./server/server.js",
+    "dev": "nodemon ./server/server.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +21,7 @@
   "dependencies": {
     "app-root-path": "^2.0.1",
     "body-parser": "^1.18.2",
+    "dgram": "^1.0.1",
     "express": "^4.16.3",
     "jwt-simple": "^0.5.1",
     "morgan": "^1.9.0",
@@ -31,8 +31,9 @@
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
+    "istanbul": "^1.1.0-alpha.1",
     "jasmine": "^3.1.0",
-    "nodemon": "^1.17.1"
+    "nodemon": "^1.17.1",
+    "supertest": "^3.0.0"
   }
 }
