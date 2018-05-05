@@ -28,7 +28,7 @@ class CasparCommon {
     constructor(settings) {
 
         this.name = settings['name'] || 'Default Caspar';
-        this.id = settings['id'] || new Int();
+        this.id = settings['id'] || new Number();
         this.ipAddr = settings['ipAddr'] || '127.0.0.1';
         this.amcpPort = settings['amcpPort'] || 5250;
         this.oscDefaultPort = settings['oscDefaultPort'] || null;
@@ -64,12 +64,15 @@ class CasparCommon {
                 }); 
         
                 client.on('error', function(error){
-                    console.log(error);
+                    let result = new Object();
+                    result['command'] = msg;
+                    result['returnCode'] = 500;
+                    result['returnMessage'] = 'Error on tcp socket'
+                    callback(result);
                 });
             
                 client.on('data', function(data) {
-                    console.log(msg);
-                    console.log(data.toString());
+
                     callback(data.toString());
                     // this.socket.emit('message','test');
                     client.destroy();
@@ -244,8 +247,8 @@ class CasparCommon {
             }
             break;
             case 'oscPredefinedClient' : {
-                this.oscPredefinedClient(value['address'], value['port']);
-                response[setting] = this.oscPredefinedClient();
+                this.setOscPredefinedClient(value.address, value.port);
+                response[setting] = this.getOscPredefinedClient();
             }
             break;
             case 'logLevel' : {
@@ -255,7 +258,7 @@ class CasparCommon {
             break;
             case 'logPath' : {  
                 this.setLogPath(value);
-                response[setting] = this.getLogPat();
+                response[setting] = this.getLogPath();
             }
             break;
             case 'mediaPath' : {
@@ -333,7 +336,7 @@ class CasparCommon {
     getTemplatePath() { return this.templatePath; }
     setTemplatePath(templatePath) { this.templatePath = templatePath; }
 
-    getThumbnailsPath() { return this.templatePath; }
+    getThumbnailsPath() { return this.thumbnailsPath; }
     setThumbnailsPath(thumbnailsPath) { this.thumbnailsPath = thumbnailsPath; }
 
     getCasparPath() { return this.casparPath; }

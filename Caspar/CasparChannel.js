@@ -87,7 +87,6 @@ class CasparChannel {
                 response[setting] = "not found";
             }
         }
-        console.log(response);
         return response;
     }
 

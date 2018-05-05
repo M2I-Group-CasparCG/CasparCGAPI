@@ -32,7 +32,7 @@ class CasparConsumer {
     setName(name) { this.name = name; }
 
     tcpSend(msg, callback){ this.getCasparCommon().tcpSend(msg, callback); }
-    tcpPromise(msg){ return this.casparCommon.tcpPromise(msg); }
+    tcpPromise(msg){ return this.getCasparCommon().tcpPromise(msg); }
 }
 
 module.exports = CasparConsumer;
