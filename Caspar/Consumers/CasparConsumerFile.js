@@ -6,7 +6,7 @@ class CasparConsumerFILE extends CasparConsumer {
     constructor(settings){
         super(settings);
         this.fileName = settings['fileName'] || 'defaultVideoFile.mp4';
-        this.codec = settings['codec'] || 'libx264';
+        this.videoCodec = settings['codec'] || 'libx264';
     }
 
 }

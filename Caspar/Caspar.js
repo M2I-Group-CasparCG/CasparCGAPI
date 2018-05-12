@@ -64,7 +64,7 @@ class Caspar {
      * Si des producers, channels ou consumer sont déjà configurés, les applique.
     */
     async ini(){     
-    
+        console.log('ini');
         if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
             let mvSettings = new Array();
                 mvSettings['name'] = 'MVW';
@@ -94,14 +94,13 @@ class Caspar {
             this.addChannel(pvw);
             this.casparCommon.setPvwId(pvw.getId());
         }
-
-        
     }
 
     /**
      * Retrieving informations form the casaparCG server
      */
     async getInfo() {
+
         const casparCommon = this.getCasparCommon();
         const caspar = this;
 
@@ -116,58 +115,61 @@ class Caspar {
                         console.log(rejectResult);
                     }
                 )
-        await this.getCasparCommon().tcpPromise('INFO')
+        if (this.getCasparCommon().getOnline()){
+
+            await this.getCasparCommon().tcpPromise('INFO')
+            .then(
+                function(resolveResult){
+                    casparCommon.setChannelsNb(resolveResult['dataLines']);
+                    resolveResult['data'].forEach(element => {
+                        element = element.split(' ');
+                        let settings = new Array();
+                            settings['id'] = parseInt(element[0]);
+                            settings['name'] = 'default';
+                            settings['videoMode'] = element[1];
+                            settings['statcaspare'] = element[2];
+                        let channel = new Channel(settings);
+                        caspar.addChannel(channel);
+                    });
+                    
+                },  
+                function(rejectResult){
+                    console.log(rejectResult);
+                    
+                }
+            )
+
+            await this.getCasparCommon().tcpPromise('INFO CONFIG')
                 .then(
                     function(resolveResult){
-                        casparCommon.setChannelsNb(resolveResult['dataLines']);
-                        resolveResult['data'].forEach(element => {
-                            element = element.split(' ');
-                            let settings = new Array();
-                                settings['id'] = parseInt(element[0]);
-                                settings['name'] = 'default';
-                                settings['videoMode'] = element[1];
-                                settings['statcaspare'] = element[2];
-                            let channel = new Channel(settings);
-                            caspar.addChannel(channel);
-                        });
-                        
+                        const xmlHandler = new XMLHelper(resolveResult['data']);
+                            casparCommon.setOscDefaultPort(parseInt(xmlHandler.getOSCPortValue()))
                     },  
                     function(rejectResult){
                         console.log(rejectResult);
-                        
                     }
                 )
-        await this.getCasparCommon().tcpPromise('INFO CONFIG')
-            .then(
-                function(resolveResult){
-                    const xmlHandler = new XMLHelper(resolveResult['data']);
-                        casparCommon.setOscDefaultPort(parseInt(xmlHandler.getOSCPortValue()))
-                },  
-                function(rejectResult){
-                    console.log(rejectResult);
-                }
-            )
-            .catch(function(error){
-                console.log(error);
-            });
-    
-        await this.getCasparCommon().tcpPromise('INFO PATHS')
-            .then(
-                function(resolveResult){
-                    const xmlHandler = new XMLHelper(resolveResult['data']);
-                    casparCommon.setCasparPath(xmlHandler.getXMLValue('initial-path'));
-                    casparCommon.setThumbnailsPath(xmlHandler.getXMLValue('thumbnail-path'));
-                    casparCommon.setTemplatePath(xmlHandler.getTemplatePathValue());
-                    casparCommon.setLogPath(xmlHandler.getLogPathValue());
-                    casparCommon.setMediaPath(xmlHandler.getMediaPathValue());
-                },  
-                function(rejectResult){
-                    console.log(rejectResult);
-                }
-            )
-            .catch(function(error){
-                console.log(error);
-            });
+                .catch(function(error){
+                    console.log(error);
+                });
+
+            await this.getCasparCommon().tcpPromise('INFO PATHS')
+                .then(
+                    function(resolveResult){
+                        const xmlHandler = new XMLHelper(resolveResult['data']);
+                        casparCommon.setCasparPath(xmlHandler.getXMLValue('initial-path'));
+                        casparCommon.setThumbnailsPath(xmlHandler.getXMLValue('thumbnail-path'));
+                        casparCommon.setTemplatePath(xmlHandler.getTemplatePathValue());
+                        casparCommon.setLogPath(xmlHandler.getLogPathValue());
+                        casparCommon.setMediaPath(xmlHandler.getMediaPathValue());
+                    },  
+                    function(rejectResult){
+                        console.log(rejectResult);
+                    }
+                )
+                .catch(function(error){
+                    console.log(error);
+                });
 
             await this.getCasparCommon().tcpPromise('INFO SYSTEM')
             .then(
@@ -185,9 +187,11 @@ class Caspar {
                 }
             )
 
+            this.ini();
 
-    
-        }
+        }        
+
+    }
 
     /**
      * Multiple settings edition
@@ -279,7 +283,10 @@ class Caspar {
             producer.setCasparCommon(this.casparCommon);
             this.producers.set(producer.getId(), producer);
             if (this.getCasparCommon().getMvId()){
-                this.channels.get(this.getCasparCommon().getMvId()).ini();
+                this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
+            }
+            if (this.getCasparCommon().getOnline()){
+                producer.run();
             }
             return true;
         }else{
@@ -303,6 +310,9 @@ class Caspar {
         var producer = this.producers.get(producerId);
         if (producer instanceof Producer) {
             this.producers.delete(producerId);
+            if (this.getCasparCommon().getMvId()){
+                this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
+            }
             return producer;
         }else{
             return false
@@ -324,6 +334,9 @@ class Caspar {
         if(consumer instanceof Consumer){
             consumer.setCasparCommon(this.casparCommon);
             this.consumers.set(consumer.getId(), consumer);
+            if (this.getCasparCommon().getOnline()){
+                consumer.run();
+            }
             return true;
         }
         else{
@@ -461,9 +474,6 @@ class Caspar {
         const reChannelMixerAudioChannelsnb         = /\/channel\/\d{1,3}\/mixer\/audio\/nb_channels/;
         const reChannelMixerAudioDbfs               = /\/channel\/\d{1,3}\/mixer\/audio\/\d{1,3}\/dBFS/;
 
-        clearTimeout(onlineTimeout);
-        caspar.getCasparCommon().setOnline(true);
-
         let returnVal = null;
 
         oscData.forEach(function(value, key, map){
@@ -526,20 +536,19 @@ class Caspar {
             }
         });
 
-        onlineTimeout = this.startOnlineTimeout();
         return returnVal;
     }
 
 
-    startOnlineTimeout(){
-        const caspar = this;
-        let timeout = setTimeout(
-            function(){
-                caspar.getCasparCommon().setOnline(false);
-            },
-            1000);
-        return timeout;
-    }
+    // startOnlineTimeout(){
+    //     const caspar = this;
+    //     let timeout = setTimeout(
+    //         function(){
+    //             caspar.getCasparCommon().setOnline(false);
+    //         },
+    //         1000);
+    //     return timeout;
+    // }
 
     /**
      *   Getters / Setters

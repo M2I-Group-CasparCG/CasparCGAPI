@@ -102,10 +102,12 @@ class CasparCommon {
 
         let amcpPort = this.amcpPort;
         let ipAddr = this.ipAddr;
+        let casparCommon = this;
 
         console.log(msg);
 
         return new Promise(function(resolve,reject){
+            
             let result = new Map();
                 result['command'] = msg;
             client.connect(amcpPort, ipAddr, function() {
@@ -113,29 +115,31 @@ class CasparCommon {
             }); 
 
             client.on('error', function(error){
+                casparCommon.setOnline(false);
                 result['returnCode'] = 500;
                 result['returnMessage'] = 'Error on tcp socket'
                 reject(result);
             });
 
             client.on('timeout', function(error){
+                casparCommon.setOnline(false);
                 result['returnCode'] = 101;
                 result['retrunMessage'] = 'CasparCG server is unreachable';
                 let data = new Array();
                     data.push(ipAddr);
                     data.push(amcpPort);
                 result['data'] = data;
-                result['dataLines'] = data.length; 
-                this.online = false;
+                result['dataLines'] = data.length; ;
                 reject(result);
             });
 
             client.on('data', function(data) {
+                casparCommon.setOnline(true);
                 const dataArray = data.toString().split('\r\n');
                 const returnMessage =  dataArray[0].substr(4);
                 const returnCode = dataArray[0].substring(0,3);
                     result['returnCode'] = parseInt(returnCode);
-                    result['retrunMessage'] = returnMessage;
+                    result['retrunMessage'] = returnMessage;    
                 switch (returnCode.substring(0,2)){
                     // INFORMATION
                     case '10' : {
@@ -219,9 +223,7 @@ class CasparCommon {
             client.on('close', function() {
                 console.log('');
             });
-
         });
-
     }
 
     /**

@@ -22,8 +22,9 @@ class CasparChannelMultiview extends CasparChannel{
     /** 
      * Initialize the mutliview according to the patternId
     */
-    ini(){
-
+    ini(producers){
+        this.producers = producers || this.producers;
+        console.log('mv ini');
         // ajout des sources au channel
         // et mise en place du mutliview
         var scale = 0.333333;
@@ -31,11 +32,14 @@ class CasparChannelMultiview extends CasparChannel{
         var posY = 0.58;
         var count = 0;
         var producerCount = 0;
+
         for(var key of this.producers.keys()){
+            console.log(producerCount);
             producerCount++;
-            let req = `MIXER ${this.id}-${producerCount} FILL ${scale*count} ${posY} ${scale} ${scale}`;
+            let req = `MIXER ${this.id}-${key} FILL ${scale*count} ${posY} ${scale} ${scale}`;
+            console.log(req);
             this.tcpSend(req, function(){});
-            req = `MIXER ${this.id}-${producerCount} VOLUME 0`;
+            req = `MIXER ${this.id}-${key} VOLUME 0`;
             this.tcpSend(req, function(){});
             count++;
         }

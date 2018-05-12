@@ -33,7 +33,49 @@ module.exports = function(socket) {
     var casparRoutes = {};                      
     var apiReturn = new ApiReturn();            // objet permettant de générer les messages API
 
+
+    /** TEMP
+     *  FOR TEST PURPOSES
+     * Add a default caspar instance with screen
+     */
     
+    // let testCasparSettings = new Array();
+    // testCasparSettings['ipAddr'] = '192.168.1.231';
+    // testCasparSettings['amcpPort'] = '5250';
+    // testCasparSettings['name'] = 'auto Test';
+    // let testCaspar = new Caspar(testCasparSettings);
+    // testCaspar.restart()
+    //     .then(
+    //         function(resolve){
+    //             console.log('restart');
+    //         },
+    //         function(reject){
+    //             console.log(reject);
+    //         }
+    //     )
+
+    // setTimeout(
+    //     function(){
+    //         console.log('timeout');
+    //         caspars.set(testCaspar.getId(),testCaspar);
+    //         testCaspar.getInfo()
+    //             .then(function(){
+    //                console.log('default caspar added')
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+                   
+    //             });
+    //         testCasparConsumer = new Array();
+    //         testCasparConsumer['channelId'] = 1;
+    //         testConsumer = new ConsumerScreen(testCasparConsumer)
+    //         testCaspar.addConsumer(testConsumer);
+    //         // testConsumer.run();
+    //     },
+    //     2000
+    // );
+   
+
     /**
      * _____________________________________________________________________________________________________________________________
      * 
@@ -45,11 +87,13 @@ module.exports = function(socket) {
      */
     casparRoutes.add = async function(req, res){
         let casparSettings = req.body;
+        console.log(casparSettings);
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             caspar.getInfo()
                 .then(function(){
                     res.json(caspar);
+                    socket.emit('casparAdd',JSON.stringify(caspar));
                 })
                 .catch(error => {
                     console.log(error);
@@ -64,6 +108,7 @@ module.exports = function(socket) {
     casparRoutes.getAll = function(req, res, next){
         console.log('getAll');
         let array = [...caspars];
+        console.log(array);
         res.json(array);
     },
 
@@ -162,8 +207,15 @@ module.exports = function(socket) {
      */
     casparRoutes.delete = function(req, res){
         const casparId = parseInt(req.params.casparId);
-        caspars.delete(casparId);
-        res.json(apiReturn.successMessage('caspar instance deleted'))
+        const caspar = caspars.get(casparId);
+        if ( caspar instanceof Caspar){
+            caspars.delete(casparId);
+            res.json(apiReturn.successMessage('caspar instance deleted'));
+            socket.emit('casparDelete',JSON.stringify(caspar));
+        } else{
+            res.json(apiReturn.notFoundMessage('Caspar instance not found'));
+        }
+        
     },
 
     /**
@@ -332,6 +384,10 @@ module.exports = function(socket) {
             consumers.set(consumer.getId(), consumer);
             caspars.get(casparId).addConsumer(consumer);
             res.json(consumer);
+            if(socket){
+                socket.emit('consumerAdd', JSON.stringify(consumer));
+                socket.broadcast('consumerAdd',JSON.stringify(consumer));
+            }
         }else{
             res.json(apiReturn.requestErrorMessage('unknown consumer type : '+consumerType));
         }
@@ -419,6 +475,10 @@ module.exports = function(socket) {
                 caspars.get(casparId).removeConsumer(consumerId);
                 consumers.delete(casparId);
                 res.json(apiReturn.successMessage('Consumer removed'));
+                if(socket){
+                    socket.emit('consumerDelete', JSON.stringify(consumer));
+                    socket.broadcast('consumerDelete',JSON.stringify(consumer));
+                }
             },
             function(msg){
                 res.json(apiReturn.amcpErrorMessage(msg));
@@ -455,16 +515,13 @@ module.exports = function(socket) {
                 producer = new ProducerFile(consumerSettings);
             }break;
             case 'stream' : {
-                producer = new ProducerStream(consumerSettings);
+                producer = new ProducerNet(consumerSettings);
             }break;
             case 'ddr' : {
                 producer = new ProducerDdr(consumerSettings);
             }break;
             case 'decklink' : {
                 producer = new ProducerDecklink(consumerSettings);
-            }break;
-            case 'net' : {
-                producer = new ProducerNet(consumerSettings);
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown producer type'));
@@ -476,8 +533,8 @@ module.exports = function(socket) {
             caspar.addProducer(producer);
             res.json(producer);
             if (socket) {
-                socket.emit('producerAdded',JSON.stringify(producer));
-                // socket.broadcast('producerAdded',JSON.stringify(producer));
+                socket.emit('producerAdd',JSON.stringify(producer));
+                socket.broadcast('producerAdded',JSON.stringify(producer));
             }
         }
     },
@@ -557,8 +614,8 @@ module.exports = function(socket) {
                         producers.delete(producerId);
                         res.json(apiReturn.successMessage('producer deleted'));
                         if(socket){
-                            socket.emit('producerRemoved',JSON.stringify(producerId));
-                            // socket.broadcast('producerRemoved',JSON.stringify(producerId));
+                            socket.emit('producerDelete', JSON.stringify(producer));
+                            socket.broadcast('producerDelete',JSON.stringify(producer));
                         }
                     },
                     function(msg){

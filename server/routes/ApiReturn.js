@@ -10,6 +10,7 @@ class ApiReturn {
 
     successMessage ( description ) {
         let message = new Object();
+            message.object = 'message';
             message.code = 202;
             message.type = 'Success';
             message.description = description;
@@ -22,6 +23,7 @@ class ApiReturn {
 
     amcpErrorMessage ( amcpErrorMessage  ) {
         let error = new Error();
+            error.object = 'message';
             error.code = 500;
             error.type = 'AMCP protocol error';
             error.description = amcpErrorMessage;
@@ -30,6 +32,7 @@ class ApiReturn {
 
     notFoundMessage ( description ) {
         let error = new Error();
+            error.object = 'message';
             error.code = 404;
             error.type = 'Ressource not found';
             error.description = description;
@@ -38,9 +41,10 @@ class ApiReturn {
 
     requestErrorMessage ( description ) {
         let error = new Error();
-        error.code = 400;
-        error.type = 'Request Error';
-        error.description = description;
+            error.object = 'message';
+            error.code = 400;
+            error.type = 'Request Error';
+            error.description = description;
     return error;
     }
 
@@ -49,9 +53,10 @@ class ApiReturn {
      */
     customMessage( code, type, description ){
         let message = new Object();
-        message.code = code;
-        message.type = type;
-        message.description = description;
+            message.object = 'message';
+            message.code = code;
+            message.type = type;
+            message.description = description;
     return message;
     }
 
