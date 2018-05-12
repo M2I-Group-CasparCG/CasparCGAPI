@@ -514,7 +514,7 @@ module.exports = function(socket) {
             case 'file' : {
                 producer = new ProducerFile(consumerSettings);
             }break;
-            case 'stream' : {
+            case 'net' : {
                 producer = new ProducerNet(consumerSettings);
             }break;
             case 'ddr' : {
