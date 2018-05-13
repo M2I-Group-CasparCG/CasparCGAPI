@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b1404006-3842-40d9-a859-8181141f0cb2",
 		"name": "CasparCGAPI",
+		"_postman_id": "322bcd24-8365-404d-9ca8-9258a670d779",
 		"description": "# Introduction\nNodeJS API to control CasparCG Server\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -671,7 +671,7 @@
 							"raw": "{\n\t\"name\":\"STREAM 3\",\n\t\"url\":\"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov\"\n}"
 						},
 						"url": {
-							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/net",
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/stream",
 							"host": [
 								"{{apiUrl}}"
 							],
@@ -681,7 +681,7 @@
 								"caspars",
 								"{{casparId}}",
 								"producers",
-								"net"
+								"stream"
 							]
 						},
 						"description": "Add a Stream producer to CasparCG Server"
@@ -1216,7 +1216,8 @@
 								"producers",
 								"{{producerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -1286,7 +1287,8 @@
 								"producers",
 								"{{producerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				}
@@ -1458,6 +1460,174 @@
 								"{{casparId}}",
 								"consumers",
 								"decklink"
+							]
+						},
+						"description": "Adding a screen consumer to casparCG"
+					},
+					"response": []
+				},
+				{
+					"name": "consumerFileAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bd6b900-8041-4a92-84e1-ba0a60f0f62c",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Consumer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+									"});",
+									"",
+									"",
+									"try {",
+									"    let consumer = JSON.parse(responseBody);",
+									"    pm.environment.set(\"consumerId\", consumer['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Test File\",\n\t\"channelId\": 1,\n\t\"fileName\": \"myFile.mov\",\n\t\"filePath\":\"\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/file",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"consumers",
+								"file"
+							]
+						},
+						"description": "Adding a screen consumer to casparCG"
+					},
+					"response": []
+				},
+				{
+					"name": "consumerStreamAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bd6b900-8041-4a92-84e1-ba0a60f0f62c",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Consumer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+									"});",
+									"",
+									"",
+									"try {",
+									"    let consumer = JSON.parse(responseBody);",
+									"    pm.environment.set(\"consumerId\", consumer['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Test File\",\n\t\"channelId\": 1,\n\t\"host\":\"192.168.1.181\",\n\t\"protocol\":\"udp\",\n\t\"port\":5004,\n\t\"vcodec\":\"libx264\",\n\t\"pictureWidth\":1920,\n\t\"pictureHeight\":1080\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/consumers/stream",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"consumers",
+								"stream"
 							]
 						},
 						"description": "Adding a screen consumer to casparCG"
@@ -1932,7 +2102,8 @@
 								"{{casparId}}",
 								"layers"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -1997,7 +2168,8 @@
 								"producers",
 								"{{producerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2061,7 +2233,8 @@
 								"{{layerId}}",
 								"start"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2125,7 +2298,8 @@
 								"{{layerId}}",
 								"stop"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2187,7 +2361,8 @@
 								"{{casparId}}",
 								"layers"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2250,7 +2425,8 @@
 								"layers",
 								"{{layerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2313,7 +2489,8 @@
 								"layers",
 								"{{layerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2376,7 +2553,8 @@
 								"layers",
 								"{{layerId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				}
@@ -2462,7 +2640,8 @@
 								"{{casparId}}",
 								"channels"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2719,7 +2898,8 @@
 								"{{channelId}}",
 								"audioLevels"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2783,7 +2963,8 @@
 								"channels",
 								"{{channelId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				},
@@ -2847,7 +3028,8 @@
 								"channels",
 								"{{channelId}}"
 							]
-						}
+						},
+						"description": null
 					},
 					"response": []
 				}
@@ -3505,7 +3687,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						},
@@ -3568,7 +3751,8 @@
 										"producers",
 										"{{producerId}}"
 									]
-								}
+								},
+								"description": null
 							},
 							"response": []
 						}
@@ -4143,7 +4327,7 @@
 				},
 				{
 					"name": "caspars_test",
-					"description": "",
+					"description": null,
 					"item": [
 						{
 							"name": "casparAdd",

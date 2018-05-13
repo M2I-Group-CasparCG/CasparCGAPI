@@ -39,53 +39,53 @@ module.exports = function(socket) {
     //  * Add a default caspar instance with screen
     //  */
     
-    let testCasparSettings = new Array();
-    testCasparSettings['ipAddr'] = '192.168.1.204';
-    testCasparSettings['amcpPort'] = '5250';
-    testCasparSettings['name'] = 'auto Test';
-    let testCaspar = new Caspar(testCasparSettings);
-    testCaspar.restart()
-        .then(
-            function(resolve){
-                console.log('restart');
-            },
-            function(reject){
-                console.log(reject);
-            }
-        )
+    // let testCasparSettings = new Array();
+    // testCasparSettings['ipAddr'] = '192.168.1.204';
+    // testCasparSettings['amcpPort'] = '5250';
+    // testCasparSettings['name'] = 'auto Test';
+    // let testCaspar = new Caspar(testCasparSettings);
+    // testCaspar.restart()
+    //     .then(
+    //         function(resolve){
+    //             console.log('restart');
+    //         },
+    //         function(reject){
+    //             console.log(reject);
+    //         }
+    //     )
 
-    setTimeout(
-        function(){
-            console.log('timeout');
-            caspars.set(testCaspar.getId(),testCaspar);
-            testCaspar.getInfo()
-                .then(function(){
-                   console.log('default caspar added')
-                })
-                .catch(error => {
-                    console.log(error);
+    // setTimeout(
+    //     function(){
+    //         console.log('timeout');
+    //         caspars.set(testCaspar.getId(),testCaspar);
+    //         testCaspar.getInfo()
+    //             .then(function(){
+    //                console.log('default caspar added')
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
                    
-                });
+    //             });
 
-            setTimeout(
-                function(){
-                    testCasparConsumer = new Array();
-                    testCasparConsumer['channelId'] = 1;
-                    testConsumer = new ConsumerScreen(testCasparConsumer)
-                    testCaspar.addConsumer(testConsumer);
-                    // testConsumer.run();
+    //         setTimeout(
+    //             function(){
+    //                 testCasparConsumer = new Array();
+    //                 testCasparConsumer['channelId'] = 1;
+    //                 testConsumer = new ConsumerScreen(testCasparConsumer)
+    //                 testCaspar.addConsumer(testConsumer);
+    //                 // testConsumer.run();
 
-                    testFileSettings = new Array();
-                    testFileSettings['name'] = 'test File';
-                    testFileSettings['fileName'] = 'amb';
-                    testFileSettings['playMode'] = 'loop';
-                    testFile = new ProducerFile(testFileSettings);
-                    testCaspar.addProducer(testFile);
-                },2000);
+    //                 testFileSettings = new Array();
+    //                 testFileSettings['name'] = 'test File';
+    //                 testFileSettings['fileName'] = 'amb';
+    //                 testFileSettings['playMode'] = 'loop';
+    //                 testFile = new ProducerFile(testFileSettings);
+    //                 testCaspar.addProducer(testFile);
+    //             },2000);
             
-        },
-        2000
-    );
+    //     },
+    //     2000
+    // );
    
 
     /**

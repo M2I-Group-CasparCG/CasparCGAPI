@@ -40,11 +40,11 @@ class CasparConsumerFILE extends CasparConsumer {
     }
 
     stop() {
-        var req = `REMOVE ${this.channelId} ${this.type}`;
+        var req = `REMOVE ${this.channelId} ${this.type}  ${this.filePath}${this.fileName}`;
         return this.tcpPromise(req);
     }
 
-    edit () {
+    edit (setting, value) {
         let response = new Object();
         switch (setting){
             case 'name' : {

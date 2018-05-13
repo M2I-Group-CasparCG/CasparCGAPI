@@ -33,7 +33,7 @@ class CasparConsumerNet extends CasparConsumer {
         return this.tcpPromise(req);
     }
 
-    edit(){
+    edit(setting, value){
         let response = new Object();
         switch (setting){
             case 'name' : {
