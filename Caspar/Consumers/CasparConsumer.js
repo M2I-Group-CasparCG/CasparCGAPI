@@ -6,8 +6,10 @@ class CasparConsumer {
     constructor(settings){
         this.object = 'Consumer';
         this.name = settings['name'] || 'Consumer';
-        this.casparCommon = null;
+        this.type = "";
+        this.id = 0;
         this.channelId = settings['channelId'] || 0;
+       
     }
 
     start(){

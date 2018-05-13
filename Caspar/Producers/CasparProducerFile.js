@@ -8,7 +8,7 @@ class CasparProducerFILE extends CasparProducer{
         CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
         super(settings);
         this.type = "FILE";
-        this.id = CasparProducerFILE.totalInstances;
+        this.id = CasparProducer.totalInstances;
         this.fileName = settings['fileName'] || 'none';
         this.playMode = settings['playMode'] || 'loop';
         this.seek = settings['seek'] || false;

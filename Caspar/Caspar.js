@@ -458,9 +458,10 @@ class Caspar {
      * @param {String} oscData 
      * @return {Object} the object describing the OSC information analyzed 
      */
-    oscAnalyzer(oscData){
+    oscAnalyzer(oscData){        
 
-        
+        // console.log(oscData);
+
         let caspar = this;
 
         const reChannelFormat                       = /\/channel\/\d{1,3}\/format/;
@@ -474,67 +475,106 @@ class Caspar {
         const reChannelMixerAudioChannelsnb         = /\/channel\/\d{1,3}\/mixer\/audio\/nb_channels/;
         const reChannelMixerAudioDbfs               = /\/channel\/\d{1,3}\/mixer\/audio\/\d{1,3}\/dBFS/;
 
+        const reChannelOutputRecord                 = /\/channel\/\d{1,3}\/output\/port\/200\//;
+        const reChannelOutputRecordFrame            = /\/channel\/\d{1,3}\/output\/port\/200\/frame/;
+        const reChannelOutputRecordPath             = /\/channel\/\d{1,3}\/output\/port\/200\/path/;
+        const reChannelOutputRecordType             = /\/channel\/\d{1,3}\/output\/port\/200\/type/;
+
         let returnVal = null;
 
-        oscData.forEach(function(value, key, map){
-            
-            if ( key.match(reChannelFormat)){
-                const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
-                if (caspar.getChannels().get(channelNb) instanceof Channel ){
-                    caspar.getChannels().get(channelNb).setVideoMode(value);
+        // console.log(oscData.keys().next().value);
+        const firstKey = oscData.keys().next().value;
+
+
+        // dans le cas d'un message de rec
+        if(firstKey.match(reChannelOutputRecord)){
+
+            const messageType = 'recordInfo';
+            const recInfo = new Object();
+            oscData.forEach(function(value, key, map){
+                if(key.match(reChannelOutputRecordFrame)){
+                    recInfo.frame = value;
+                }else if (key.match(reChannelOutputRecordPath)){
+                    recInfo.path = value;
                 }
-                returnVal = null;
-            }else if ( key.match(reChannelLayerLoop)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelLayerPaused)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelLayerFileTime)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelLayerFileFrame)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelLayerFileFps)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelLayerFilePath)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const layerNb = parseInt(result[1]);
-                returnVal = null;
-            }else if ( key.match(reChannelMixerAudioChannelsnb)){
-                const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
-                returnVal = null;
-            }else if ( key.match(reChannelMixerAudioDbfs)){
-                const result = key.match(/\d{1,3}/g);
-                const channelNb = parseInt(result[0]);
-                const audioChannelNb = parseInt(result[1]);
-                if (caspar.getChannels().get(channelNb) instanceof Channel ){
-                    caspar.getChannels().get(channelNb).setAudioLevel(audioChannelNb, value);
-                }
-                let state = new Object();
-                    state.type = 'audioLevel';
-                    state.casparId = caspar.getCasparCommon().getId();
-                    state.channelId = channelNb;
-                    state.audioChannelNb = audioChannelNb;
-                    state.audioLevel = value;
-                returnVal =  state;
-            }else{
-                returnVal = null;
+            });
+
+            if (recInfo.frame && recInfo.path){
+                return [messageType,recInfo];
             }
-        });
+        }
+        // if (oscData.key().next().val)
+
+        // oscData.forEach(function(value, key, map){
+            
+        //     if ( key.match(reChannelFormat)){
+        //         const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
+        //         if (caspar.getChannels().get(channelNb) instanceof Channel ){
+        //             caspar.getChannels().get(channelNb).setVideoMode(value);
+        //         }
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerLoop)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerPaused)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerFileTime)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerFileFrame)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerFileFps)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelLayerFilePath)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const layerNb = parseInt(result[1]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelMixerAudioChannelsnb)){
+        //         const channelNb = parseInt(key.match(/\d{1,3}/)[0]);
+        //         returnVal = null;
+        //     }else if ( key.match(reChannelMixerAudioDbfs)){
+        //         const result = key.match(/\d{1,3}/g);
+        //         const channelNb = parseInt(result[0]);
+        //         const audioChannelNb = parseInt(result[1]);
+        //         if (caspar.getChannels().get(channelNb) instanceof Channel ){
+        //             caspar.getChannels().get(channelNb).setAudioLevel(audioChannelNb, value);
+        //         }
+        //         let state = new Object();
+        //             state.type = 'audioLevel';
+        //             state.casparId = caspar.getCasparCommon().getId();
+        //             state.channelId = channelNb;
+        //             state.audioChannelNb = audioChannelNb;
+        //             state.audioLevel = value;
+        //         returnVal =  state;
+            
+        //     /**
+        //      * RECORD
+        //      */
+        //     }elseif (key.match(reChannelOutputRecord)){
+                
+        //     }
+            
+            
+            
+            
+        //     else{
+        //         returnVal = null;
+        //     }
+        // });
 
         return returnVal;
     }
