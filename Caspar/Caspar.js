@@ -386,6 +386,7 @@ class Caspar {
      * @return {}
      */
     addLayer (settings) {
+        console.log(settings);
         settings['casparCommon'] = this.getCasparCommon();
         let layer = new Layer(settings);
         this.layers.set(layer.getId(), layer);
@@ -395,7 +396,7 @@ class Caspar {
         if (channel instanceof Channel){
             return this.getChannel(channelId).addLayer(layer);      // ajout du layer au channel
         }else{
-            false;
+            return layer;
         }
     }
 
@@ -409,9 +410,10 @@ class Caspar {
         let channel = this.channels.get(layer.getChannelId());
 
         if (channel instanceof Channel ){
+            this.layers.delete(layerId);
             return channel.removeLayer(layerId);
         }else{
-            return false;
+            return this.layers.delete(layerId);
         }
     }
 

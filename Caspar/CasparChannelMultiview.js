@@ -27,21 +27,40 @@ class CasparChannelMultiview extends CasparChannel{
         console.log('mv ini');
         // ajout des sources au channel
         // et mise en place du mutliview
-        var scale = 0.333333;
+        var scale = 1;
+        if (this.producers.size  <= 4){
+            scale = 1/this.producers.size;
+        }else{
+            scale = 0.25;
+        }
+        console.log('scale : '+scale)
         var posX = 0;
-        var posY = 0.58;
+        if (this.producers.size <= 4){
+            var posY = 0.5 + (0.5-scale)/2;
+        }else{
+            var posY = 0.5
+        }
+        
         var count = 0;
         var producerCount = 0;
 
         for(var key of this.producers.keys()){
-            console.log(producerCount);
-            producerCount++;
-            let req = `MIXER ${this.id}-${key} FILL ${scale*count} ${posY} ${scale} ${scale}`;
-            console.log(req);
-            this.tcpSend(req, function(){});
-            req = `MIXER ${this.id}-${key} VOLUME 0`;
-            this.tcpSend(req, function(){});
-            count++;
+
+           
+                console.log(producerCount);
+                producerCount++;
+                let req = `MIXER ${this.id}-${key} FILL ${scale*count} ${posY} ${scale} ${scale}`;
+                console.log(req);
+                this.tcpSend(req, function(){});
+                req = `MIXER ${this.id}-${key} VOLUME 0`;
+                this.tcpSend(req, function(){});
+                count++;
+
+                if (count == 4 ){
+                    var posY = 0.75
+                    count = 0;
+                }
+
         }
 
         // ajout de PGM / PVW

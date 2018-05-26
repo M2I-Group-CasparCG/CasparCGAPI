@@ -39,53 +39,67 @@ module.exports = function(socket) {
     //  * Add a default caspar instance with screen
     //  */
     
-    // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '192.168.1.204';
-    // testCasparSettings['amcpPort'] = '5250';
-    // testCasparSettings['name'] = 'auto Test';
-    // let testCaspar = new Caspar(testCasparSettings);
-    // testCaspar.restart()
-    //     .then(
-    //         function(resolve){
-    //             console.log('restart');
-    //         },
-    //         function(reject){
-    //             console.log(reject);
-    //         }
-    //     )
+    let testCasparSettings = new Array();
+    testCasparSettings['ipAddr'] = '192.168.1.231';
+    testCasparSettings['amcpPort'] = '5250';
+    testCasparSettings['name'] = 'auto Test';
+    let testCaspar = new Caspar(testCasparSettings);
+    testCaspar.restart()
+        .then(
+            function(resolve){
+                console.log('restart');
+            },
+            function(reject){
+                console.log(reject);
+            }
+        )
 
-    // setTimeout(
-    //     function(){
-    //         console.log('timeout');
-    //         caspars.set(testCaspar.getId(),testCaspar);
-    //         testCaspar.getInfo()
-    //             .then(function(){
-    //                console.log('default caspar added')
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
+    setTimeout(
+        function(){
+            console.log('timeout');
+            caspars.set(testCaspar.getId(),testCaspar);
+            testCaspar.getInfo()
+                .then(function(){
+                   console.log('default caspar added')
+                })
+                .catch(error => {
+                    console.log(error);
                    
-    //             });
+                });
 
-    //         setTimeout(
-    //             function(){
-    //                 testCasparConsumer = new Array();
-    //                 testCasparConsumer['channelId'] = 1;
-    //                 testConsumer = new ConsumerScreen(testCasparConsumer)
-    //                 testCaspar.addConsumer(testConsumer);
-    //                 // testConsumer.run();
+            setTimeout(
+                function(){
+                    testCasparConsumer = new Array();
+                    testCasparConsumer['channelId'] = 1;
+                    testConsumer = new ConsumerScreen(testCasparConsumer)
+                    testCaspar.addConsumer(testConsumer);
+                    // testConsumer.run();
 
-    //                 testFileSettings = new Array();
-    //                 testFileSettings['name'] = 'test File';
-    //                 testFileSettings['fileName'] = 'amb';
-    //                 testFileSettings['playMode'] = 'loop';
-    //                 testFile = new ProducerFile(testFileSettings);
-    //                 testCaspar.addProducer(testFile);
-    //             },2000);
+                    testFileSettings = new Array();
+                    testFileSettings['name'] = 'AMB';
+                    testFileSettings['fileName'] = 'amb';
+                    testFileSettings['playMode'] = 'loop';
+                    testFile = new ProducerFile(testFileSettings);
+                    testCaspar.addProducer(testFile);
+
+                    testFileSettings2 = new Array();
+                    testFileSettings2['name'] = 'GO';
+                    testFileSettings2['fileName'] = 'GO1080P25';
+                    testFileSettings2['playMode'] = 'loop';
+                    testFile2 = new ProducerFile(testFileSettings2);
+                    testCaspar.addProducer(testFile2);
+
+                    testFileSettings3 = new Array();
+                    testFileSettings3['name'] = 'itescia';
+                    testFileSettings3['fileName'] = 'itescia';
+                    testFileSettings3['playMode'] = 'loop';
+                    testFile3 = new ProducerFile(testFileSettings3);
+                    testCaspar.addProducer(testFile3);
+                },2000);
             
-    //     },
-    //     2000
-    // );
+        },
+        2000
+    );
    
 
     /**
@@ -284,6 +298,7 @@ module.exports = function(socket) {
                 result[setting] = response[setting];
             }
             res.json(apiReturn.successMessage(result));
+            socket.emit(objectType.slice(0, -1)+'Edit', JSON.stringify(object));
         }else{
             res.json(apiReturn.requestErrorMessage('unkown object type'));
         }
@@ -706,6 +721,8 @@ module.exports = function(socket) {
                 .then(
                     function(msg){  
                         res.json(apiReturn.successMessage('Channel\'s input switched'));
+                        socket.emit('channelEdit', JSON.stringify(channel));
+                        
                     },
                     function(msg){
                         console.log(msg);
@@ -722,11 +739,24 @@ module.exports = function(socket) {
     },
 
     /**
+     * Get all the layers of a channel
+     */
+    casparRoutes.channelLayersGetAll = function (req,res) {
+        const casparId = parseInt(req.params.casparId);
+        const channelId = parseInt(req.params.channelId);
+        const channel = caspars.get(casparId).getChannel(channelId);
+
+        let array = [...channel.getLayers()];
+        res.json(array);
+        
+    },  
+
+    /**
      * Delete a channel instance
      */
     casparRoutes.channelDelete = function (res, req, next){
 
-    }
+    },
 
 
     /**
@@ -743,9 +773,10 @@ module.exports = function(socket) {
         const caspar = caspars.get(casparId);
         const settings = req.body; 
 
-        let result = caspar.addLayer(settings);
-        if (result){
-            res.json(result);
+        let layer = caspar.addLayer(settings);
+        if (layer){
+            res.json(layer);
+            socket.emit('layerAdd',JSON.stringify(layer))
         }else{
             res.json(apiReturn.notFoundMessage('Channel instance not found'));
         }
@@ -781,6 +812,7 @@ module.exports = function(socket) {
                 .then(
                     function(msg){
                         res.json(apiReturn.successMessage('Layer\'s input switched'));
+                        socket.emit('layerEdit', JSON.stringify(layer   ));
                     },
                     function(msg){
                         res.json(apiReturn.amcpErrorMessage(msg));
@@ -842,6 +874,7 @@ module.exports = function(socket) {
             let result = caspars.get(casparId).removeLayer(layerId);
             if (result){
                 res.json(apiReturn.successMessage('Layer deleted'));
+                socket.emit('layerDelete', JSON.stringify(layer))
             }else{
                 res.json(apiReturn.notFoundMessage('Unable to delete layer'));
             }

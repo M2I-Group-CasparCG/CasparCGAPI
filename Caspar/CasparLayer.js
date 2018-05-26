@@ -10,7 +10,7 @@ class CasparLayer {
         this.name = settings['name'] || 'layer';
         this.layerId = settings['layerId'] || 0;
         this.channelId = settings['channelId'] || 0;
-        this.producerId = settings['layerId'] || 1;
+        this.selectedInput = settings['layerId'] || 1;
         this.posX = settings['posX'] || 0;
         this.posY = settings['posY'] || 0;
         this.scaleX = settings['scaleX'] || 1;
@@ -25,7 +25,7 @@ class CasparLayer {
      */
     setInput(producerId){
         let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${producerId}`;
-        this.producerId = producerId;
+        this.selectedInput = producerId;
         return this.tcpPromise(req);
     }
 
@@ -34,7 +34,7 @@ class CasparLayer {
      * @return {Promise} tcpPromise
      */
     start(){
-        let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${this.producerId}`;
+        let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${this.selectedInput}`;
         return this.tcpPromise(req);
     }
 
