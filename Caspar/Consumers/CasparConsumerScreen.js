@@ -11,15 +11,19 @@ class CasparConsumerSCREEN extends CasparConsumer {
         this.type = 'SCREEN';
         this.id = CasparConsumer.totalInstances;
         this.bufferDepth = settings['bufferDepth'] || 4;
-        this.displayName = settings['displayName'] || 'Screen';
+        this.channelName = settings['channelName'] || 'Screen';
         this.channelId = settings['channelId'] || 0;
+        this.fullscreen = settings['fullscreen'] || false;
         this.running = false;                               // à alimenter en OSC. 
         
     }
 
 
     run() {
-        var req = `ADD ${this.channelId} ${this.type} ${this.id} name ${this.displayName}`;
+        var req = `ADD ${this.channelId} ${this.type} ${this.id} name ${this.name}-${this.channelName}`;
+        if(this.fullscreen){
+            req = `${req} FULLSCREEN`;
+        }
         return this.tcpPromise(req);
     }
 
@@ -46,9 +50,9 @@ class CasparConsumerSCREEN extends CasparConsumer {
                 response[setting] = this.getChannelId();
             }
             break;
-            case 'displayName' : {
-                this.setDisplayName(value);
-                response[setting] = this.getDisplayName();
+            case 'channelName' : {
+                this.setChannelName(value);
+                response[setting] = this.getChannelName();
             }
             break; 
             default : {
@@ -58,8 +62,8 @@ class CasparConsumerSCREEN extends CasparConsumer {
         return response;
     }
 
-    getDisplayName(){ return this.displayName; }
-    setDisplayName(displayName){ this.displayName = displayName; }
+    getChannelName(){ return this.channelName; }
+    setChannelName(channelName){ this.channelName = channelName; }
 
     getBufferDepth() { return this.bufferDepth; }
     setBufferDepth(bufferDepth) { this.bufferDepth = bufferDepth; }

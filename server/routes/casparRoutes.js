@@ -71,6 +71,9 @@ module.exports = function(socket) {
                 function(){
                     testCasparConsumer = new Array();
                     testCasparConsumer['channelId'] = 1;
+                    testCasparConsumer['name'] = 'Consumer1';
+                    testCasparConsumer['fullscreen'] = true;
+                    testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
                     testConsumer = new ConsumerScreen(testCasparConsumer)
                     testCaspar.addConsumer(testConsumer);
                     // testConsumer.run();
@@ -808,17 +811,8 @@ module.exports = function(socket) {
         const producerId = parseInt(req.params.producerId);
         let layer = caspars.get(casparId).getLayer(layerId);
         if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
-            layer.setInput(producerId)
-                .then(
-                    function(msg){
-                        res.json(apiReturn.successMessage('Layer\'s input switched'));
-                        socket.emit('layerEdit', JSON.stringify(layer   ));
-                    },
-                    function(msg){
-                        res.json(apiReturn.amcpErrorMessage(msg));
-                    }).catch(function(error){
-                        console.log(error);
-                    });
+            layer.setInput(producerId);
+            socket.emit('layerEdit', JSON.stringify(layer));
         }else{
             res.json(apiReturn.notFoundMessage('producer not found'));
         }
@@ -835,6 +829,8 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Layer started'))
+                    layer.setIsActive(true);
+                    socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
@@ -854,6 +850,8 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Layer stoped'))
+                    layer.setIsActive(false);
+                    socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));

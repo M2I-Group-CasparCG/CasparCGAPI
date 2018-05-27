@@ -27,8 +27,9 @@ class CasparChannelMultiview extends CasparChannel{
         console.log('mv ini');
         // ajout des sources au channel
         // et mise en place du mutliview
-        var scale = 1;
-        if (this.producers.size  <= 4){
+        if (this.producers.size == 1){
+            var scale = 0.5;
+        }else if (this.producers.size  <= 4){
             scale = 1/this.producers.size;
         }else{
             scale = 0.25;

@@ -28,7 +28,14 @@ class CasparConsumer {
     setCasparCommon(casparCommon){ this.casparCommon = casparCommon; }
 
     getChannelId(){ return this.channelId; }
-    setChannelId(channelId){ this.channelId = channelId; }
+    setChannelId(channelId){ 
+        if(this.type != 'DECKLINK'){
+            this.stop();
+        }
+        this.channelId = channelId; 
+
+        this.run();
+    }
 
     getName() { return this.name; }
     setName(name) { this.name = name; }
