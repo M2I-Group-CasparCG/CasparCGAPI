@@ -51,9 +51,9 @@ describe('CasparChannel Tests', function (){
             expect(Object.values(edit)[0]).toBe('editBufferDepth');
 
 
-            edit = consumerDecklink.edit('channelId', 'editedChannelId');
-            expect(Object.keys(edit)[0]).toBe('channelId');
-            expect(Object.values(edit)[0]).toBe('editedChannelId');
+            // edit = consumerDecklink.edit('channelId', 'editedChannelId');
+            // expect(Object.keys(edit)[0]).toBe('channelId');
+            // expect(Object.values(edit)[0]).toBe('editedChannelId');
 
             edit = consumerDecklink.edit('decklinkId', 'editedDecklinkId');
             expect(Object.keys(edit)[0]).toBe('decklinkId');
