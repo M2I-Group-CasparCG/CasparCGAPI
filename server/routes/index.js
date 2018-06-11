@@ -95,6 +95,7 @@ let udpServer = dgram.createSocket('udp4');
     router.get('/api/v1/caspars/:casparId/channels/:channelId/audioLevels', casparRoutes.channelGetAudioLevels);
     router.post('/api/v1/caspars/:casparId/channels/:channelId/producers/:producerId', casparRoutes.channelSetInput);
     router.get('/api/v1/caspars/:casparId/channels/:channelId/layers', casparRoutes.channelLayersGetAll);
+        // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', casparRoutes.channelDelete);
 
     /**
      * Layers
@@ -111,10 +112,23 @@ let udpServer = dgram.createSocket('udp4');
     // router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', casparRoutes.channelLayerStop);
 
 
-    // router.delete('/api/v1/casparcg/:casparId/channel/:channelId/:producerId', casparRoutes.channelDelete);
+    /**
+     * DDR
+     */
 
 
-  
+
+    /**
+     * PLAYLIST
+     */
+
+    
+     /**
+      * MEDIAS
+      */
+    router.post('/api/v1/caspars/:casparId/medias', casparRoutes.scanMedias);
+    // router.get('/api/v1/caspars/:casparId/medias', casparRoutes.getMedias);
+    // router.post('/api/v1/caspars/:casparId/medias/:mediaId', casparRoutes.getMedia);
 
     /**
      * XMLHandler

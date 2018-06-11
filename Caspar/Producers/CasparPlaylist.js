@@ -31,6 +31,12 @@ class CasparPlaylist {
        
     }
 
+    getMedia (index)  {
+        if(this.list.findIndex(index)){
+            return this.list[index];
+        }
+    }
+
     removeMedia (mediaIndex){
 
         if (this.list[mediaIndex] != null){

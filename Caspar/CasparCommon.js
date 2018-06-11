@@ -47,7 +47,6 @@ class CasparCommon {
         this.casparVersion = null;
         this.casparPath = null;
         this.channelsNb = 0;
-
     }
 
     /**

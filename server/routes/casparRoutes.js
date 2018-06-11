@@ -7,6 +7,7 @@ const Caspar =            require('../../Caspar/Caspar.js');
 const Channel =           require('../../Caspar/CasparChannel');
 const ChannelMultiview =  require('../../Caspar/CasparChannelMultiview.js');
 const Layer =             require('../../Caspar/CasparLayer.js')
+const Media =             require('../../Caspar/Producers/CasparMedia.js')
 
 const Producer =          require('../../Caspar/Producers/CasparProducer.js');
 const ProducerDdr =       require('../../Caspar/Producers/CasparProducerDdr.js');
@@ -64,7 +65,6 @@ module.exports = function(socket) {
                 })
                 .catch(error => {
                     console.log(error);
-                   
                 });
 
             setTimeout(
@@ -72,7 +72,7 @@ module.exports = function(socket) {
                     testCasparConsumer = new Array();
                     testCasparConsumer['channelId'] = 1;
                     testCasparConsumer['name'] = 'Consumer1';
-                    testCasparConsumer['fullscreen'] = true;
+                    // testCasparConsumer['fullscreen'] = true;
                     testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
                     testConsumer = new ConsumerScreen(testCasparConsumer)
                     testCaspar.addConsumer(testConsumer);
@@ -99,7 +99,6 @@ module.exports = function(socket) {
                     testFile3 = new ProducerFile(testFileSettings3);
                     testCaspar.addProducer(testFile3);
                 },2000);
-            
         },
         2000
     );
@@ -343,6 +342,12 @@ module.exports = function(socket) {
                     object = layer;
                 }
             }break;
+            case 'medias' :{
+                let media = caspar.getMedia(objectId);
+                if (media instanceof Media ){
+                    object = media;
+                }
+            }break;
             default : {
                 res.json(apiReturn.notFoundMessage('objectType unknown'))
             }
@@ -374,6 +379,9 @@ module.exports = function(socket) {
             }break;
             case 'layers' :{
                 res.json([...caspar.getLayers()]);
+            }break;
+            case 'medias' :{
+                res.json([...caspar.getMedias()]);
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown object type'));
@@ -560,6 +568,9 @@ module.exports = function(socket) {
             }break;
             case 'decklink' : {
                 producer = new ProducerDecklink(consumerSettings);
+            }break;
+            case 'ddr' : {
+                producer = new ProducerDdr(consumerSettings);
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown producer type'));
@@ -860,7 +871,7 @@ module.exports = function(socket) {
                 });
     },
 
-        /**
+    /**
      * Delete a layer instance
      */
     casparRoutes.layerDelete = function (req, res){
@@ -879,11 +890,28 @@ module.exports = function(socket) {
         }else{
             res.json(apiReturn.notFoundMessage('Layer instance not found'));
         }
-       
-       
-
     },
+
+    /**
+    * _____________________________________________________________________________________________________________________________
+    * 
+    * DDR manipulation
+    */
     
+        /**
+    * _____________________________________________________________________________________________________________________________
+    * 
+    * Medias manipulation
+    */
+    casparRoutes.scanMedias = async function (req, res){
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+
+        await caspar.scanMedias();
+        
+        res.json([...caspar.getMedias()]);
+    }
+
     /**
      * To be deleted ? Use on settings changes in caspar getters/setters
      */

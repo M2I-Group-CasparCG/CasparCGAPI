@@ -15,6 +15,8 @@ var ProducerDecklink =  require('./Producers/CasparProducerDecklink.js');
 var ProducerFile =      require('./Producers/CasparProducerFile.js');
 var ProducerNet =       require('./Producers/CasparProducerNet.js');
 
+const Media =           require('./Producers/CasparMedia.js');
+
 var Consumer =          require('./Consumers/CasparConsumer.js');
 var ConsumerScreen =    require('./Consumers/CasparConsumerScreen.js');
 var ConsumerFile =      require('./Consumers/CasparConsumerFile.js');
@@ -51,10 +53,11 @@ class Caspar {
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.layers = new Map();
+        this.medias = new Map();
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
         settings['id'] = this.id;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
-
+    
       }  
 
 
@@ -187,6 +190,9 @@ class Caspar {
                 }
             )
 
+            await this.scanMedias();
+
+            console.log(this.medias);
             this.ini();
 
         }        
@@ -436,6 +442,61 @@ class Caspar {
         return this.layers;
     }
 
+
+    /**
+     * MEDIAS
+     */
+
+    getMedia(mediaId){
+        if (this.medias.get(mediaId) instanceof Media){
+            return this.medias.get(mediaId);
+        }else{
+            return false;
+        }
+    }
+    getMedias () { 
+        return this.medias;
+    }
+
+    async scanMedias () {
+        const medias = this.medias;
+        await this.getCasparCommon().tcpPromise('CLS')
+            .then(
+                function(resolveResult){
+               
+                    const fileList = resolveResult['data'];
+                    fileList.forEach(function(file) {
+                    
+                    const settings = new Array();
+
+                    const fileInfo = file.split(' ');
+                    const fullPath = fileInfo[0].replace(/"/g,'');
+
+                    const splittedPath = fullPath.split('/');
+                    settings['name'] = splittedPath.pop();
+                    settings['path'] = splittedPath.join('/');
+                    
+                    settings['mediaType'] = fileInfo[1];
+                    settings['size'] = parseInt(fileInfo[2]);
+                    settings['lastModification'] = parseInt(fileInfo[3]);
+                    settings['frameNumber'] = parseInt(fileInfo[4])
+                    const frameRate = parseInt(fileInfo[5].split('/')[0])/parseInt(fileInfo[5].split('/')[1]);
+                    settings['frameRate'] = frameRate;
+
+                    const media = new Media(settings);
+
+                    medias.set(media.getId(),media);
+                  
+                    });
+                },  
+                function(rejectResult){
+                    console.log(rejectResult);
+                }
+            )
+    }
+
+
+
     /**
      * Restart the casparCG server
      * @return {Promise} tcpPromise with a JSON message (success or error description)
@@ -454,6 +515,7 @@ class Caspar {
         this.casparCommon.tcpSend(msg, callback);
     }
 
+   
 
     /**
      * Analyze OSC message and update the caspar instance according to the result.
@@ -603,6 +665,7 @@ class Caspar {
     tcpPromise(req){ return this.getCasparCommon().tcpPromise(req); }
 
     getId(){ return this.id; }
+
 
 }
 
