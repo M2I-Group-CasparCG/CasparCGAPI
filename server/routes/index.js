@@ -63,7 +63,6 @@ let udpServer = dgram.createSocket('udp4');
     router.post('/api/v1/caspars/:casparId/ini/', casparRoutes.ini);
     router.delete('/api/v1/caspars/:casparId/', casparRoutes.delete);
     router.post('/api/v1/caspars/:casparId/restart', casparRoutes.restart);
-
     router.put('/api/v1/caspars/:casparId/:objectType/:objectId/', casparRoutes.editObject);
     router.get('/api/v1/caspars/:casparId/:objectType/:objectId/', casparRoutes.getObject);
     router.get('/api/v1/caspars/:casparId/:objectType/', casparRoutes.getAllObjects);
@@ -106,29 +105,38 @@ let udpServer = dgram.createSocket('udp4');
     router.post('/api/v1/caspars/:casparId/layers/:layerId/producers/:producerId', casparRoutes.layerSetInput);
     router.post('/api/v1/caspars/:casparId/layers/:layerId/start', casparRoutes.layerStart);
     router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', casparRoutes.layerStop);
-    // router.delete('/api/v1/caspars/:casparId/layers/:layerId', casparRoutes.channelRemoveLayer);
-    // router.post('/api/v1/caspars/:casparId/layers/:layerId/producers/:producerId', casparRoutes.channelLayerSetInput);
-    // router.post('/api/v1/caspars/:casparId/layers/:layerId/start', casparRoutes.channelLayerStart);
-    // router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', casparRoutes.channelLayerStop);
 
 
     /**
      * DDR
      */
+    router.all('/api/v1/caspars/:casparId/ddr/:ddrId/*', casparRoutes.ddrCheck);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/play', casparRoutes.ddrPlay);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/pause', casparRoutes.ddrPause);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/next', casparRoutes.ddrNext);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/previous', casparRoutes.ddrPrevious);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/autoPlay', casparRoutes.ddrAutoPlay);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/playlistLoop', casparRoutes.ddrPlaylistLoop);
+    router.get('/api/v1/caspars/:casparId/ddr/:ddrId/playlist', casparRoutes.ddrGetPlaylist)
+    router.get('/api/v1/caspars/:casparId/ddr/:ddrId/file', casparRoutes.ddrGetCurrentMedia)
 
 
 
     /**
      * PLAYLIST
      */
-
+    router.post('/api/v1/caspars/:casparId/playlists', casparRoutes.playlistAdd);
+    router.all('/api/v1/caspars/:casparId/playlists/:playlistId/*', casparRoutes.playlistCheck);
+    router.delete('/api/v1/caspars/:casparId/playlists/:playlistId/', casparRoutes.playlistDelete);
+    router.post('/api/v1/caspars/:casparId/playlists/:playlistId/files/:fileId', casparRoutes.playlistAddFile);
+    router.delete('/api/v1/caspars/:casparId/playlists/:playlistId/index/:index', casparRoutes.playlistRemoveFile);
+    router.get('/api/v1/caspars/:casparId/playlists/:playlistId/files', casparRoutes.playlistGetFiles);
+    
     
      /**
       * MEDIAS
       */
     router.post('/api/v1/caspars/:casparId/medias', casparRoutes.scanMedias);
-    // router.get('/api/v1/caspars/:casparId/medias', casparRoutes.getMedias);
-    // router.post('/api/v1/caspars/:casparId/medias/:mediaId', casparRoutes.getMedia);
 
     /**
      * XMLHandler

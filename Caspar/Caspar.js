@@ -16,8 +16,9 @@ var ProducerFile =      require('./Producers/CasparProducerFile.js');
 var ProducerNet =       require('./Producers/CasparProducerNet.js');
 
 const Media =           require('./Producers/CasparMedia.js');
+const Playlist =        require('./Producers/CasparPlaylist.js');
 
-var Consumer =          require('./Consumers/CasparConsumer.js');
+const Consumer =          require('./Consumers/CasparConsumer.js');
 var ConsumerScreen =    require('./Consumers/CasparConsumerScreen.js');
 var ConsumerFile =      require('./Consumers/CasparConsumerFile.js');
 var ConsumerNet =       require('./Consumers/CasparConsumerNet.js');
@@ -53,9 +54,11 @@ class Caspar {
         this.consumers = new Map();                         // Map contenant les différents consumers disponibles sur le serveur
         this.channels = new Map();                          // Map contenant les différents channels disponibles sur le serveur
         this.layers = new Map();
+        this.playlists = new Map();
         this.medias = new Map();
         this.id = Caspar.totalInstances;                    // Incrémentation pour ID unique
         settings['id'] = this.id;
+        settings['medias'] = this.medias;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
     
       }  
@@ -392,7 +395,6 @@ class Caspar {
      * @return {}
      */
     addLayer (settings) {
-        console.log(settings);
         settings['casparCommon'] = this.getCasparCommon();
         let layer = new Layer(settings);
         this.layers.set(layer.getId(), layer);
@@ -442,17 +444,52 @@ class Caspar {
         return this.layers;
     }
 
+    /**
+    * PLAYLIST
+    */
 
+    addPlaylist (settings) {
+        settings['casparCommon'] = this.getCasparCommon();
+        let playlist = new Playlist(settings);
+        
+        this.playlists.set(playlist.getId(), playlist);
+
+        return playlist;
+    }
+
+    getPlaylist (id){
+        if (this.playlists.get(id) instanceof Playlist){
+            return this.playlists.get(id) ;
+        }else{
+            return false;
+        }
+    }
+
+    getPlaylists(){
+        return this.playlists;
+    }
+
+    removePlaylist(id) {
+        let playlist = this.playlists.get(id);
+        if (playlist instanceof Playlist){
+            this.playlists.delete(id);
+            return playlist;
+        }else{
+            return false;
+        }
+    }
     /**
      * MEDIAS
      */
 
     getMedia(mediaId){
-        if (this.medias.get(mediaId) instanceof Media){
-            return this.medias.get(mediaId);
-        }else{
-            return false;
-        }
+        let result = null;
+        this.medias.forEach(media => {
+            if (media.getId() == mediaId){
+                result = media;
+            }
+        });
+        return result;
     }
     getMedias () { 
         return this.medias;
@@ -467,25 +504,25 @@ class Caspar {
                     const fileList = resolveResult['data'];
                     fileList.forEach(function(file) {
                     
-                    const settings = new Array();
+                        const settings = new Array();
 
-                    const fileInfo = file.split(' ');
-                    const fullPath = fileInfo[0].replace(/"/g,'');
+                        const fileInfo = file.split(' ');
+                        const fullPath = fileInfo[0].replace(/"/g,'');
 
-                    const splittedPath = fullPath.split('/');
-                    settings['name'] = splittedPath.pop();
-                    settings['path'] = splittedPath.join('/');
-                    
-                    settings['mediaType'] = fileInfo[1];
-                    settings['size'] = parseInt(fileInfo[2]);
-                    settings['lastModification'] = parseInt(fileInfo[3]);
-                    settings['frameNumber'] = parseInt(fileInfo[4])
-                    const frameRate = parseInt(fileInfo[5].split('/')[0])/parseInt(fileInfo[5].split('/')[1]);
-                    settings['frameRate'] = frameRate;
+                        const splittedPath = fullPath.split('/');
+                        settings['name'] = splittedPath.pop();
+                        settings['path'] = splittedPath.join('/');
+                        
+                        settings['mediaType'] = fileInfo[1];
+                        settings['size'] = parseInt(fileInfo[2]);
+                        settings['lastModification'] = parseInt(fileInfo[3]);
+                        settings['frameNumber'] = parseInt(fileInfo[4])
+                        const frameRate = parseInt(fileInfo[5].split('/')[0])/parseInt(fileInfo[5].split('/')[1]);
+                        settings['frameRate'] = frameRate;
 
-                    const media = new Media(settings);
+                        const media = new Media(settings);
 
-                    medias.set(media.getId(),media);
+                        medias.set(media.getFullPath(),media);
                   
                     });
                 },  
@@ -524,7 +561,7 @@ class Caspar {
      */
     oscAnalyzer(oscData){        
 
-        // console.log(oscData);
+     
 
         let caspar = this;
 
@@ -549,10 +586,8 @@ class Caspar {
         // console.log(oscData.keys().next().value);
         const firstKey = oscData.keys().next().value;
 
-
         // dans le cas d'un message de rec
         if(firstKey.match(reChannelOutputRecord)){
-
             const messageType = 'recordInfo';
             const recInfo = new Object();
             oscData.forEach(function(value, key, map){
@@ -562,11 +597,95 @@ class Caspar {
                     recInfo.path = value;
                 }
             });
-
             if (recInfo.frame && recInfo.path){
                 return [messageType,recInfo];
             }
         }
+        for (let [key, value] of oscData){
+            if (key.match(reChannelLayerFilePath)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                const producer = this.getProducer(layerNb);
+                if (channelNb == 1){
+                    if (producer instanceof ProducerDdr){
+                        let array = value.split('.');
+                        array.pop();
+                        let mediaName = '/'+array.join().toUpperCase();
+                        if(producer.getCurrentMedia() != this.medias.get(mediaName)){
+                            producer.setCurrentMedia(this.medias.get(mediaName));
+                            const object = new Object();
+                                object.property = 'currentMediaIndex';
+                                object.value = producer.getCurrentMediaIndex();
+                                object.id = layerNb;
+                            return ['ddrEdit', object];
+                        }
+                    }
+                }
+            }else if (key.match(reChannelLayerPaused)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                if (channelNb == 1){
+                    const producer = this.getProducer(layerNb);
+                    if (producer instanceof ProducerDdr){
+                        if (producer.getPaused() !== value){
+                            this.getProducer(layerNb).setPaused(value);
+                            const object = new Object();
+                                object.property = 'paused';
+                                object.value = value;
+                                object.id = layerNb;
+                            return ['ddrEdit', object];
+                        }
+                    }
+                }
+            }else if (key.match(reChannelLayerFileTime)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                if (channelNb == 1){
+                    if (this.getProducer(layerNb) instanceof ProducerDdr){
+                        this.getProducer(layerNb).setFileTime(value);
+                        const object = new Object();
+                            object.property = 'formattedFileTime';
+                            object.value =  this.getProducer(layerNb).getFormattedFileTime();
+                            object.id = layerNb;
+                        const object2 = new Object();
+                            object2.property = 'formattedRemainingTime';
+                            object2.value =  this.getProducer(layerNb).getFormattedRemainingTime();
+                            object2.id = layerNb;
+                        return ['ddrEdit', [object, object2]];
+                    }
+                }
+            }else if (key.match(reChannelLayerFileFrame)){
+                const result = key.match(/\d{1,3}/g);
+                const channelNb = parseInt(result[0]);
+                const layerNb = parseInt(result[1]);
+                if (channelNb == 1){
+                    if (this.getProducer(layerNb) instanceof ProducerDdr){
+                        if (value.indexOf('|')>-1){
+                            value = value.split('|')[0];
+                        }else{
+                        value = 0;
+                        }
+                        this.getProducer(layerNb).setCurrentFileFrame(parseInt(value));
+                        const object = new Object();
+                            object.property = 'currentFileFrame';
+                            object.value = value;
+                            object.id = layerNb;
+                        return ['ddrEdit', object];
+                    }
+                }
+            }
+        }
+
+
+
+        // oscData.forEach(function(value, key, map){
+
+        // }
+
+
         // if (oscData.key().next().val)
 
         // oscData.forEach(function(value, key, map){
@@ -640,7 +759,7 @@ class Caspar {
         //     }
         // });
 
-        return returnVal;
+        
     }
 
 

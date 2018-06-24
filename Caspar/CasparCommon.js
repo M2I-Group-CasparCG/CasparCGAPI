@@ -47,6 +47,7 @@ class CasparCommon {
         this.casparVersion = null;
         this.casparPath = null;
         this.channelsNb = 0;
+        this.medias = settings['medias'] || null;
     }
 
     /**
@@ -342,6 +343,8 @@ class CasparCommon {
 
     getCasparPath() { return this.casparPath; }
     setCasparPath(casparPath) { this.casparPath = casparPath; }
+
+    getMedia() { return this.medias;}
 
     getId(){ return this.id; }
 

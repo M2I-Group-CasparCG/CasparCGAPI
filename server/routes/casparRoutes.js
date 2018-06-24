@@ -8,6 +8,7 @@ const Channel =           require('../../Caspar/CasparChannel');
 const ChannelMultiview =  require('../../Caspar/CasparChannelMultiview.js');
 const Layer =             require('../../Caspar/CasparLayer.js')
 const Media =             require('../../Caspar/Producers/CasparMedia.js')
+const Playlist =          require('../../Caspar/Producers/CasparPlaylist.js');
 
 const Producer =          require('../../Caspar/Producers/CasparProducer.js');
 const ProducerDdr =       require('../../Caspar/Producers/CasparProducerDdr.js');
@@ -28,6 +29,7 @@ let caspars = new Map();
 let consumers = new Map();
 let producers = new Map();
 let channels = new Map();
+let playlists = new Map();
 
 module.exports = function(socket) {
 
@@ -74,7 +76,7 @@ module.exports = function(socket) {
                     testCasparConsumer['name'] = 'Consumer1';
                     // testCasparConsumer['fullscreen'] = true;
                     testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
-                    testConsumer = new ConsumerScreen(testCasparConsumer)
+                    let testConsumer = new ConsumerScreen(testCasparConsumer)
                     testCaspar.addConsumer(testConsumer);
                     // testConsumer.run();
 
@@ -82,22 +84,38 @@ module.exports = function(socket) {
                     testFileSettings['name'] = 'AMB';
                     testFileSettings['fileName'] = 'amb';
                     testFileSettings['playMode'] = 'loop';
-                    testFile = new ProducerFile(testFileSettings);
+                    let testFile = new ProducerFile(testFileSettings);
                     testCaspar.addProducer(testFile);
 
                     testFileSettings2 = new Array();
                     testFileSettings2['name'] = 'GO';
                     testFileSettings2['fileName'] = 'GO1080P25';
                     testFileSettings2['playMode'] = 'loop';
-                    testFile2 = new ProducerFile(testFileSettings2);
+                    let testFile2 = new ProducerFile(testFileSettings2);
                     testCaspar.addProducer(testFile2);
 
                     testFileSettings3 = new Array();
                     testFileSettings3['name'] = 'itescia';
                     testFileSettings3['fileName'] = 'itescia';
                     testFileSettings3['playMode'] = 'loop';
-                    testFile3 = new ProducerFile(testFileSettings3);
+                    let testFile3 = new ProducerFile(testFileSettings3);
                     testCaspar.addProducer(testFile3);
+
+                    playlistSettings = new Array();
+                    playlistSettings['name'] = 'autoPlaylist';
+                    let playlist = testCaspar.addPlaylist(playlistSettings)
+                    playlist.addMedia(3);
+                    // playlist.addMedia(73);
+                    playlist.addMedia(74);
+                    // playlist.addMedia(4);
+                    
+                    ddrSettings = new Array();
+                    ddrSettings['name']  = 'autoDDR';
+                    ddrSettings['playlist']  = playlist;
+                    let ddr = new ProducerDdr(ddrSettings);
+                    testCaspar.addProducer(ddr);
+
+
                 },2000);
         },
         2000
@@ -289,6 +307,12 @@ module.exports = function(socket) {
                     object = layer;
                 }
             }break;
+            case 'playlists' :{
+                let playlist = caspar.getPlaylist(objectId);
+                if (playlist instanceof Playlist ){
+                    object = playlist;
+                }
+            }break;
         }
 
         if (object){
@@ -348,6 +372,12 @@ module.exports = function(socket) {
                     object = media;
                 }
             }break;
+            case 'playlists' :{
+                let playlist = caspar.getPlaylist(objectId);
+                if (playlist instanceof Playlist ){
+                    object = playlist;
+                }
+            }break;
             default : {
                 res.json(apiReturn.notFoundMessage('objectType unknown'))
             }
@@ -382,6 +412,9 @@ module.exports = function(socket) {
             }break;
             case 'medias' :{
                 res.json([...caspar.getMedias()]);
+            }break;
+            case 'playlists' :{
+                res.json([...caspar.getPlaylists()]);
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown object type'));
@@ -608,7 +641,7 @@ module.exports = function(socket) {
      * Start playing a producer instance
      */
     casparRoutes.producerStart = function(req,res,next){
-        console.log('startConsumer');
+        console.log('startProducer');
 
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
@@ -897,8 +930,218 @@ module.exports = function(socket) {
     * 
     * DDR manipulation
     */
+    casparRoutes.ddrCheck = function(req,res,next) {
+        console.log('ddrCheck');
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        if(ddr instanceof ProducerDdr){
+            next();
+            console.log('ddrCheck ok')
+        }else{
+            res.json(apiReturn.notFoundMessage('DDR instance not found'));
+        }
+    },
+    casparRoutes.ddrPlay = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.resume()
+            .then(
+                function(msg){
+                    res.json(apiReturn.successMessage('Ddr play'))
+                    // socket.emit('layerEdit', JSON.stringify(layer));
+                },
+                function(msg){
+                    res.json(apiReturn.amcpErrorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+        
+    },
+    casparRoutes.ddrPause = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.pause()
+            .then(
+                function(msg){
+                    res.json(apiReturn.successMessage('Ddr pause'))
+                    // socket.emit('layerEdit', JSON.stringify(layer));
+                },
+                function(msg){
+                    res.json(apiReturn.amcpErrorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+        
+    }
+
+    casparRoutes.ddrNext = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+
+        ddr.next()
+            .then(
+                function(msg){
+                    res.json(apiReturn.successMessage('Ddr next'))
+                    // socket.emit('layerEdit', JSON.stringify(layer));
+                },
+                function(msg){
+                    res.json(apiReturn.amcpErrorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+    },
+    casparRoutes.ddrPrevious = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.previous()
+        .then(
+            function(msg){
+                res.json(apiReturn.successMessage('Ddr previous'))
+                // socket.emit('layerEdit', JSON.stringify(layer));
+            },
+            function(msg){
+                res.json(apiReturn.amcpErrorMessage(msg));
+            }).catch(function(error){
+                console.log(error);
+            });
+    },
+    casparRoutes.ddrAutoPlay = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.setAutoPlay(!ddr.getAutoPlay());
+        res.json(apiReturn.successMessage('autoPlay toogled : '+ddr.getAutoPlay()));
+        const object = new Object();
+                object.property = 'autoPlay';
+                object.value = ddr.getAutoPlay();
+                object.id = ddrId;
+                socket.emit('ddrEdit', JSON.stringify(object));
+
+    },
+    casparRoutes.ddrPlaylistLoop = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.setPlaylistLoop(!ddr.getPlaylistLoop());
+        res.json(apiReturn.successMessage('playlistLoop toogled : '+ddr.getPlaylistLoop()));
+        const object = new Object();
+                object.property = 'playlistLoop';
+                object.value = ddr.getPlaylistLoop();
+                object.id = ddrId;
+                socket.emit('ddrEdit', JSON.stringify(object));
+    },
+    casparRoutes.ddrGetPlaylist = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        res.json(ddr.getPlaylist());
+    },
+    casparRoutes.ddrGetCurrentMedia = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        res.json(ddr.getCurrentMedia());
+    },
+
+
+    /**
+    * _____________________________________________________________________________________________________________________________
+    * 
+    * PLAYLIST manipulation
+    */
     
-        /**
+    casparRoutes.playlistAdd = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        const caspar = caspars.get(casparId);
+        const settings = req.body; 
+
+        let playlist = caspar.addPlaylist(settings);
+
+        if (playlist instanceof Playlist ){
+            playlists.set(playlist.getId(), playlist);
+            res.json(playlist);
+        }else{
+            res.json(apiReturn.requestErrorMessage('Failed to create Playlist'));
+        }
+    },
+
+    casparRoutes.playlistCheck = function(req, res, next) {
+        console.log('playlistCheck');
+        const casparId = parseInt(req.params.casparId);
+        const playlistId = parseInt(req.params.playlistId);
+        let playlist = caspars.get(casparId).getPlaylist(playlistId);
+        if(playlist instanceof Playlist){
+            next();
+            console.log('playlistCheck ok')
+        }else{
+            res.json(apiReturn.notFoundMessage('Playlist instance not found'));
+        }
+    },
+
+    casparRoutes.playlistDelete = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        const playlistId = parseInt(req.params.playlistId);
+        let playlist = caspars.get(casparId).getPlaylist(playlistId);
+        if(playlist instanceof Playlist){
+            let result = caspars.get(casparId).removePlaylist(playlistId);
+            if (result){
+                res.json(apiReturn.successMessage('Playlist deleted'));
+                // socket.emit('layerDelete', JSON.stringify(layer));
+            }else{
+                res.json(apiReturn.notFoundMessage('Unable to delete playlist'));
+            }
+        }else{
+            res.json(apiReturn.notFoundMessage('Playlist instance not found'));
+        }
+    },
+
+    
+    casparRoutes.playlistAddFile = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        const playlistId = parseInt(req.params.playlistId);
+        const mediaId = parseInt(req.params.fileId);
+        let playlist = caspars.get(casparId).getPlaylist(playlistId);
+
+        let result = playlist.addMedia(mediaId);
+
+        if (result instanceof Media){
+            res.json(apiReturn.successMessage('Media Added'));
+            socket.emit('playlistEdit',JSON.stringify(playlist));
+        }else{
+            res.json(apiReturn.notFoundMessage('Media not found'));
+        }
+    },
+
+    casparRoutes.playlistRemoveFile = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        const playlistId = parseInt(req.params.playlistId);
+        const index = parseInt(req.params.index);
+        let playlist = caspars.get(casparId).getPlaylist(playlistId);
+
+        let result = playlist.removeMedia(index);
+
+        if (result) {
+            res.json(apiReturn.successMessage('Media Removed'));
+            socket.emit('playlistEdit',JSON.stringify(playlist));
+        }else{
+            res.json(apiReturn.notFoundMessage('Media not found'));
+        }
+    },
+
+    casparRoutes.playlistGetFiles = function(req, res) {
+        const casparId = parseInt(req.params.casparId);
+        const playlistId = parseInt(req.params.playlistId);
+        let playlist = caspars.get(casparId).getPlaylist(playlistId);
+
+        res.json([...playlist.getList()]);
+    },
+
+    /**
     * _____________________________________________________________________________________________________________________________
     * 
     * Medias manipulation
@@ -911,6 +1154,9 @@ module.exports = function(socket) {
         
         res.json([...caspar.getMedias()]);
     }
+
+
+
 
     /**
      * To be deleted ? Use on settings changes in caspar getters/setters
@@ -929,9 +1175,10 @@ module.exports = function(socket) {
      * API Utilities
      */
 
+    /**
+     * Parse the OSC protocol buffer octet stream in parsed readable string
+     */
     casparRoutes.oscParser = function (buffer, rinfo){
-
-       
 
         /*
             OSC BUNDLE STRING : 
