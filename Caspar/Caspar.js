@@ -561,7 +561,7 @@ class Caspar {
      */
     oscAnalyzer(oscData){        
 
-     
+        // console.log(oscData);
 
         let caspar = this;
 
@@ -612,14 +612,14 @@ class Caspar {
                         let array = value.split('.');
                         array.pop();
                         let mediaName = '/'+array.join().toUpperCase();
-                        if(producer.getCurrentMedia() != this.medias.get(mediaName)){
-                            producer.setCurrentMedia(this.medias.get(mediaName));
-                            const object = new Object();
-                                object.property = 'currentMediaIndex';
-                                object.value = producer.getCurrentMediaIndex();
-                                object.id = layerNb;
-                            return ['ddrEdit', object];
-                        }
+                        // if(producer.getCurrentMedia() != this.medias.get(mediaName) || !producer.toBeIncremented){
+                        //     // producer.setCurrentMedia(this.medias.get(mediaName));
+                        //     const object = new Object();
+                        //         object.property = 'currentMediaIndex';
+                        //         object.value = producer.getCurrentMediaIndex();
+                        //         object.id = layerNb;
+                        //     return ['ddrEdit', object];
+                        // }
                     }
                 }
             }else if (key.match(reChannelLayerPaused)){
@@ -645,16 +645,35 @@ class Caspar {
                 const layerNb = parseInt(result[1]);
                 if (channelNb == 1){
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
+                        let old_index = this.getProducer(layerNb).getCurrentIndex();
                         this.getProducer(layerNb).setFileTime(value);
+
+                        let result = [];
+
                         const object = new Object();
                             object.property = 'formattedFileTime';
                             object.value =  this.getProducer(layerNb).getFormattedFileTime();
                             object.id = layerNb;
+                            result.push(object);
                         const object2 = new Object();
                             object2.property = 'formattedRemainingTime';
                             object2.value =  this.getProducer(layerNb).getFormattedRemainingTime();
                             object2.id = layerNb;
-                        return ['ddrEdit', [object, object2]];
+                            result.push(object2);
+                        // if the media has changed
+                        if (old_index != this.getProducer(layerNb).getCurrentIndex()){
+                            const object3 = new Object();
+                            object3.property = 'currentMedia';
+                            object3.value =  this.getProducer(layerNb).getCurrentMedia();
+                            object3.id = layerNb;
+                            result.push(object3);
+                        const object4 = new Object();
+                            object4.property = 'currentIndex';
+                            object4.value =  this.getProducer(layerNb).getCurrentIndex();
+                            object4.id = layerNb;
+                            result.push(object4);
+                        }                        
+                        return ['ddrEdit', result];
                     }
                 }
             }else if (key.match(reChannelLayerFileFrame)){

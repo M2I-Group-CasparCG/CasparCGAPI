@@ -105,9 +105,10 @@ module.exports = function(socket) {
                     playlistSettings['name'] = 'autoPlaylist';
                     let playlist = testCaspar.addPlaylist(playlistSettings)
                     playlist.addMedia(3);
-                    // playlist.addMedia(73);
+                    
                     playlist.addMedia(74);
-                    // playlist.addMedia(4);
+                    playlist.addMedia(73);
+                    playlist.addMedia(4);
                     
                     ddrSettings = new Array();
                     ddrSettings['name']  = 'autoDDR';
@@ -986,7 +987,15 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr next'))
-                    // socket.emit('layerEdit', JSON.stringify(layer));
+                    const object = new Object();
+                        object.property = 'currentIndex';
+                        object.value = ddr.getCurrentIndex();
+                        object.id = ddrId;
+                    const object2 = new Object();
+                        object2.property = 'currentMedia';
+                        object2.value = ddr.getCurrentMedia();
+                        object2.id = ddrId;
+                    socket.emit('ddrEdit', JSON.stringify([object, object2]));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
@@ -1002,7 +1011,15 @@ module.exports = function(socket) {
         .then(
             function(msg){
                 res.json(apiReturn.successMessage('Ddr previous'))
-                // socket.emit('layerEdit', JSON.stringify(layer));
+                const object = new Object();
+                    object.property = 'currentIndex';
+                    object.value = ddr.getCurrentIndex();
+                    object.id = ddrId;
+                const object2 = new Object();
+                    object2.property = 'currentMedia';
+                    object2.value = ddr.getCurrentMedia();
+                    object2.id = ddrId;
+                socket.emit('ddrEdit', JSON.stringify([object, object2]));
             },
             function(msg){
                 res.json(apiReturn.amcpErrorMessage(msg));
