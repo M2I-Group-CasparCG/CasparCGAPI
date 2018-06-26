@@ -290,6 +290,14 @@ class Caspar {
     addProducer (producer) {
         if (producer instanceof Producer){
             producer.setCasparCommon(this.casparCommon);
+            if (producer.getType() == 'DDR'){
+                let settings = new Array();
+                    settings['casparCommon'] = this.getCasparCommon();
+                let playlist = new Playlist(settings);
+                producer.setPlaylist(playlist);
+                this.playlists.set(playlist.getId(), playlist);
+
+            }
             this.producers.set(producer.getId(), producer);
             if (this.getCasparCommon().getMvId()){
                 this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
@@ -631,11 +639,13 @@ class Caspar {
                     if (producer instanceof ProducerDdr){
                         if (producer.getPaused() !== value){
                             this.getProducer(layerNb).setPaused(value);
-                            const object = new Object();
-                                object.property = 'paused';
-                                object.value = value;
-                                object.id = layerNb;
-                            return ['ddrEdit', object];
+                            // const object = new Object();
+                            //     object.property = 'paused';
+                            //     object.value = value;
+                            //     object.id = layerNb;
+                            // return ['ddrEdit', object];
+                            // return ['ddrEdit', this.getProducer(layerNb)];
+                            return ['ddrEdit', this.getProducer(layerNb)];
                         }
                     }
                 }
@@ -648,32 +658,32 @@ class Caspar {
                         let old_index = this.getProducer(layerNb).getCurrentIndex();
                         this.getProducer(layerNb).setFileTime(value);
 
-                        let result = [];
+                        // let result = [];
 
-                        const object = new Object();
-                            object.property = 'formattedFileTime';
-                            object.value =  this.getProducer(layerNb).getFormattedFileTime();
-                            object.id = layerNb;
-                            result.push(object);
-                        const object2 = new Object();
-                            object2.property = 'formattedRemainingTime';
-                            object2.value =  this.getProducer(layerNb).getFormattedRemainingTime();
-                            object2.id = layerNb;
-                            result.push(object2);
-                        // if the media has changed
-                        if (old_index != this.getProducer(layerNb).getCurrentIndex()){
-                            const object3 = new Object();
-                            object3.property = 'currentMedia';
-                            object3.value =  this.getProducer(layerNb).getCurrentMedia();
-                            object3.id = layerNb;
-                            result.push(object3);
-                        const object4 = new Object();
-                            object4.property = 'currentIndex';
-                            object4.value =  this.getProducer(layerNb).getCurrentIndex();
-                            object4.id = layerNb;
-                            result.push(object4);
-                        }                        
-                        return ['ddrEdit', result];
+                        // const object = new Object();
+                        //     object.property = 'formattedFileTime';
+                        //     object.value =  this.getProducer(layerNb).getFormattedFileTime();
+                        //     object.id = layerNb;
+                        //     result.push(object);
+                        // const object2 = new Object();
+                        //     object2.property = 'formattedRemainingTime';
+                        //     object2.value =  this.getProducer(layerNb).getFormattedRemainingTime();
+                        //     object2.id = layerNb;
+                        //     result.push(object2);
+                        // // if the media has changed
+                        // if (old_index != this.getProducer(layerNb).getCurrentIndex()){
+                        //     const object3 = new Object();
+                        //     object3.property = 'currentMedia';
+                        //     object3.value =  this.getProducer(layerNb).getCurrentMedia();
+                        //     object3.id = layerNb;
+                        //     result.push(object3);
+                        // const object4 = new Object();
+                        //     object4.property = 'currentIndex';
+                        //     object4.value =  this.getProducer(layerNb).getCurrentIndex();
+                        //     object4.id = layerNb;
+                        //     result.push(object4);
+                        // }                        
+                        return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
             }else if (key.match(reChannelLayerFileFrame)){
@@ -688,11 +698,12 @@ class Caspar {
                         value = 0;
                         }
                         this.getProducer(layerNb).setCurrentFileFrame(parseInt(value));
-                        const object = new Object();
-                            object.property = 'currentFileFrame';
-                            object.value = value;
-                            object.id = layerNb;
-                        return ['ddrEdit', object];
+                        // const object = new Object();
+                        //     object.property = 'currentFileFrame';
+                        //     object.value = value;
+                        //     object.id = layerNb;
+                        // return ['ddrEdit', object];
+                        return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
             }

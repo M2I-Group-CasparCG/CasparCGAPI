@@ -92,7 +92,8 @@ class CasparPlaylist {
     setList (list) { this.list = list;}
 
     getCasparCommon() { return this.casparCommon;}
-    setCasparCommon (casparCommon){ this.casparCommon = casparCommon;}
+    setCasparCommon (casparCommon){ this.casparCommon = casparCommon;
+   }
 }
 
 module.exports = CasparPlaylist;

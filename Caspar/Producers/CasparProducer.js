@@ -27,6 +27,9 @@ class CasparProducer {
     setCasparCommon(casparCommon){
         this.casparCommon = casparCommon;
     }
+    getCasparCommon(){
+        return this.casparCommon;
+    }
 
     getName() { return this.name; }
     setName(name) { this.name = name; }

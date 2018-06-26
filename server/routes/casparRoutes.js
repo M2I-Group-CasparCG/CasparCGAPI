@@ -101,20 +101,20 @@ module.exports = function(socket) {
                     let testFile3 = new ProducerFile(testFileSettings3);
                     testCaspar.addProducer(testFile3);
 
-                    playlistSettings = new Array();
-                    playlistSettings['name'] = 'autoPlaylist';
-                    let playlist = testCaspar.addPlaylist(playlistSettings)
-                    playlist.addMedia(3);
+                    // playlistSettings = new Array();
+                    // playlistSettings['name'] = 'autoPlaylist';
+                    // let playlist = testCaspar.addPlaylist(playlistSettings)
+                    // playlist.addMedia(3);
                     
-                    playlist.addMedia(74);
-                    playlist.addMedia(73);
-                    playlist.addMedia(4);
+                    // playlist.addMedia(74);
+                    // playlist.addMedia(73);
+                    // playlist.addMedia(4);
                     
-                    ddrSettings = new Array();
-                    ddrSettings['name']  = 'autoDDR';
-                    ddrSettings['playlist']  = playlist;
-                    let ddr = new ProducerDdr(ddrSettings);
-                    testCaspar.addProducer(ddr);
+                    // ddrSettings = new Array();
+                    // ddrSettings['name']  = 'autoDDR';
+                    // // ddrSettings['playlist']  = playlist;
+                    // let ddr = new ProducerDdr(ddrSettings);
+                    // testCaspar.addProducer(ddr);
 
 
                 },2000);
@@ -987,15 +987,7 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr next'))
-                    const object = new Object();
-                        object.property = 'currentIndex';
-                        object.value = ddr.getCurrentIndex();
-                        object.id = ddrId;
-                    const object2 = new Object();
-                        object2.property = 'currentMedia';
-                        object2.value = ddr.getCurrentMedia();
-                        object2.id = ddrId;
-                    socket.emit('ddrEdit', JSON.stringify([object, object2]));
+                    socket.emit('ddrEdit', JSON.stringify(ddr));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
@@ -1011,15 +1003,7 @@ module.exports = function(socket) {
         .then(
             function(msg){
                 res.json(apiReturn.successMessage('Ddr previous'))
-                const object = new Object();
-                    object.property = 'currentIndex';
-                    object.value = ddr.getCurrentIndex();
-                    object.id = ddrId;
-                const object2 = new Object();
-                    object2.property = 'currentMedia';
-                    object2.value = ddr.getCurrentMedia();
-                    object2.id = ddrId;
-                socket.emit('ddrEdit', JSON.stringify([object, object2]));
+                socket.emit('ddrEdit', JSON.stringify(ddr));
             },
             function(msg){
                 res.json(apiReturn.amcpErrorMessage(msg));
@@ -1033,11 +1017,7 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.setAutoPlay(!ddr.getAutoPlay());
         res.json(apiReturn.successMessage('autoPlay toogled : '+ddr.getAutoPlay()));
-        const object = new Object();
-                object.property = 'autoPlay';
-                object.value = ddr.getAutoPlay();
-                object.id = ddrId;
-                socket.emit('ddrEdit', JSON.stringify(object));
+        socket.emit('ddrEdit', JSON.stringify(ddr));
 
     },
     casparRoutes.ddrPlaylistLoop = function(req, res){
@@ -1046,11 +1026,7 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.setPlaylistLoop(!ddr.getPlaylistLoop());
         res.json(apiReturn.successMessage('playlistLoop toogled : '+ddr.getPlaylistLoop()));
-        const object = new Object();
-                object.property = 'playlistLoop';
-                object.value = ddr.getPlaylistLoop();
-                object.id = ddrId;
-                socket.emit('ddrEdit', JSON.stringify(object));
+        socket.emit('ddrEdit', JSON.stringify(ddr));
     },
     casparRoutes.ddrGetPlaylist = function(req, res){
         const casparId = parseInt(req.params.casparId);

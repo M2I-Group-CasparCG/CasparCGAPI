@@ -34,21 +34,31 @@ class CasparProducerDDR extends CasparProducer{
         this.nextMedia = null;
 
         this.lock = false;
-        
+        this.initialized = false;
     }
 
     /**
      * Init the DDR by loading the first file of the playlist
      */
     async run() {
+        
+        this.playlist.setCasparCommon(this.getCasparCommon());
+        console.log(this.playlist);
         // init the plyalist
         this.currentIndex = this.indexVerify(0);
         // loading the first media of the playlist
-        await this.tcpPromise(this.loadRequest(this.currentIndex));
-        if (this.autoPlay){
-            let nextIndex = this.indexVerify(this.currentIndex+1);
-            await this.tcpPromise(this.loadBgRequest(nextIndex));
+
+        if (this.currentIndex >= 0){
+            await this.tcpPromise(this.loadRequest(this.currentIndex));
+            if (this.autoPlay){
+                let nextIndex = this.indexVerify(this.currentIndex+1);
+                await this.tcpPromise(this.loadBgRequest(nextIndex));
+            }
+            this.initialized = true;
         }
+
+        
+
     }
 
     /**
@@ -135,11 +145,15 @@ class CasparProducerDDR extends CasparProducer{
      */
     loadRequest(index){
         let media = this.playlist.getMedia(index);
-        let req =   `LOAD ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
-        if (this.mediaLoop){
-            req = req+' LOOP';
+        let req = '';
+        if (media != undefined){
+            req =   `LOAD ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
+            if (this.mediaLoop){
+                req = req+' LOOP';
+            }
+            this.setCurrentMedia(media);
         }
-        this.setCurrentMedia(media);
+        
         return req;
     }
     /**
@@ -304,6 +318,10 @@ class CasparProducerDDR extends CasparProducer{
     setTotalFileFrame (frame) { this.totalFileFrame = frame;}
 
     getCurrentIndex() { return this.currentIndex;}
+
+    setCasparCommon(casparCommon){
+        this.casparCommon = casparCommon;
+    }
 
     // getNextMediaIndex(){ return this.getNextMediaIndex;}
 }
