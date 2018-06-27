@@ -194,8 +194,6 @@ class Caspar {
             )
 
             await this.scanMedias();
-
-            console.log(this.medias);
             this.ini();
 
         }        
@@ -620,17 +618,10 @@ class Caspar {
                         let array = value.split('.');
                         array.pop();
                         let mediaName = '/'+array.join().toUpperCase();
-                        // if(producer.getCurrentMedia() != this.medias.get(mediaName) || !producer.toBeIncremented){
-                        //     // producer.setCurrentMedia(this.medias.get(mediaName));
-                        //     const object = new Object();
-                        //         object.property = 'currentMediaIndex';
-                        //         object.value = producer.getCurrentMediaIndex();
-                        //         object.id = layerNb;
-                        //     return ['ddrEdit', object];
-                        // }
                     }
                 }
             }else if (key.match(reChannelLayerPaused)){
+               
                 const result = key.match(/\d{1,3}/g);
                 const channelNb = parseInt(result[0]);
                 const layerNb = parseInt(result[1]);
@@ -639,12 +630,6 @@ class Caspar {
                     if (producer instanceof ProducerDdr){
                         if (producer.getPaused() !== value){
                             this.getProducer(layerNb).setPaused(value);
-                            // const object = new Object();
-                            //     object.property = 'paused';
-                            //     object.value = value;
-                            //     object.id = layerNb;
-                            // return ['ddrEdit', object];
-                            // return ['ddrEdit', this.getProducer(layerNb)];
                             return ['ddrEdit', this.getProducer(layerNb)];
                         }
                     }
@@ -656,33 +641,7 @@ class Caspar {
                 if (channelNb == 1){
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
                         let old_index = this.getProducer(layerNb).getCurrentIndex();
-                        this.getProducer(layerNb).setFileTime(value);
-
-                        // let result = [];
-
-                        // const object = new Object();
-                        //     object.property = 'formattedFileTime';
-                        //     object.value =  this.getProducer(layerNb).getFormattedFileTime();
-                        //     object.id = layerNb;
-                        //     result.push(object);
-                        // const object2 = new Object();
-                        //     object2.property = 'formattedRemainingTime';
-                        //     object2.value =  this.getProducer(layerNb).getFormattedRemainingTime();
-                        //     object2.id = layerNb;
-                        //     result.push(object2);
-                        // // if the media has changed
-                        // if (old_index != this.getProducer(layerNb).getCurrentIndex()){
-                        //     const object3 = new Object();
-                        //     object3.property = 'currentMedia';
-                        //     object3.value =  this.getProducer(layerNb).getCurrentMedia();
-                        //     object3.id = layerNb;
-                        //     result.push(object3);
-                        // const object4 = new Object();
-                        //     object4.property = 'currentIndex';
-                        //     object4.value =  this.getProducer(layerNb).getCurrentIndex();
-                        //     object4.id = layerNb;
-                        //     result.push(object4);
-                        // }                        
+                        this.getProducer(layerNb).setFileTime(value);                    
                         return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
@@ -698,11 +657,6 @@ class Caspar {
                         value = 0;
                         }
                         this.getProducer(layerNb).setCurrentFileFrame(parseInt(value));
-                        // const object = new Object();
-                        //     object.property = 'currentFileFrame';
-                        //     object.value = value;
-                        //     object.id = layerNb;
-                        // return ['ddrEdit', object];
                         return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }

@@ -112,6 +112,8 @@ let udpServer = dgram.createSocket('udp4');
      */
     router.all('/api/v1/caspars/:casparId/ddr/:ddrId/*', casparRoutes.ddrCheck);
     router.post('/api/v1/caspars/:casparId/ddr/:ddrId/play', casparRoutes.ddrPlay);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/playId/:index', casparRoutes.ddrPlayId);
+    router.post('/api/v1/caspars/:casparId/ddr/:ddrId/seek/:frame', casparRoutes.ddrSeek);
     router.post('/api/v1/caspars/:casparId/ddr/:ddrId/pause', casparRoutes.ddrPause);
     router.post('/api/v1/caspars/:casparId/ddr/:ddrId/next', casparRoutes.ddrNext);
     router.post('/api/v1/caspars/:casparId/ddr/:ddrId/previous', casparRoutes.ddrPrevious);

@@ -101,20 +101,19 @@ module.exports = function(socket) {
                     let testFile3 = new ProducerFile(testFileSettings3);
                     testCaspar.addProducer(testFile3);
 
-                    // playlistSettings = new Array();
-                    // playlistSettings['name'] = 'autoPlaylist';
-                    // let playlist = testCaspar.addPlaylist(playlistSettings)
-                    // playlist.addMedia(3);
+                    playlistSettings = new Array();
+                    playlistSettings['name'] = 'autoPlaylist';
+                    let playlist = testCaspar.addPlaylist(playlistSettings)
+                    playlist.addMedia(3);
+                    playlist.addMedia(74);
+                    playlist.addMedia(73);
+                    playlist.addMedia(4);
                     
-                    // playlist.addMedia(74);
-                    // playlist.addMedia(73);
-                    // playlist.addMedia(4);
-                    
-                    // ddrSettings = new Array();
-                    // ddrSettings['name']  = 'autoDDR';
-                    // // ddrSettings['playlist']  = playlist;
-                    // let ddr = new ProducerDdr(ddrSettings);
-                    // testCaspar.addProducer(ddr);
+                    ddrSettings = new Array();
+                    ddrSettings['name']  = 'autoDDR';
+                    ddrSettings['playlist']  = playlist;
+                    let ddr = new ProducerDdr(ddrSettings);
+                    testCaspar.addProducer(ddr);
 
 
                 },2000);
@@ -948,6 +947,42 @@ module.exports = function(socket) {
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.resume()
+            .then(
+                function(msg){
+                    res.json(apiReturn.successMessage('Ddr play'))
+                    // socket.emit('layerEdit', JSON.stringify(layer));
+                },
+                function(msg){
+                    res.json(apiReturn.amcpErrorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+        
+    },
+    casparRoutes.ddrPlayId = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        const index = parseInt(req.params.index);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.playId(index)
+            .then(
+                function(msg){
+                    res.json(apiReturn.successMessage('Ddr play'))
+                    // socket.emit('layerEdit', JSON.stringify(layer));
+                },
+                function(msg){
+                    res.json(apiReturn.amcpErrorMessage(msg));
+                }).catch(function(error){
+                    console.log(error);
+                });
+        
+    },
+    casparRoutes.ddrSeek = function(req, res){
+        const casparId = parseInt(req.params.casparId);
+        const ddrId = parseInt(req.params.ddrId);
+        const frame = parseInt(req.params.frame);
+        let ddr = caspars.get(casparId).getProducer(ddrId);
+        ddr.seek(frame)
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr play'))

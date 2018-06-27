@@ -34,7 +34,7 @@ class CasparChannelMultiview extends CasparChannel{
         }else{
             scale = 0.25;
         }
-        console.log('scale : '+scale)
+        // console.log('scale : '+scale)
         var posX = 0;
         if (this.producers.size <= 4){
             var posY = 0.5 + (0.5-scale)/2;
@@ -48,10 +48,10 @@ class CasparChannelMultiview extends CasparChannel{
         for(var key of this.producers.keys()){
 
            
-                console.log(producerCount);
+                // console.log(producerCount);
                 producerCount++;
                 let req = `MIXER ${this.id}-${key} FILL ${scale*count} ${posY} ${scale} ${scale}`;
-                console.log(req);
+                // console.log(req);
                 this.tcpSend(req, function(){});
                 req = `MIXER ${this.id}-${key} VOLUME 0`;
                 this.tcpSend(req, function(){});
