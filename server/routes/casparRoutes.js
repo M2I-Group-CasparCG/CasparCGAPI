@@ -1,7 +1,7 @@
-// ++ todo
-// add JSON validator
-// add url variables type validator. 
 
+/**
+ * Depedencies
+ */
 
 const Caspar =            require('../../Caspar/Caspar.js');
 const Channel =           require('../../Caspar/CasparChannel');
@@ -24,12 +24,14 @@ const ConsumerDecklink =  require('../../Caspar/Consumers/CasparConsumerDecklink
 
 const ApiReturn =         require('./ApiReturn.js');
 
-let count = 0;
-let caspars = new Map();
-let consumers = new Map();
-let producers = new Map();
-let channels = new Map();
-let playlists = new Map();
+
+
+// let count = 0;
+let caspars = new Map();                        // map containing the caspar instances created
+// let consumers = new Map();                   
+// let producers = new Map();  
+// let channels = new Map();
+// let playlists = new Map();
 
 module.exports = function(socket) {
 
@@ -42,84 +44,84 @@ module.exports = function(socket) {
     //  * Add a default caspar instance with screen
     //  */
     
-    let testCasparSettings = new Array();
-    testCasparSettings['ipAddr'] = '192.168.1.231';
-    testCasparSettings['amcpPort'] = '5250';
-    testCasparSettings['name'] = 'auto Test';
-    let testCaspar = new Caspar(testCasparSettings);
-    testCaspar.restart()
-        .then(
-            function(resolve){
-                console.log('restart');
-            },
-            function(reject){
-                console.log(reject);
-            }
-        )
+    // let testCasparSettings = new Array();
+    // testCasparSettings['ipAddr'] = '127.0.0.1';
+    // testCasparSettings['amcpPort'] = '5250';
+    // testCasparSettings['name'] = 'auto Test';
+    // let testCaspar = new Caspar(testCasparSettings);
+    // testCaspar.restart()
+    //     .then(
+    //         function(resolve){
+    //             console.log('restart');
+    //         },
+    //         function(reject){
+    //             console.log(reject);
+    //         }
+    //     )
 
-    setTimeout(
-        function(){
-            console.log('timeout');
-            caspars.set(testCaspar.getId(),testCaspar);
-            testCaspar.getInfo()
-                .then(function(){
-                   console.log('default caspar added')
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+    // setTimeout(
+    //     function(){
+    //         console.log('timeout');
+    //         caspars.set(testCaspar.getId(),testCaspar);
+    //         testCaspar.getInfo()
+    //             .then(function(){
+    //                console.log('default caspar added')
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //             });
 
-            setTimeout(
-                function(){
-                    testCasparConsumer = new Array();
-                    testCasparConsumer['channelId'] = 1;
-                    testCasparConsumer['name'] = 'Consumer1';
-                    // testCasparConsumer['fullscreen'] = true;
-                    testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
-                    let testConsumer = new ConsumerScreen(testCasparConsumer)
-                    testCaspar.addConsumer(testConsumer);
-                    // testConsumer.run();
+    //         setTimeout(
+    //             function(){
+    //                 testCasparConsumer = new Array();
+    //                 testCasparConsumer['channelId'] = 1;
+    //                 testCasparConsumer['name'] = 'Consumer1';
+    //                 // testCasparConsumer['fullscreen'] = true;
+    //                 testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
+    //                 let testConsumer = new ConsumerScreen(testCasparConsumer)
+    //                 testCaspar.addConsumer(testConsumer);
+    //                 // testConsumer.run();
 
-                    testFileSettings = new Array();
-                    testFileSettings['name'] = 'AMB';
-                    testFileSettings['fileName'] = 'amb';
-                    testFileSettings['playMode'] = 'loop';
-                    let testFile = new ProducerFile(testFileSettings);
-                    testCaspar.addProducer(testFile);
+    //                 testFileSettings = new Array();
+    //                 testFileSettings['name'] = 'AMB';
+    //                 testFileSettings['fileName'] = 'amb';
+    //                 testFileSettings['playMode'] = 'loop';
+    //                 let testFile = new ProducerFile(testFileSettings);
+    //                 testCaspar.addProducer(testFile);
 
-                    testFileSettings2 = new Array();
-                    testFileSettings2['name'] = 'GO';
-                    testFileSettings2['fileName'] = 'GO1080P25';
-                    testFileSettings2['playMode'] = 'loop';
-                    let testFile2 = new ProducerFile(testFileSettings2);
-                    testCaspar.addProducer(testFile2);
+    //                 testFileSettings2 = new Array();
+    //                 testFileSettings2['name'] = 'GO';
+    //                 testFileSettings2['fileName'] = 'GO1080P25';
+    //                 testFileSettings2['playMode'] = 'loop';
+    //                 let testFile2 = new ProducerFile(testFileSettings2);
+    //                 testCaspar.addProducer(testFile2);
 
-                    testFileSettings3 = new Array();
-                    testFileSettings3['name'] = 'itescia';
-                    testFileSettings3['fileName'] = 'itescia';
-                    testFileSettings3['playMode'] = 'loop';
-                    let testFile3 = new ProducerFile(testFileSettings3);
-                    testCaspar.addProducer(testFile3);
+    //                 testFileSettings3 = new Array();
+    //                 testFileSettings3['name'] = 'itescia';
+    //                 testFileSettings3['fileName'] = 'itescia';
+    //                 testFileSettings3['playMode'] = 'loop';
+    //                 let testFile3 = new ProducerFile(testFileSettings3);
+    //                 testCaspar.addProducer(testFile3);
 
-                    playlistSettings = new Array();
-                    playlistSettings['name'] = 'autoPlaylist';
-                    let playlist = testCaspar.addPlaylist(playlistSettings)
-                    playlist.addMedia(3);
-                    playlist.addMedia(74);
-                    playlist.addMedia(73);
-                    playlist.addMedia(4);
+    //                 playlistSettings = new Array();
+    //                 playlistSettings['name'] = 'autoPlaylist';
+    //                 let playlist = testCaspar.addPlaylist(playlistSettings)
+    //                 playlist.addMedia(3);
+    //                 playlist.addMedia(74);
+    //                 playlist.addMedia(73);
+    //                 playlist.addMedia(4);
                     
-                    ddrSettings = new Array();
-                    ddrSettings['name']  = 'autoDDR';
-                    ddrSettings['playlist']  = playlist;
-                    let ddr = new ProducerDdr(ddrSettings);
-                    testCaspar.addProducer(ddr);
+    //                 ddrSettings = new Array();
+    //                 ddrSettings['name']  = 'autoDDR';
+    //                 ddrSettings['playlist']  = playlist;
+    //                 let ddr = new ProducerDdr(ddrSettings);
+    //                 testCaspar.addProducer(ddr);
 
 
-                },2000);
-        },
-        2000
-    );
+    //             },2000);
+    //     },
+    //     2000
+    // );
    
 
     /**
@@ -133,7 +135,6 @@ module.exports = function(socket) {
      */
     casparRoutes.add = async function(req, res){
         let casparSettings = req.body;
-        console.log(casparSettings);
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             caspar.getInfo()
@@ -148,8 +149,7 @@ module.exports = function(socket) {
     },
 
     /**
-     * 
-     * Get all caspar objects
+     * Return all caspar instances 
      */
     casparRoutes.getAll = function(req, res, next){
         console.log('getAll');
@@ -159,7 +159,7 @@ module.exports = function(socket) {
     },
 
     /**
-     * Check the validity of a casparObject. 
+     * Check the validity of a caspar id. 
      */
     casparRoutes.check = function(req, res, next){
         console.log('check');
@@ -191,7 +191,6 @@ module.exports = function(socket) {
      * A revoir.
      */
     casparRoutes.ini = function(req, res, next) {
-        console.log('ini');
         const casparId = req.params.casparId;
         let caspar = caspars.get(parseInt(casparId));
             if (caspar.getCasparCommon().getChannelsNb() >= 3){
@@ -205,9 +204,7 @@ module.exports = function(socket) {
         let crtChannels = caspar.getChannels();
         crtChannels.forEach(function (item, key, mapObj) {  
             if(socket){
-                // console.log(mapObj);
                 socket.emit('channelAdded',JSON.stringify(item));
-                // socket.broadcast('channelAdded',JSON.stringify(mapObj));
             }  
         });  
            
@@ -289,7 +286,6 @@ module.exports = function(socket) {
                 }
             }break;
             case 'producers' :{
-                console.log('producer');
                 let producer = caspar.getProducer(objectId);
                 if (producer instanceof Producer ){
                     object = producer;
@@ -314,12 +310,9 @@ module.exports = function(socket) {
                 }
             }break;
         }
-
         if (object){
-
             let result = new Object();
             for (let setting in settings){
-                console.log(setting+' '+settings[setting]);
                 let response = object.edit(setting, settings[setting]);
                 result[setting] = response[setting];
             }
@@ -339,7 +332,6 @@ module.exports = function(socket) {
         const objectId = parseInt(req.params.objectId);
         const objectType = req.params.objectType;
         let object = null;
-        console.log(objectType);
         switch (objectType){
             case 'consumers' :{
                 let consumer = caspar.getConsumer(objectId);
@@ -348,7 +340,6 @@ module.exports = function(socket) {
                 }
             }break;
             case 'producers' :{
-                console.log('producer');
                 let producer = caspar.getProducer(objectId);
                 if (producer instanceof Producer ){
                     object = producer;
@@ -432,9 +423,7 @@ module.exports = function(socket) {
     /**
      * Create a consumer instance into an capsar instance
      */
-    casparRoutes.consumerAdd = function(req,res,next){
-        console.log('addConsumer');
-
+    casparRoutes.consumerAdd = function(req,res,next){;
         const casparId = parseInt(req.params.casparId);
         const consumerType = req.params.consumerType;
         let consumerSettings = req.body;
@@ -460,12 +449,10 @@ module.exports = function(socket) {
         }
 
         if (consumer instanceof Consumer){
-            consumers.set(consumer.getId(), consumer);
             caspars.get(casparId).addConsumer(consumer);
             res.json(consumer);
             if(socket){
                 socket.emit('consumerAdd', JSON.stringify(consumer));
-                // socket.broadcast('consumerAdd',JSON.stringify(consumer));
             }
         }else{
             res.json(apiReturn.requestErrorMessage('unknown consumer type : '+consumerType));
@@ -491,14 +478,11 @@ module.exports = function(socket) {
      * Start the play a consumer instance
      */
     casparRoutes.consumerStart = function(req,res,next){
-        console.log('startConsumer');
-
         const casparId = parseInt(req.params.casparId);
         const consumerId = parseInt(req.params.consumerId);    
 
 
         let consumer = caspars.get(casparId).getConsumer(consumerId);
-            console.log(consumer);
             if (caspars.get(casparId).getChannel(consumer.getChannelId()) instanceof Channel){
                 consumer.run()
                     .then(
@@ -552,11 +536,9 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                 caspars.get(casparId).removeConsumer(consumerId);
-                consumers.delete(casparId);
                 res.json(apiReturn.successMessage('Consumer removed'));
                 if(socket){
                     socket.emit('consumerDelete', JSON.stringify(consumer));
-                    // socket.broadcast('consumerDelete',JSON.stringify(consumer));
                 }
             },
             function(msg){
@@ -568,8 +550,6 @@ module.exports = function(socket) {
         }else{
             res.json(apiReturn.notFoundMessage('Consumer instance not found'));
         }
-
-       
     },
 
     /**
@@ -582,7 +562,6 @@ module.exports = function(socket) {
      * Create a producer instance into an capsar instance
      */
     casparRoutes.producerAdd = function(req, res, next){
-        console.log('producerAdd');
         let producerType = req.params.producerType;
         let consumerSettings = req.body;
         const casparId = req.params.casparId;
@@ -611,12 +590,10 @@ module.exports = function(socket) {
         }   
 
         if (producer instanceof Producer){
-            producers.set(producer.getId(), producer)
             caspar.addProducer(producer);
             res.json(producer);
             if (socket) {
                 socket.emit('producerAdd',JSON.stringify(producer));
-                // socket.broadcast('producerAdded',JSON.stringify(producer));
             }
         }
     },
@@ -625,13 +602,11 @@ module.exports = function(socket) {
      * Check if the requested producer instance exists.
      */
     casparRoutes.producerCheck = function(req,res,next){
-        console.log('producerCheck');
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
         let producer = caspars.get(casparId).getProducer(producerId);
         if(producer instanceof Producer){
             next();
-            console.log('producerCheck ok')
         }else{
             res.json(apiReturn.notFoundMessage('Producer instance not found'));
         }
@@ -641,12 +616,9 @@ module.exports = function(socket) {
      * Start playing a producer instance
      */
     casparRoutes.producerStart = function(req,res,next){
-        console.log('startProducer');
-
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
         let producer = caspars.get(casparId).getProducer(producerId);
-
             producer.run()
                 .then(
                     function(msg){
@@ -666,7 +638,6 @@ module.exports = function(socket) {
     casparRoutes.producerStop = function(req,res,next){
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
-
         let producer = caspars.get(casparId).getProducer(producerId);
             producer.stop().then(
                 function(msg){
@@ -693,11 +664,9 @@ module.exports = function(socket) {
                 .then(
                     function(msg){
                         caspars.get(casparId).removeProducer(producerId);
-                        producers.delete(producerId);
                         res.json(apiReturn.successMessage('producer deleted'));
                         if(socket){
                             socket.emit('producerDelete', JSON.stringify(producer));
-                            // socket.broadcast('producerDelete',JSON.stringify(producer));
                         }
                     },
                     function(msg){
@@ -719,6 +688,7 @@ module.exports = function(socket) {
 
     /**
      * Create a consumer instance into an capsar instance
+     * To be implemented
      */
     casparRoutes.channelAdd = function (res, req, next){
 
@@ -728,13 +698,11 @@ module.exports = function(socket) {
      * Check if the requested channel instance exists.
      */
     casparRoutes.channelCheck = function(req,res,next){
-        console.log('channelCheck');
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
         let channel = caspars.get(casparId).getChannel(channelId);
         if(channel instanceof Channel){
             next();
-            console.log('channelCheck ok')
         }else{
             res.json(apiReturn.notFoundMessage('Channel instance not found'));
         }
@@ -745,13 +713,11 @@ module.exports = function(socket) {
      * Return the audio levels of a channel
      */
     casparRoutes.channelGetAudioLevels = function(req,res,next){
-        console.log('channelGetAudioLevels');
         const casparId = parseInt(req.params.casparId);
         const channelId = parseInt(req.params.channelId);
         const audioLevels = caspars.get(casparId).getChannel(channelId).getAudioLevels();
         let array =  [...audioLevels];
         res.json(array);
-    
     },
     
     /**
@@ -762,27 +728,21 @@ module.exports = function(socket) {
         const channelId = parseInt(req.params.channelId);
         const producerId = parseInt(req.params.producerId);
         const channel = caspars.get(casparId).getChannel(channelId);
-
         if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
             channel.setInput(producerId)
                 .then(
                     function(msg){  
                         res.json(apiReturn.successMessage('Channel\'s input switched'));
                         socket.emit('channelEdit', JSON.stringify(channel));
-                        
                     },
                     function(msg){
-                        console.log(msg);
                         res.json(apiReturn.amcpErrorMessage());
                     }).catch(function(error){
                         console.log(error);
                     });
         }else{
-            console.log('Producer not found');
             res.json(apiReturn.notFoundMessage('Producer not found'));
         }
-        
-    
     },
 
     /**
@@ -800,6 +760,7 @@ module.exports = function(socket) {
 
     /**
      * Delete a channel instance
+     * To be implemented
      */
     casparRoutes.channelDelete = function (res, req, next){
 
@@ -834,13 +795,11 @@ module.exports = function(socket) {
      * Check if the requested layer instance exists.
      */
     casparRoutes.layerCheck = function (req, res, next){
-        console.log('layerCheck');
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
         let layer = caspars.get(casparId).getLayer(layerId);
         if(layer instanceof Layer){
             next();
-            console.log('layerCheck ok')
         }else{
             res.json(apiReturn.notFoundMessage('Layer instance not found'));
         }
@@ -911,7 +870,6 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
         const layer = caspars.get(casparId).getLayer(layerId);
-        console.log(layer);
         if (layer instanceof Layer){
             let result = caspars.get(casparId).removeLayer(layerId);
             if (result){
@@ -930,8 +888,11 @@ module.exports = function(socket) {
     * 
     * DDR manipulation
     */
+
+    /**
+     * Check if the ddr id is valid
+     */
     casparRoutes.ddrCheck = function(req,res,next) {
-        console.log('ddrCheck');
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
@@ -942,6 +903,11 @@ module.exports = function(socket) {
             res.json(apiReturn.notFoundMessage('DDR instance not found'));
         }
     },
+
+    /**
+     * Launch the play function of the DDR
+     * 
+     */
     casparRoutes.ddrPlay = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -950,15 +916,17 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr play'))
-                    // socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
                 }).catch(function(error){
                     console.log(error);
                 });
-        
     },
+
+    /**
+     *  Launch the play function of the DDR on a specific media id
+     */
     casparRoutes.ddrPlayId = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -968,7 +936,6 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr play'))
-                    // socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
@@ -977,6 +944,10 @@ module.exports = function(socket) {
                 });
         
     },
+
+    /**
+     *  Launch the play function of the DDR on a specific media time
+     */
     casparRoutes.ddrSeek = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -986,15 +957,17 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr play'))
-                    // socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
                 }).catch(function(error){
                     console.log(error);
                 });
-        
     },
+
+    /**
+     *  Launch the pause function of the DDR
+     */    
     casparRoutes.ddrPause = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1003,16 +976,17 @@ module.exports = function(socket) {
             .then(
                 function(msg){
                     res.json(apiReturn.successMessage('Ddr pause'))
-                    // socket.emit('layerEdit', JSON.stringify(layer));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
                 }).catch(function(error){
                     console.log(error);
                 });
-        
     }
 
+    /**
+     *  Play the next media on the DDR
+     */
     casparRoutes.ddrNext = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1030,6 +1004,10 @@ module.exports = function(socket) {
                     console.log(error);
                 });
     },
+
+    /**
+     *  Play the previous media on the DDR
+     */
     casparRoutes.ddrPrevious = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1046,6 +1024,10 @@ module.exports = function(socket) {
                 console.log(error);
             });
     },
+
+    /**
+     *  Set the autoplay mode on the DDR
+     */
     casparRoutes.ddrAutoPlay = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1055,6 +1037,10 @@ module.exports = function(socket) {
         socket.emit('ddrEdit', JSON.stringify(ddr));
 
     },
+
+    /**
+     *  Set the playlist loop mode on the DDR
+     */
     casparRoutes.ddrPlaylistLoop = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1063,12 +1049,20 @@ module.exports = function(socket) {
         res.json(apiReturn.successMessage('playlistLoop toogled : '+ddr.getPlaylistLoop()));
         socket.emit('ddrEdit', JSON.stringify(ddr));
     },
+
+    /**
+     *  Get the current playlist of the ddr
+     */
     casparRoutes.ddrGetPlaylist = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
         res.json(ddr.getPlaylist());
     },
+
+    /**
+     *  Get the current media of the ddr
+     */
     casparRoutes.ddrGetCurrentMedia = function(req, res){
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
@@ -1082,7 +1076,10 @@ module.exports = function(socket) {
     * 
     * PLAYLIST manipulation
     */
-    
+
+    /**
+     *  Adding a playlist to a DDR
+     */
     casparRoutes.playlistAdd = function(req, res) {
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
@@ -1091,13 +1088,16 @@ module.exports = function(socket) {
         let playlist = caspar.addPlaylist(settings);
 
         if (playlist instanceof Playlist ){
-            playlists.set(playlist.getId(), playlist);
+            // playlists.set(playlist.getId(), playlist);
             res.json(playlist);
         }else{
             res.json(apiReturn.requestErrorMessage('Failed to create Playlist'));
         }
     },
 
+    /**
+     *  Check if the playlist id is valid
+     */
     casparRoutes.playlistCheck = function(req, res, next) {
         console.log('playlistCheck');
         const casparId = parseInt(req.params.casparId);
@@ -1111,6 +1111,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     *  Delete a playlist instance
+     */
     casparRoutes.playlistDelete = function(req, res) {
         const casparId = parseInt(req.params.casparId);
         const playlistId = parseInt(req.params.playlistId);
@@ -1128,7 +1131,9 @@ module.exports = function(socket) {
         }
     },
 
-    
+    /**
+     *  Add a file to a playlist
+     */
     casparRoutes.playlistAddFile = function(req, res) {
         const casparId = parseInt(req.params.casparId);
         const playlistId = parseInt(req.params.playlistId);
@@ -1145,6 +1150,9 @@ module.exports = function(socket) {
         }
     },
 
+     /**
+     *  Remove a file from a playlist
+     */
     casparRoutes.playlistRemoveFile = function(req, res) {
         const casparId = parseInt(req.params.casparId);
         const playlistId = parseInt(req.params.playlistId);
@@ -1161,6 +1169,9 @@ module.exports = function(socket) {
         }
     },
 
+    /**
+     *  Get the array containing the files of the playlist
+     */
     casparRoutes.playlistGetFiles = function(req, res) {
         const casparId = parseInt(req.params.casparId);
         const playlistId = parseInt(req.params.playlistId);
@@ -1168,6 +1179,7 @@ module.exports = function(socket) {
 
         res.json([...playlist.getList()]);
     },
+
 
     /**
     * _____________________________________________________________________________________________________________________________
@@ -1204,7 +1216,7 @@ module.exports = function(socket) {
      */
 
     /**
-     * Parse the OSC protocol buffer octet stream in parsed readable string
+     * Transform the OSC protocol buffer octet stream in parsed readable string
      */
     casparRoutes.oscParser = function (buffer, rinfo){
 
@@ -1223,13 +1235,13 @@ module.exports = function(socket) {
          
          */
     
-        var result = new Map();                                                            // dictionnaire contenant les données récoltées.
-        var bufferLength = buffer.length;                                           //longeur totale du buffer
-        var cursor = 16;                                                            // on place le curseur à la taille de premier élément
-        while(cursor < bufferLength){                                               // tant qu'il reste des données dans le buffer
-            var elementSize = buffer.readInt32BE(cursor);                           // on récupère la longueur de l'élément
-            cursor = cursor + 4;                                                // on place le curseur au début de l'élément
-            var element = buffer.slice(cursor, cursor+elementSize);                 // on récupère l'élément en entier
+        var result = new Map();                                                             // dictionnaire contenant les données récoltées.
+        var bufferLength = buffer.length;                                                   //longeur totale du buffer
+        var cursor = 16;                                                                    // on place le curseur à la taille de premier élément
+        while(cursor < bufferLength){                                                       // tant qu'il reste des données dans le buffer
+            var elementSize = buffer.readInt32BE(cursor);                                   // on récupère la longueur de l'élément
+            cursor = cursor + 4;                                                            // on place le curseur au début de l'élément
+            var element = buffer.slice(cursor, cursor+elementSize);                         // on récupère l'élément en entier
             // traitement de l'élément
             var valName = element.toString('utf-8').split(',')[0];
             var valNameLength = valName.length;
@@ -1237,7 +1249,7 @@ module.exports = function(socket) {
             var valType = element.slice(valNameLength+1, valNameLength+2).toString();
             var valData = element.slice(valNameLength+2);
     
-            switch(valType){                                                        // formattage des valeurs en fonction des types
+            switch(valType){                                                                // formattage des valeurs en fonction des types
                 case 'i' :      // int32
                     valData = valData.readInt32BE(2);
                 break;
@@ -1266,18 +1278,23 @@ module.exports = function(socket) {
                 break;
             }
             result.set(valName,valData);
-            cursor = cursor + elementSize;                                          // incrémentation du curseur 
+            cursor = cursor + elementSize;                                                  // incrémentation du curseur 
         }
         this.oscRouter(result, rinfo['address']);
         return result;
     }
 
+    /**
+     * Route a osc message on the correct caspar instance
+     * @param {*} msg                   msg to be routed
+     * @param {*} sourceIpAddr          source ipAddr of the osc message
+     */
     casparRoutes.oscRouter = function (msg, sourceIpAddr){
         caspars.forEach(function(caspar, casparId, map){
             const ipAddr = caspar.getCasparCommon().getIpAddr();
             if (ipAddr == sourceIpAddr){
                 let result = caspar.oscAnalyzer(msg);
-                if (result){                                            // envoi de socketIO
+                if (result){                                                                // envoi de socketIO
                     socket.emit(result[0],JSON.stringify(result[1]));
                 }
             }

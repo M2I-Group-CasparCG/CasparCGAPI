@@ -27,7 +27,6 @@ class CasparProducerDDR extends CasparProducer{
         this.formattedRemainingTime = null;
 
         //playlist index
-        
         this.currentIndex = 0;
         this.nextIndex = null;
         this.currentMedia = null;
@@ -43,26 +42,36 @@ class CasparProducerDDR extends CasparProducer{
      * Init the DDR by loading the first file of the playlist
      */
     async run() {
-        
-       
-        // init the plyalist
         this.currentIndex = this.indexVerify(this.currentIndex);
-        // loading the first media of the playlist
 
+        let req = false;
         if (this.currentIndex >= 0){
             if (this.paused){
-                await this.tcpPromise(this.loadRequest(this.currentIndex));
+               req = this.loadRequest(this.currentIndex);
             }else{
-                await this.tcpPromise(this.playRequest(this.currentIndex));
+               req = this.playRequest(this.currentIndex);
             }
-           
             if (this.autoPlay){
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                await this.tcpPromise(this.loadBgRequest(nextIndex));
+                this.tcpPromise(this.loadBgRequest(nextIndex))
+                    .then(
+                        function(resolve){
+                            console.log(resolve);
+                        },
+                        function(reject){
+                            console.log(reject);
+                        }
+                    ) 
             }
             this.initialized = true;
             this.lock = true;
         }
+        if (req){
+            return this.tcpPromise(req);
+        }else{
+            return Promise.resolve('no media in the playlist');
+        }
+        
     }
 
     /**
@@ -74,7 +83,15 @@ class CasparProducerDDR extends CasparProducer{
         if (this.autoPlay){
             console.log('AUTOPLAY');
             let nextIndex = this.indexVerify(this.currentIndex+1);
-            this.tcpPromise(this.loadBgRequest(nextIndex));
+            this.tcpPromise(this.loadBgRequest(nextIndex))
+                .then(
+                    function(resolve){
+                       console.log(resolve);
+                    },function(reject){
+                        console.log(reject);
+                    }
+                );
+
         }
         this.lock = true;
         this.play = true;
@@ -104,8 +121,9 @@ class CasparProducerDDR extends CasparProducer{
         if (this.playlist.list[index] instanceof CasparMedia){
             this.currentIndex = index;
             return this.run();
+            
         }else{
-            return Promise.resolve('');
+            return Promise.reject('index not found in playlist');
         }
 
     }
@@ -205,7 +223,6 @@ class CasparProducerDDR extends CasparProducer{
             }
             this.setCurrentMedia(media);
         }
-        
         return req;
     }
     /**
@@ -313,7 +330,14 @@ class CasparProducerDDR extends CasparProducer{
     setAutoPlay(autoPlay){ 
         this.autoPlay = autoPlay;
         let nextIndex = this.indexVerify(this.currentIndex+1);
-        this.tcpPromise(this.loadBgRequest(nextIndex));
+        this.tcpPromise(this.loadBgRequest(nextIndex))
+            .then(
+                function(resolve){
+                    console.log(resolve);
+                },function(reject){
+                    console.log(reject);
+                }
+            )
     }
 
     getNextIndex(){return this.nextIndex;}

@@ -5,7 +5,7 @@ class CasparMedia {
     constructor(settings){
         CasparMedia.totalInstances = (CasparMedia.totalInstances || 0) + 1;
         this.id = CasparMedia.totalInstances;
-        this.name = settings['name'] || null;
+        this.name = settings['name'] || 'default';
         this.label = settings['label'] || this.name;
         this.path = settings['path'] || '';
         this.fullPath = `${this.path}/${this.name}`;
@@ -18,18 +18,32 @@ class CasparMedia {
         this.formattedSize = this.sizeFormat(this.size);
     }
 
+    /**
+     * Calcul the file time and return a formatted string 'HH:MM:SS:FF' format
+     * @param {*} frameNb number of frames of the media
+     * @param {*} frameRate frame rate of the media
+     * @return {String} The formatted duration
+     */
     timeFormat(frameNb, frameRate){
 
-        let duration = frameNb*frameRate;
-        let seconds = (duration-duration % 1) % 60 ;
-        let minutes = (duration - duration % 60) / 60;
-        let hours = (duration - duration % 3600) / 3600;
-        let frames = frameNb - (seconds + 60*minutes + 3600*hours)/frameRate;
+        let duration = frameNb*frameRate;                   // duration en seconds
+        let brutHours = duration / 3600;
+        let hours = Math.floor(duration / 3600);
+        let brutMinutes = (brutHours - hours) * 60;
+        let minutes = Math.floor(brutMinutes);
+        let brutSeconds = (brutMinutes - minutes) *60;
+        let seconds = Math.floor(brutSeconds);
+        let frames = Math.round((brutSeconds - seconds) / frameRate);
+        // let frames = frameNb - (seconds + 60*minutes + 3600*hours)/frameRate;
 
-        return `${hours}:${minutes}:${seconds}:${frames}`;
+        return `${('0'+hours).slice(-2)}:${('0'+minutes).slice(-2)}:${('0'+seconds).slice(-2)}:${('0'+frames).slice(-2)}`;
     }
 
-
+    /**
+     * Take an octet size integer and return a human readable String
+     * @param {*} size size in otcet
+     * @return {String} the human readable string
+     */
     sizeFormat(size){
 
         const units = ['octets','ko','Mo','Go','To']; 

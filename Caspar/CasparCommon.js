@@ -344,6 +344,7 @@ class CasparCommon {
     getCasparPath() { return this.casparPath; }
     setCasparPath(casparPath) { this.casparPath = casparPath; }
 
+    setMedias(medias){ this.medias = medias;}
     getMedia() { return this.medias;}
 
     getId(){ return this.id; }
