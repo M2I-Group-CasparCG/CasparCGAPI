@@ -51,6 +51,7 @@ class CasparProducerDDR extends CasparProducer{
             }else{
                req = this.playRequest(this.currentIndex);
             }
+            let promise = this.tcpPromise(req);
             if (this.autoPlay){
                 let nextIndex = this.indexVerify(this.currentIndex+1);
                 this.tcpPromise(this.loadBgRequest(nextIndex))
@@ -67,7 +68,7 @@ class CasparProducerDDR extends CasparProducer{
             this.lock = true;
         }
         if (req){
-            return this.tcpPromise(req);
+            return promise;
         }else{
             return Promise.resolve('no media in the playlist');
         }
@@ -137,10 +138,17 @@ class CasparProducerDDR extends CasparProducer{
             req = this.playRequest(this.currentIndex)
         }  
         req+= ' SEEK '+frame; 
-        let promise = this.tcpPromise(req);
+        let promise = this.tcpPromise(req)
         if (this.autoPlay){
             let nextIndex = this.indexVerify(this.currentIndex+1);
-            this.tcpPromise(this.loadBgRequest(nextIndex));
+            this.tcpPromise(this.loadBgRequest(nextIndex))
+                .then(
+                    function(resolve){
+                        console.log(resolve);
+                    },function(reject){
+                        console.log(reject);
+                    }
+                )
         }  
         return promise;
     }
@@ -161,12 +169,19 @@ class CasparProducerDDR extends CasparProducer{
             if (this.autoPlay){
                 console.log('AUTOPLAY');
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                this.tcpPromise(this.loadBgRequest(nextIndex));
+                this.tcpPromise(this.loadBgRequest(nextIndex))
+                    .then(
+                        function(resolve){
+                            console.log(resolve);
+                        },function(reject){
+                            console.log(reject);
+                        }
+                    )
             }
             this.lock = true;
             return promise;
         }else{
-            return Promise.resolve('');
+            return Promise.reject('ERROR : next index and current index are the same');
         }
     }
 
@@ -182,16 +197,23 @@ class CasparProducerDDR extends CasparProducer{
             }else{
                 req = this.playRequest(this.currentIndex)
             }
-            let promise = this.tcpPromise(req);
+            let promise =this.tcpPromise(req);
             if (this.autoPlay){
                 console.log('AUTOPLAY');
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                this.tcpPromise(this.loadBgRequest(nextIndex));
+                this.tcpPromise(this.loadBgRequest(nextIndex))
+                    .then(
+                        function(resolve){
+                            console.log(resolve);
+                        },function(reject){
+                            console.log(reject);
+                        }
+                    )
             }
             this.lock = true;
             return promise;
         }else{
-            return Promise.resolve('');
+            return Promise.reject('ERROR : next index and current index are the same');
         }
     }
 
@@ -266,6 +288,13 @@ class CasparProducerDDR extends CasparProducer{
         return index;
     }
 
+    /**
+     * Edit a setting of the playlist 
+     * Used for the API
+     * @param {*} setting the attribute name to be edited
+     * @param {*} value the new value to set
+     * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
+     */
     edit(setting, value){
         let response = new Object();
         switch (setting){
@@ -320,7 +349,14 @@ class CasparProducerDDR extends CasparProducer{
     setPlaylistLoop(bool) { 
         this.playlistLoop = bool;
         let nextIndex = this.indexVerify(this.currentIndex+1);
-        this.tcpPromise(this.loadBgRequest(nextIndex));
+        this.tcpPromise(this.loadBgRequest(nextIndex))
+            .then(
+                function(resolve){
+                    console.log(resolve);
+                },function(reject){
+                    console.log(reject);
+                }
+            )
     }
 
     getMediaLoop() { return this.mediaLoop;}
@@ -360,15 +396,15 @@ class CasparProducerDDR extends CasparProducer{
             if (! this.lock){
                 this.fileTime = time;
                 console.log('NEW FILE ***************************************************');
-                
+                this.currentIndex = this.nextIndex;
+                this.setCurrentMedia(this.nextMedia);
                 let nextIndex = this.indexVerify(this.currentIndex +1);
                  console.log( this.playlist.list.length);
                  console.log(nextIndex);
                  console.log(this.currentIndex);
-                if (nextIndex != this.currentIndex || this.playlist.list.length == 1){
+                if (nextIndex != this.currentIndex){
                     console.log('load next');
-                    this.currentIndex = this.nextIndex;
-                    this.setCurrentMedia(this.nextMedia);
+                   
                     await this.tcpPromise(this.loadBgRequest(nextIndex));
                 }
             }       
