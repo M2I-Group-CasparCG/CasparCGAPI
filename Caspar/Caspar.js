@@ -592,7 +592,8 @@ class Caspar {
         // console.log(oscData.keys().next().value);
         const firstKey = oscData.keys().next().value;
 
-        // dans le cas d'un message de rec
+        if(firstKey){
+            // dans le cas d'un message de rec
         if(firstKey.match(reChannelOutputRecord)){
             const messageType = 'recordInfo';
             const recInfo = new Object();
@@ -662,6 +663,9 @@ class Caspar {
                 }
             }
         }
+
+        }
+        
 
 
 

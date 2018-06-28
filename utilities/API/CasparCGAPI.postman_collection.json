@@ -864,6 +864,94 @@
 					"response": []
 				},
 				{
+					"name": "producerDdrAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "874b68bd-1790-4e0c-8f50-6dcf095f2f89",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Producer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Producer\");",
+									"});",
+									"",
+									"/**",
+									" *  environment variables update.",
+									" */",
+									"try {",
+									"    let producer = JSON.parse(responseBody);",
+									"    pm.environment.set(\"producerId\", producer['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"    pm.environment.set(\"producerId\", '1');",
+									"}",
+									"",
+									"",
+									" "
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"DDR 1\",\n\t\"autoplay\":true\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/producers/ddr",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"producers",
+								"ddr"
+							]
+						},
+						"description": "Add a file producer to CasparCG Server"
+					},
+					"response": []
+				},
+				{
 					"name": "producerStart",
 					"event": [
 						{
@@ -2832,6 +2920,71 @@
 								"caspars",
 								"{{casparId}}",
 								"channels"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "channelLayerGetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "53a05bc9-006c-4727-a8f5-cffa731ea603",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/channels/{{channelId}}/layers",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"channels",
+								"{{channelId}}",
+								"layers"
 							]
 						},
 						"description": "Starts the playing of a producer"
@@ -5556,6 +5709,1093 @@
 						}
 					],
 					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "producerDdr",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "medias",
+			"description": "",
+			"item": [
+				{
+					"name": "mediaGetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/medias/",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"medias",
+								""
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "mediaGet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/medias/{{mediaId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"medias",
+								"{{mediaId}}"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "mediaScan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/medias/",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"medias",
+								""
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "playlist",
+			"description": "",
+			"item": [
+				{
+					"name": "playlistAdd",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f409221b-077c-4c45-93e1-f8eb8e0aa18b",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Consumer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+									"});",
+									"",
+									"",
+									"try {",
+									"    let playlist = JSON.parse(responseBody);",
+									"    pm.environment.set(\"playlistId\", playlist['id']);",
+									"}catch (error){",
+									"    console.log('malformed JSON');",
+									"}",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"myPlaylist\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists"
+							]
+						},
+						"description": "Adding a screen consumer to casparCG"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistGet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f5bfcb4b-9310-4ab0-8864-a405d5818672",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/{{playlistId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								"{{playlistId}}"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistsGetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								""
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistEdit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "689c65c4-f69e-42a7-b544-cb00e46ba1ec",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Playlist Edited\",\n\t\"test\":\"vli\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/{{playlistId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								"{{playlistId}}"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistDelete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5aa4a346-03b8-422e-8762-eceb347c7690",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/{{playlistId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								"{{playlistId}}"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistAddFile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "794e2ead-0766-4e00-9d0a-b06495cdf76b",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});",
+									"",
+									"",
+									"/**",
+									" *  Caspar Tests",
+									" */",
+									"pm.test(\"response should be Consumer object\", function(){",
+									"    pm.expect(pm.response.json().code).to.not.eql(500);",
+									"    pm.expect(pm.response.json().code).to.not.eql(400);",
+									"    pm.expect(pm.response.json().code).to.not.eql(404);",
+									"    pm.expect(pm.response.json().object).to.eql(\"Consumer\");",
+									"});",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"myPlaylist\"\n}"
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/{{playlistId}}/file/{{fileId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								"{{playlistId}}",
+								"file",
+								"{{fileId}}"
+							]
+						},
+						"description": "Adding a screen consumer to casparCG"
+					},
+					"response": []
+				},
+				{
+					"name": "playlistsGetFiles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/playlists/{{playlistId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"playlists",
+								"{{playlistId}}"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ddrControl",
+			"description": "",
+			"item": [
+				{
+					"name": "ddrPlay",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/medias/",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"medias",
+								""
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "ddrPause",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ddr/{{ddrId}}/pause",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"ddr",
+								"{{ddrId}}",
+								"pause"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "ddrNext",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ddr/{{ddrId}}/next",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"ddr",
+								"{{ddrId}}",
+								"next"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "ddrPrevious",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ddr/{{ddrId}}/previous",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"ddr",
+								"{{ddrId}}",
+								"previous"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "ddrGetPlaylist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ddr/{{ddrId}}/playlist",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"ddr",
+								"{{ddrId}}",
+								"playlist"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
+				},
+				{
+					"name": "ddrGetCurrentMedia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f32ddc16-61c0-40d7-9536-b18ad92bbe19",
+								"type": "text/javascript",
+								"exec": [
+									"/**",
+									" *  API TESTS",
+									" */",
+									" ",
+									" pm.test(\"Response should not be error\", function(){",
+									"    pm.response.to.not.be.error; ",
+									" });",
+									" ",
+									"pm.test(\"response should be JSON\", function () { ",
+									"    pm.response.json();",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MjI2ODkxOTk4NDl9.aOSO_U8tcC7QKJO28xbCccm2vy5NTTTrXql60Xv7ppw",
+								"disabled": true
+							},
+							{
+								"key": "x-key",
+								"value": "admin@clydeUI.com",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v1/caspars/{{casparId}}/ddr/{{ddrId}}/file",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"caspars",
+								"{{casparId}}",
+								"ddr",
+								"{{ddrId}}",
+								"file"
+							]
+						},
+						"description": "Starts the playing of a producer"
+					},
+					"response": []
 				}
 			]
 		}
