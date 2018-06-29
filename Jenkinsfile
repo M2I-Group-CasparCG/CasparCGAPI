@@ -33,6 +33,10 @@ pipeline {
       }
     }
     stage('test') {
+      agent any
+      environment {
+        withSonarQubeEnv = 'CasparCGAPI_skg'
+      }
       steps {
         waitForQualityGate true
       }
