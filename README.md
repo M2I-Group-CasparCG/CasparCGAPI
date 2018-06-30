@@ -1,17 +1,54 @@
-# CasparCGAPI
+# Welcome to our CasparCG API project ! 
 
-When testing, our CasparCG server must have at list 3 channels declared in the casparcg.config file.
-You can find a sample caspar.config in ./utilities/API/
+The aim of this project is to offer a powerfull nodeJS API for the CasparCG server. We try to make the API easy to use to enable anyone to quickly build a personalized web interface for CasparCG.
 
-You can use the ./utilities/API/CasparCG api.postman_collection.json JSON file to import API tests commands into Postman.
-You can use Postman runner and run the "ini" bin to initialize CasparCG with the default media available on the server. 
 
-The api documentation is available at https://documenter.getpostman.com/view/3948879/RVnZgd9U
+The API uses the AMCP protocol to send commands to CasparCG.
 
-# Jenkins CI
+Return states of the server are catched with the OSC protocol and send back to the clients with an socket.IO socket.
 
-Test for Jenkins
+## Quick start guide
 
-Second test for Jenkins
+### 1. Install and configure the CasparCG server
 
-Third test for Jenkins
+* Download the last CasparCG stable version [here](http://casparcg.com/download.html).
+* Edit the CasparCG configuration file in order to :
+  * Have a least 3 channels
+  * Have a predefined OSC client matching with the server on which you run the API
+  * If you need it, a demo configuration file is available [here](https://github.com/M2I-Group-CasparCG/CasparCGAPI/blob/master/utilities/API/caspar.config).
+
+### 2. Install the API
+
+* Make sur you have nodeJS and npm installed
+    ```
+    node -v
+    npm -v
+    ```
+    If they are not, please install the last release from the [nodeJS site](https://nodejs.org/en/).
+
+* Download the API sources
+    ```bash
+    git clone https://github.com/M2I-Group-CasparCG/CasparCGAPI.git
+    ```
+* install the depedencies
+    ```bash
+    npm install
+    ```
+* once everything is installed, just run the API 
+    ```bash
+    npm start 
+    ```
+
+* You should know see the current message in the nodeJS prompt :
+    ```bash
+    udp server listening on 0.0.0.0:5253
+    Express server listening on port 3000
+    ```
+### Congrats ! The API is ready !
+
+If you encountered any problem during the installation process, please [create an issue](https://github.com/M2I-Group-CasparCG/CasparCGAPI/issues/new) with the `help wanted` tag to ask for help ! 
+
+If you want to try it with a web interface, please install our demo interface [ClydeUi](https://github.com/M2I-Group-CasparCG/ClydeUI).
+
+
+
