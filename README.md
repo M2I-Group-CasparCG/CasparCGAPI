@@ -7,6 +7,8 @@ The API uses the AMCP protocol to send commands to CasparCG.
 
 Return states of the server are catched with the OSC protocol and send back to the clients with an socket.IO socket.
 
+### The project is still under development. Please report the bugs you encoutered in the [issues section](https://github.com/M2I-Group-CasparCG/CasparCGAPI/wiki).
+
 ## Quick start guide
 
 ### 1. Install and configure the CasparCG server
@@ -53,6 +55,3 @@ If you want to try it with a web interface, please install our demo interface [C
 ## For the developpers
 
 Please visit the [wiki](https://github.com/M2I-Group-CasparCG/CasparCGAPI/wiki).
-
-
-
