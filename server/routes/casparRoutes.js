@@ -45,7 +45,7 @@ module.exports = function(socket) {
      */
     
     // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '192.168.1.231';
+    // testCasparSettings['ipAddr'] = '127.0.0.1';
     // testCasparSettings['amcpPort'] = '5250';
     // testCasparSettings['name'] = 'auto Test';
     // let testCaspar = new Caspar(testCasparSettings);
@@ -106,10 +106,10 @@ module.exports = function(socket) {
     //                 playlistSettings = new Array();
     //                 playlistSettings['name'] = 'autoPlaylist';
     //                 let playlist = testCaspar.addPlaylist(playlistSettings)
-    //                 playlist.addMedia(3);
-    //                 playlist.addMedia(74);
-    //                 playlist.addMedia(73);
-    //                 playlist.addMedia(4);
+    //                     playlist.addMedia(3);
+    //                     playlist.addMedia(74);
+    //                     playlist.addMedia(73);
+    //                     playlist.addMedia(4);
                     
     //                 ddrSettings = new Array();
     //                 ddrSettings['name']  = 'autoDDR';
@@ -204,7 +204,7 @@ module.exports = function(socket) {
         let crtChannels = caspar.getChannels();
         crtChannels.forEach(function (item, key, mapObj) {  
             if(socket){
-                socket.emit('channelAdded',JSON.stringify(item));
+                socket.emit('channelAdd',JSON.stringify(item));
             }  
         });  
            
