@@ -1,6 +1,6 @@
 # Welcome to our CasparCG API project ! 
 
-The aim of this project is to offer a powerfull nodeJS API for the CasparCG server. We try to make the API easy to use to enable anyone to quickly build a personalized web interface for CasparCG.
+The aim of this project is to offer an open-source and powerfull nodeJS API for the CasparCG server. We try to make the API easy to use to enable anyone to quickly build a personalized web interface for CasparCG.
 
 
 The API uses the AMCP protocol to send commands to CasparCG.
@@ -49,6 +49,10 @@ Return states of the server are catched with the OSC protocol and send back to t
 If you encountered any problem during the installation process, please [create an issue](https://github.com/M2I-Group-CasparCG/CasparCGAPI/issues/new) with the `help wanted` tag to ask for help ! 
 
 If you want to try it with a web interface, please install our demo interface [ClydeUi](https://github.com/M2I-Group-CasparCG/ClydeUI).
+
+## For the developpers
+
+Please visit the [wiki](https://github.com/M2I-Group-CasparCG/CasparCGAPI/wiki).
 
 
 
