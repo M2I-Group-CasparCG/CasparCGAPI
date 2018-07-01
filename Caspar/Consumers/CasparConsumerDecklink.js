@@ -71,6 +71,28 @@ class CasparConsumerDECKLINK extends CasparConsumer {
     getLatency(){ return this.latency; }
     setLatency(latency){ this.latency = latency; }
 
+    async setChannelId(id) {
+        await this.stop()
+            .then(
+                function(resolve){
+                    console.log(resolve);
+                },
+                function(reject){
+                    console.log(reject);
+                }
+            )
+        this.channelId = id;
+        await  this.run()
+        .then(
+            function(resolve){
+                console.log(resolve);
+            },function(reject){
+                console.log(reject);
+            }
+        )
+       
+    }
+
 }
 
 module.exports = CasparConsumerDECKLINK;

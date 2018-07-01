@@ -503,32 +503,59 @@ class Caspar {
 
     async scanMedias () {
         const medias = this.medias;
+        const caspar = this;
         await this.getCasparCommon().tcpPromise('CLS')
             .then(
                 function(resolveResult){
                
                     const fileList = resolveResult['data'];
+                   
                     fileList.forEach(function(file) {
                     
                         const settings = new Array();
 
                         const fileInfo = file.split(' ');
-                        const fullPath = fileInfo[0].replace(/"/g,'');
+                        console.log(caspar.getCasparCommon().getCasparVersion());
+                        
+                        /**
+                         * The indexes of the different media information in the CLS command return
+                         */
+                        const indexes = new Object();
+                        if (caspar.getCasparCommon().getCasparVersion() == '2.2.0 3c77a837 Beta 1'){
+                            indexes.path = 0;
+                            indexes.mediaType = 2;
+                            indexes.size = 4;
+                            indexes.lastModification = 5;
+                            indexes.frameNumber = 6;
+                            indexes.frameRate = 7;
+                        }else{
+                            indexes.path = 0;
+                            indexes.mediaType = 1;
+                            indexes.size = 2;
+                            indexes.lastModification = 3;
+                            indexes.frameNumber = 4;
+                            indexes.frameRate = 5;
+                        }
+                              
+
+                        const fullPath = fileInfo[indexes.path].replace(/"/g,'');
 
                         const splittedPath = fullPath.split('/');
                         settings['name'] = splittedPath.pop();
                         settings['path'] = splittedPath.join('/');
                         
-                        settings['mediaType'] = fileInfo[1];
-                        settings['size'] = parseInt(fileInfo[2]);
-                        settings['lastModification'] = parseInt(fileInfo[3]);
-                        settings['frameNumber'] = parseInt(fileInfo[4])
-                        const frameRate = parseInt(fileInfo[5].split('/')[0])/parseInt(fileInfo[5].split('/')[1]);
+                        settings['mediaType'] = fileInfo[indexes.mediaType];
+                        settings['size'] = parseInt(fileInfo[indexes.size]);
+                        settings['lastModification'] = parseInt(fileInfo[indexes.lastModification]);
+                        settings['frameNumber'] = parseInt(fileInfo[indexes.frameNumber])
+                        const frameRate = parseInt(fileInfo[indexes.frameRate].split('/')[0])/parseInt(fileInfo[indexes.frameRate].split('/')[1]);
                         settings['frameRate'] = frameRate;
 
                         const media = new Media(settings);
-
+                        console.log(media);
                         medias.set(media.getFullPath(),media);
+
+
                   
                     });
                 },  
@@ -567,8 +594,7 @@ class Caspar {
      */
     oscAnalyzer(oscData){        
 
-        // console.log(oscData);
-
+        
         let caspar = this;
 
         const reChannelFormat                       = /\/channel\/\d{1,3}\/format/;
@@ -593,6 +619,8 @@ class Caspar {
         const firstKey = oscData.keys().next().value;
 
         if(firstKey){
+        //    console.log('_______________');
+
             // dans le cas d'un message de rec
         if(firstKey.match(reChannelOutputRecord)){
             const messageType = 'recordInfo';
@@ -609,6 +637,7 @@ class Caspar {
             }
         }
         for (let [key, value] of oscData){
+            // console.log(key +'\t\t\t'+value);
             if (key.match(reChannelLayerFilePath)){
                 const result = key.match(/\d{1,3}/g);
                 const channelNb = parseInt(result[0]);
@@ -616,6 +645,10 @@ class Caspar {
                 const producer = this.getProducer(layerNb);
                 if (channelNb == 1){
                     if (producer instanceof ProducerDdr){
+                        // console.log('Layer File Path __________________')
+                        // console.log(key);     
+                        // console.log(value);     
+                        // console.log('__________________')  
                         let array = value.split('.');
                         array.pop();
                         let mediaName = '/'+array.join().toUpperCase();
@@ -629,10 +662,14 @@ class Caspar {
                 if (channelNb == 1){
                     const producer = this.getProducer(layerNb);
                     if (producer instanceof ProducerDdr){
-                        if (producer.getPaused() !== value){
-                            this.getProducer(layerNb).setPaused(value);
-                            return ['ddrEdit', this.getProducer(layerNb)];
-                        }
+                        // console.log('Layer Paused __________________')
+                        // console.log(key);
+                        // console.log(value);   
+                        // console.log('__________________')           
+                        // if (producer.getPaused() !== value){
+                        //     this.getProducer(layerNb).setPaused(value);
+                        //     return ['ddrEdit', this.getProducer(layerNb)];
+                        // }
                     }
                 }
             }else if (key.match(reChannelLayerFileTime)){
@@ -642,7 +679,11 @@ class Caspar {
                 if (channelNb == 1){
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
                         let old_index = this.getProducer(layerNb).getCurrentIndex();
-                        this.getProducer(layerNb).setFileTime(value);                    
+                        this.getProducer(layerNb).setFileTime(value);  
+                        // console.log('File Time __________________')
+                        // console.log(key);    
+                        // console.log(value);       
+                        // console.log('__________________')          
                         return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
@@ -652,6 +693,10 @@ class Caspar {
                 const layerNb = parseInt(result[1]);
                 if (channelNb == 1){
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
+                        // console.log('File Frame __________________')
+                        // console.log(key);
+                        // console.log(value);   
+                        // console.log('__________________')                 
                         if (value.indexOf('|')>-1){
                             value = value.split('|')[0];
                         }else{

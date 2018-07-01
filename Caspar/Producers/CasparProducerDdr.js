@@ -95,7 +95,7 @@ class CasparProducerDDR extends CasparProducer{
 
         }
         this.lock = true;
-        this.play = true;
+        this.paused = false;
         return promise;
     }
 
@@ -104,13 +104,13 @@ class CasparProducerDDR extends CasparProducer{
      */
     pause() {
         let req = `PAUSE ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.play = false;
+        this.paused = true;
         return this.tcpPromise(req);
     }
 
     stop() {
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.play = false;
+        this.paused = true;
         this.nextIndex=0;
         this.currentIndex=0;
         this.currentMedia = null;
@@ -422,7 +422,6 @@ class CasparProducerDDR extends CasparProducer{
     getFormattedRemainingTime() { return this.formattedRemainingTime; }
 
     getRemainingTime() { return this.remainingTime; }
-
 
     getFormattedFileTime () { return this.formattedFileTime; }
     setFormattedFileTime (time) { this.formattedFileTime = time;}

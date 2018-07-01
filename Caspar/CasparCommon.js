@@ -350,6 +350,8 @@ class CasparCommon {
     getId(){ return this.id; }
 
     getXmlHandler(){ return this.xmlHandler; }
+
+    getCasparVersion(){return this.casparVersion;}
 }
 
 module.exports = CasparCommon;

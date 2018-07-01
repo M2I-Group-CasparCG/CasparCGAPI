@@ -14,7 +14,8 @@ class CasparMedia {
         this.lastModification = settings['lastModification'] || null;
         this.frameNumber = settings['frameNumber'] || null;
         this.frameRate = settings['frameRate'] || null;
-        this.duration = this.timeFormat(this.frameNumber,this.frameRate);
+        this.duration = this.frameNumber*this.frameRate;
+        this.formattedDuration = this.timeFormat(this.frameNumber,this.frameRate);
         this.formattedSize = this.sizeFormat(this.size);
     }
 

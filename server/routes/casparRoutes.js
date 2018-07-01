@@ -45,19 +45,19 @@ module.exports = function(socket) {
      */
     
     // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '127.0.0.1';
+    // testCasparSettings['ipAddr'] = '192.168.1.204';
     // testCasparSettings['amcpPort'] = '5250';
     // testCasparSettings['name'] = 'auto Test';
     // let testCaspar = new Caspar(testCasparSettings);
-    // testCaspar.restart()
-    //     .then(
-    //         function(resolve){
-    //             console.log('restart');
-    //         },
-    //         function(reject){
-    //             console.log(reject);
-    //         }
-    //     )
+    // // testCaspar.restart()
+    // //     .then(
+    // //         function(resolve){
+    // //             console.log('restart');
+    // //         },
+    // //         function(reject){
+    // //             console.log(reject);
+    // //         }
+    // //     )
 
     // setTimeout(
     //     function(){
