@@ -47,6 +47,7 @@ class CasparCommon {
         this.casparVersion = null;
         this.casparPath = null;
         this.channelsNb = 0;
+        this.decklinkCards = new Array();
         this.medias = settings['medias'] || null;
     }
 
@@ -352,6 +353,12 @@ class CasparCommon {
     getXmlHandler(){ return this.xmlHandler; }
 
     getCasparVersion(){return this.casparVersion;}
+
+    getDecklinkCards(){ return this.decklinkCards;}
+    setDecklinkCards(map){ this.decklinkCards = map;}
+    setDecklinkCard(index, label){
+        this.decklinkCards.push([index, label]);
+    }
 }
 
 module.exports = CasparCommon;

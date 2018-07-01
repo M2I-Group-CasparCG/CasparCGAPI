@@ -39,10 +39,10 @@ module.exports = function(socket) {
     var apiReturn = new ApiReturn();            // objet permettant de générer les messages API
 
 
-    /** TEMP
-     *  FOR TEST PURPOSES
-     * Add a default caspar instance with screen
-     */
+    // /** TEMP
+    //  *  FOR TEST PURPOSES
+    //  * Add a default caspar instance with screen
+    //  */
     
     // let testCasparSettings = new Array();
     // testCasparSettings['ipAddr'] = '192.168.1.204';
@@ -563,26 +563,26 @@ module.exports = function(socket) {
      */
     casparRoutes.producerAdd = function(req, res, next){
         let producerType = req.params.producerType;
-        let consumerSettings = req.body;
+        let producerSettings = req.body;
         const casparId = req.params.casparId;
         let caspar = caspars.get(parseInt(casparId));
         let producer = null;
-
+        console.log(producerSettings);
         switch (producerType){
             case 'file' : {
-                producer = new ProducerFile(consumerSettings);
+                producer = new ProducerFile(producerSettings);
             }break;
             case 'stream' : {
-                producer = new ProducerNet(consumerSettings);
+                producer = new ProducerNet(producerSettings);
             }break;
             case 'ddr' : {
-                producer = new ProducerDdr(consumerSettings);
+                producer = new ProducerDdr(producerSettings);
             }break;
             case 'decklink' : {
-                producer = new ProducerDecklink(consumerSettings);
+                producer = new ProducerDecklink(producerSettings);
             }break;
             case 'ddr' : {
-                producer = new ProducerDdr(consumerSettings);
+                producer = new ProducerDdr(producerSettings);
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown producer type'));

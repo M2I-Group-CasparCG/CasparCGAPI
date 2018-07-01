@@ -150,6 +150,7 @@ class Caspar {
                     function(resolveResult){
                         const xmlHandler = new XMLHelper(resolveResult['data']);
                             casparCommon.setOscDefaultPort(parseInt(xmlHandler.getOSCPortValue()))
+                           
                     },  
                     function(rejectResult){
                         console.log(rejectResult);
@@ -181,6 +182,17 @@ class Caspar {
             .then(
                 function(resolveResult){
                     // console.log(resolveResult['data']);
+                    // console.log(resolveResult['data']);
+                    const xmlHandler = new XMLHelper(resolveResult['data']);
+                    let resultArray = xmlHandler.getDecklinkValue().split(' ').join('').split('\n');
+                    for(let n in resultArray){
+                        const element = resultArray[n];
+                        if (element.indexOf('DeckLink') > -1){
+                            const index = parseInt(element.split('[')[1].replace(']',''));
+                            casparCommon.setDecklinkCard(index, element);
+                        }   
+                    }   
+                    console.log(casparCommon.getDecklinkCards());
                     /**
                      * Récupération des élements
                      * name
@@ -515,7 +527,6 @@ class Caspar {
                         const settings = new Array();
 
                         const fileInfo = file.split(' ');
-                        console.log(caspar.getCasparCommon().getCasparVersion());
                         
                         /**
                          * The indexes of the different media information in the CLS command return
@@ -552,7 +563,6 @@ class Caspar {
                         settings['frameRate'] = frameRate;
 
                         const media = new Media(settings);
-                        console.log(media);
                         medias.set(media.getFullPath(),media);
 
 
