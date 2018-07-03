@@ -9,6 +9,7 @@ class CasparConsumer {
         this.type = "";
         this.id = 0;
         this.channelId = settings['channelId'] || 0;
+        this.started = false;
        
     }
 
@@ -42,6 +43,13 @@ class CasparConsumer {
 
     tcpSend(msg, callback){ this.getCasparCommon().tcpSend(msg, callback); }
     tcpPromise(msg){ return this.getCasparCommon().tcpPromise(msg); }
+
+    setStarted(boolean){
+        this.started = boolean;
+    }
+    getStarted(){
+        return this.started;
+    }
 }
 
 module.exports = CasparConsumer;

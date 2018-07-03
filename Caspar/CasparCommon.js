@@ -3,6 +3,7 @@ var appRoot =           require('app-root-path');
 var XMLHelper =         require(appRoot + '/XMLHandler/bin/xmlhelper.js');
 var dgram =             require('dgram');
 
+let socketIo;
 
 class CasparCommon {
 
@@ -26,7 +27,7 @@ class CasparCommon {
      * ['channels'] =  Map contenant les différents channels disponibles sur le serveur
      */
     constructor(settings) {
-
+        this.socketIo = settings['socketIo'];
         this.name = settings['name'] || 'Default Caspar';
         this.id = settings['id'] || new Number();
         this.ipAddr = settings['ipAddr'] || '127.0.0.1';
@@ -42,14 +43,14 @@ class CasparCommon {
         this.pvwId = null;
         this.mvId = null;
         this.online = false;
-        this.socket = settings['socket'] || null;
+        // this.socket = settings['socket'] || null;
         this.xmlHandler = new XMLHelper(appRoot + '/utilities/API/caspar.config');
         this.casparVersion = null;
         this.casparPath = null;
         this.channelsNb = 0;
         this.decklinkCards = new Array();
         this.medias = settings['medias'] || null;
-    }
+    }   
 
     /**
      * Permet d'envoyer une commande TCP au serveur
@@ -286,6 +287,25 @@ class CasparCommon {
         return response;
     }
 
+
+
+    /**
+    * Remove socketIO
+    */
+
+   cleanObject(object){
+        const objectCopy = Object.assign({}, object);
+        if (objectCopy.casparCommon){
+            const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+            delete casparCommonCopy.socketIo;
+            objectCopy.casparCommon = casparCommonCopy;
+            // if (object.playlist){
+            //     object.playlist.casparCommon = casparCommonCopy
+            // }
+        }
+        return objectCopy;
+    }   
+
     /**
      *  SETTERS / GETTERS
      */
@@ -358,6 +378,31 @@ class CasparCommon {
     setDecklinkCards(map){ this.decklinkCards = map;}
     setDecklinkCard(index, label){
         this.decklinkCards.push([index, label]);
+    }
+
+    getSocketIo (){
+        console.log('socketIo !');
+        return this.socketIo;
+    }
+
+    sendSocketIo(key, object){
+
+        const objectCopy = Object.assign({}, object);
+        if (objectCopy.casparCommon){
+            const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+            delete casparCommonCopy.socketIo;
+            objectCopy.casparCommon = casparCommonCopy;
+            const playlistCopy =  Object.assign({}, objectCopy.playlist);
+            if (playlistCopy){
+                playlistCopy.casparCommon = casparCommonCopy;
+                objectCopy.playlist = playlistCopy;
+            }
+        }
+
+        const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));
+        if(! succes){
+            console.log('error while sending socket.IO : '+key+' - '+value);
+        }
     }
 }
 

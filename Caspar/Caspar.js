@@ -60,7 +60,6 @@ class Caspar {
         settings['id'] = this.id;
         settings['medias'] = this.medias;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
-    
       }  
 
 
@@ -361,6 +360,7 @@ class Caspar {
         if(consumer instanceof Consumer){
             consumer.setCasparCommon(this.casparCommon);
             this.consumers.set(consumer.getId(), consumer);
+            const caspar = this;
             if (this.getCasparCommon().getOnline()){
                 consumer.run();
             }
@@ -521,6 +521,8 @@ class Caspar {
                 function(resolveResult){
                
                     const fileList = resolveResult['data'];
+
+                    console.log(fileList);
                    
                     fileList.forEach(function(file) {
                     
@@ -558,9 +560,13 @@ class Caspar {
                         settings['mediaType'] = fileInfo[indexes.mediaType];
                         settings['size'] = parseInt(fileInfo[indexes.size]);
                         settings['lastModification'] = parseInt(fileInfo[indexes.lastModification]);
-                        settings['frameNumber'] = parseInt(fileInfo[indexes.frameNumber])
-                        const frameRate = parseInt(fileInfo[indexes.frameRate].split('/')[0])/parseInt(fileInfo[indexes.frameRate].split('/')[1]);
-                        settings['frameRate'] = frameRate;
+                        settings['frameNumber'] = parseInt(fileInfo[indexes.frameNumber]);
+                        if(fileInfo[indexes.frameRate]){
+                            const frameRate = parseInt(fileInfo[indexes.frameRate].split('/')[0])/parseInt(fileInfo[indexes.frameRate].split('/')[1]);
+                            settings['frameRate'] = frameRate;
+                        }
+                       
+                       
 
                         const media = new Media(settings);
                         medias.set(media.getFullPath(),media);
@@ -621,6 +627,8 @@ class Caspar {
         const reChannelOutputRecord                 = /\/channel\/\d{1,3}\/output\/port\/200\//;
         const reChannelOutputRecordFrame            = /\/channel\/\d{1,3}\/output\/port\/200\/frame/;
         const reChannelOutputRecordPath             = /\/channel\/\d{1,3}\/output\/port\/200\/path/;
+        const reChannelOutputRecordFps              = /\/channel\/\d{1,3}\/output\/port\/200\/fps/;
+
         const reChannelOutputRecordType             = /\/channel\/\d{1,3}\/output\/port\/200\/type/;
 
         let returnVal = null;
@@ -630,7 +638,7 @@ class Caspar {
 
         if(firstKey){
         //    console.log('_______________');
-
+        // console.log(oscData);
             // dans le cas d'un message de rec
         if(firstKey.match(reChannelOutputRecord)){
             const messageType = 'recordInfo';
@@ -640,14 +648,31 @@ class Caspar {
                     recInfo.frame = value;
                 }else if (key.match(reChannelOutputRecordPath)){
                     recInfo.path = value;
+                }else if (key.match(reChannelOutputRecordFps)){
+                    recInfo.fps = 1/parseInt(value);
                 }
             });
-            if (recInfo.frame && recInfo.path){
-                return [messageType,recInfo];
+            let recorder = false;
+            if (recInfo.frame && recInfo.path){ //if the record is detected
+
+                for (let consumer of this.consumers.values()){
+                    let consumerFullPath = consumer.fileName;
+                    if (consumer.filePath != ""){
+                        consumerFullPath = consumer.filePath+consumer.fileName;
+                    }
+                    if (consumerFullPath == recInfo.path){
+                       recorder = consumer;
+                       if (recorder.getFrameRate() != recInfo.fps){
+                           recorder.setFrameRate(recInfo.fps);
+                       }
+                       recorder.setFrames(recInfo.frame)
+                    //    return ['recorderEdit', recorder];
+                    }
+                };
+               
             }
         }
         for (let [key, value] of oscData){
-            // console.log(key +'\t\t\t'+value);
             if (key.match(reChannelLayerFilePath)){
                 const result = key.match(/\d{1,3}/g);
                 const channelNb = parseInt(result[0]);
@@ -655,10 +680,6 @@ class Caspar {
                 const producer = this.getProducer(layerNb);
                 if (channelNb == 1){
                     if (producer instanceof ProducerDdr){
-                        // console.log('Layer File Path __________________')
-                        // console.log(key);     
-                        // console.log(value);     
-                        // console.log('__________________')  
                         let array = value.split('.');
                         array.pop();
                         let mediaName = '/'+array.join().toUpperCase();
@@ -672,14 +693,6 @@ class Caspar {
                 if (channelNb == 1){
                     const producer = this.getProducer(layerNb);
                     if (producer instanceof ProducerDdr){
-                        // console.log('Layer Paused __________________')
-                        // console.log(key);
-                        // console.log(value);   
-                        // console.log('__________________')           
-                        // if (producer.getPaused() !== value){
-                        //     this.getProducer(layerNb).setPaused(value);
-                        //     return ['ddrEdit', this.getProducer(layerNb)];
-                        // }
                     }
                 }
             }else if (key.match(reChannelLayerFileTime)){
@@ -689,11 +702,7 @@ class Caspar {
                 if (channelNb == 1){
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
                         let old_index = this.getProducer(layerNb).getCurrentIndex();
-                        this.getProducer(layerNb).setFileTime(value);  
-                        // console.log('File Time __________________')
-                        // console.log(key);    
-                        // console.log(value);       
-                        // console.log('__________________')          
+                        this.getProducer(layerNb).setFileTime(value);        
                         return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
@@ -702,11 +711,7 @@ class Caspar {
                 const channelNb = parseInt(result[0]);
                 const layerNb = parseInt(result[1]);
                 if (channelNb == 1){
-                    if (this.getProducer(layerNb) instanceof ProducerDdr){
-                        // console.log('File Frame __________________')
-                        // console.log(key);
-                        // console.log(value);   
-                        // console.log('__________________')                 
+                    if (this.getProducer(layerNb) instanceof ProducerDdr){                
                         if (value.indexOf('|')>-1){
                             value = value.split('|')[0];
                         }else{

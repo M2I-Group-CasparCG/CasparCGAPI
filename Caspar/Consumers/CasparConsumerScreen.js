@@ -13,9 +13,7 @@ class CasparConsumerSCREEN extends CasparConsumer {
         this.bufferDepth = settings['bufferDepth'] || 4;
         this.channelName = settings['channelName'] || 'Screen';
         this.channelId = settings['channelId'] || 0;
-        this.fullscreen = settings['fullscreen'] || false;
-        this.running = false;                               // à alimenter en OSC. 
-        
+        this.fullscreen = settings['fullscreen'] || false;                        
     }
 
 
@@ -24,12 +22,36 @@ class CasparConsumerSCREEN extends CasparConsumer {
         if(this.fullscreen){
             req = `${req} FULLSCREEN`;
         }
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(true);
+                    consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     stop(){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.id}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(false);
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     edit(setting, value){

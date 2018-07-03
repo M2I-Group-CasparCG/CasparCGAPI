@@ -38,91 +38,110 @@ module.exports = function(socket) {
     var casparRoutes = {};                      
     var apiReturn = new ApiReturn();            // objet permettant de générer les messages API
 
-
-    // /** TEMP
-    //  *  FOR TEST PURPOSES
-    //  * Add a default caspar instance with screen
-    //  */
+    /** TEMP
+     *  FOR TEST PURPOSES
+     * Add a default caspar instance with screen
+     */
     
-    // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '192.168.1.204';
-    // testCasparSettings['amcpPort'] = '5250';
-    // testCasparSettings['name'] = 'auto Test';
-    // let testCaspar = new Caspar(testCasparSettings);
-    // // testCaspar.restart()
-    // //     .then(
-    // //         function(resolve){
-    // //             console.log('restart');
-    // //         },
-    // //         function(reject){
-    // //             console.log(reject);
-    // //         }
-    // //     )
+    let testCasparSettings = new Array();
+    testCasparSettings['ipAddr'] = '192.168.1.204';
+    testCasparSettings['amcpPort'] = '5250';
+    testCasparSettings['name'] = 'auto Test';
+    testCasparSettings['socketIo'] = socket;
+    let testCaspar = new Caspar(testCasparSettings);
+    testCaspar.restart()
+        .then(
+            function(resolve){
+                console.log('restart');
+            },
+            function(reject){
+                console.log(reject);
+            }
+        )
 
-    // setTimeout(
-    //     function(){
-    //         console.log('timeout');
-    //         caspars.set(testCaspar.getId(),testCaspar);
-    //         testCaspar.getInfo()
-    //             .then(function(){
-    //                console.log('default caspar added')
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //             });
+    setTimeout(
+        function(){
+            console.log('timeout');
+            caspars.set(testCaspar.getId(),testCaspar);
+            testCaspar.getInfo()
+                .then(function(){
+                   console.log('default caspar added')
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
-    //         setTimeout(
-    //             function(){
-    //                 testCasparConsumer = new Array();
-    //                 testCasparConsumer['channelId'] = 1;
-    //                 testCasparConsumer['name'] = 'Consumer1';
-    //                 // testCasparConsumer['fullscreen'] = true;
-    //                 testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
-    //                 let testConsumer = new ConsumerScreen(testCasparConsumer)
-    //                 testCaspar.addConsumer(testConsumer);
-    //                 // testConsumer.run();
+            setTimeout(
+                function(){
+                    testCasparConsumer = new Array();
+                    testCasparConsumer['channelId'] = 1;
+                    testCasparConsumer['name'] = 'Consumer1';
+                    // testCasparConsumer['fullscreen'] = true;
+                    testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
+                    let testConsumer = new ConsumerScreen(testCasparConsumer)
+                    testCaspar.addConsumer(testConsumer);
+                    // testConsumer.run();
 
-    //                 testFileSettings = new Array();
-    //                 testFileSettings['name'] = 'AMB';
-    //                 testFileSettings['fileName'] = 'amb';
-    //                 testFileSettings['playMode'] = 'loop';
-    //                 let testFile = new ProducerFile(testFileSettings);
-    //                 testCaspar.addProducer(testFile);
+                    testFileSettings = new Array();
+                    testFileSettings['name'] = 'AMB';
+                    testFileSettings['fileName'] = 'amb';
+                    testFileSettings['playMode'] = 'loop';
+                    let testFile = new ProducerFile(testFileSettings);
+                    testCaspar.addProducer(testFile);
 
-    //                 testFileSettings2 = new Array();
-    //                 testFileSettings2['name'] = 'GO';
-    //                 testFileSettings2['fileName'] = 'GO1080P25';
-    //                 testFileSettings2['playMode'] = 'loop';
-    //                 let testFile2 = new ProducerFile(testFileSettings2);
-    //                 testCaspar.addProducer(testFile2);
+                    testFileSettings2 = new Array();
+                    testFileSettings2['name'] = 'GO';
+                    testFileSettings2['fileName'] = 'GO1080P25';
+                    testFileSettings2['playMode'] = 'loop';
+                    let testFile2 = new ProducerFile(testFileSettings2);
+                    testCaspar.addProducer(testFile2);
 
-    //                 testFileSettings3 = new Array();
-    //                 testFileSettings3['name'] = 'itescia';
-    //                 testFileSettings3['fileName'] = 'itescia';
-    //                 testFileSettings3['playMode'] = 'loop';
-    //                 let testFile3 = new ProducerFile(testFileSettings3);
-    //                 testCaspar.addProducer(testFile3);
+                    testFileSettings3 = new Array();
+                    testFileSettings3['name'] = 'itescia';
+                    testFileSettings3['fileName'] = 'itescia';
+                    testFileSettings3['playMode'] = 'loop';
+                    let testFile3 = new ProducerFile(testFileSettings3);
+                    testCaspar.addProducer(testFile3);
 
-    //                 playlistSettings = new Array();
-    //                 playlistSettings['name'] = 'autoPlaylist';
-    //                 let playlist = testCaspar.addPlaylist(playlistSettings)
-    //                     playlist.addMedia(3);
-    //                     playlist.addMedia(74);
-    //                     playlist.addMedia(73);
-    //                     playlist.addMedia(4);
+                    playlistSettings = new Array();
+                    playlistSettings['name'] = 'autoPlaylist';
+                    let playlist = testCaspar.addPlaylist(playlistSettings)
+                        playlist.addMedia(3);    
+                        playlist.addMedia(74);
+                        playlist.addMedia(73);
+                        playlist.addMedia(4);
                     
-    //                 ddrSettings = new Array();
-    //                 ddrSettings['name']  = 'autoDDR';
-    //                 ddrSettings['playlist']  = playlist;
-    //                 let ddr = new ProducerDdr(ddrSettings);
-    //                 testCaspar.addProducer(ddr);
+                    ddrSettings = new Array();
+                    ddrSettings['name']  = 'autoDDR';
+                    ddrSettings['playlist']  = playlist;
+                    let ddr = new ProducerDdr(ddrSettings);
+                    testCaspar.addProducer(ddr);
 
 
-    //             },2000);
-    //     },
-    //     2000
-    // );
+                },2000);
+        },
+        2000
+    );
+    
+
+    /**playlistCopy
+     * Remove socketIO
+     */
+   cleanObject  = function(object){
+        const objectCopy = Object.assign({}, object);
+        const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+                delete casparCommonCopy.socketIo;
+                objectCopy.casparCommon = casparCommonCopy;
+
+            const playlistCopy =  Object.assign({}, objectCopy.playlist);
+            if (playlistCopy){
+                playlistCopy.casparCommon = casparCommonCopy;
+                objectCopy.playlist = playlistCopy;
+            }
+           
    
+        return objectCopy;
+    }
 
     /**
      * _____________________________________________________________________________________________________________________________
@@ -135,12 +154,13 @@ module.exports = function(socket) {
      */
     casparRoutes.add = async function(req, res){
         let casparSettings = req.body;
+            casparSettings.socketIo = socket;
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             caspar.getInfo()
                 .then(function(){
-                    res.json(caspar);
-                    socket.emit('casparAdd',JSON.stringify(caspar));
+                    res.json(cleanObject(caspar));
+                    socket.emit('casparAdd',JSON.stringify(cleanObject(caspar)));
                 })
                 .catch(error => {
                     console.log(error);
@@ -153,8 +173,11 @@ module.exports = function(socket) {
      */
     casparRoutes.getAll = function(req, res, next){
         console.log('getAll');
+
         let array = [...caspars];
-        console.log(array);
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
         res.json(array);
     },
 
@@ -179,7 +202,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
         if(caspar instanceof Caspar){
-            res.json(caspars.get(casparId));
+            res.json(cleanObject(caspars.get(casparId)));
         }else{
             res.json(apiReturn.notFoundMessage('caspar instance not found'));
         }
@@ -196,6 +219,9 @@ module.exports = function(socket) {
             if (caspar.getCasparCommon().getChannelsNb() >= 3){
                 caspar.ini();
                 let array =  [...caspar.getChannels()];
+                for(let n in array){
+                    array[n][1] = cleanObject(array[n][1]); 
+                }
                 res.json(array);
             }
             else{
@@ -204,7 +230,7 @@ module.exports = function(socket) {
         let crtChannels = caspar.getChannels();
         crtChannels.forEach(function (item, key, mapObj) {  
             if(socket){
-                socket.emit('channelAdd',JSON.stringify(item));
+                socket.emit('channelAdd',JSON.stringify(cleanObject(item)));
             }  
         });  
            
@@ -254,7 +280,7 @@ module.exports = function(socket) {
         if ( caspar instanceof Caspar){
             caspars.delete(casparId);
             res.json(apiReturn.successMessage('caspar instance deleted'));
-            socket.emit('casparDelete',JSON.stringify(caspar));
+            socket.emit('casparDelete',JSON.stringify(cleanObject(caspar)));
         } else{
             res.json(apiReturn.notFoundMessage('Caspar instance not found'));
         }
@@ -317,7 +343,7 @@ module.exports = function(socket) {
                 result[setting] = response[setting];
             }
             res.json(apiReturn.successMessage(result));
-            socket.emit(objectType.slice(0, -1)+'Edit', JSON.stringify(object));
+            socket.emit(objectType.slice(0, -1)+'Edit', JSON.stringify(cleanObject(object)));
         }else{
             res.json(apiReturn.requestErrorMessage('unkown object type'));
         }
@@ -375,7 +401,7 @@ module.exports = function(socket) {
         }
 
         if (object){
-            res.json(object);
+            res.json(cleanObject(object));
         }else{
             res.json(apiReturn.notFoundMessage(objectType +' instance not found'))
         }
@@ -388,29 +414,36 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
         const objectType = req.params.objectType;
+        let array = [];
         switch (objectType){
             case 'consumers' :{
-                res.json([...caspar.getConsumers()]);
+                array = [...caspar.getConsumers()];
             }break;
             case 'producers' :{
-                res.json([...caspar.getProducers()]);
+                array = [...caspar.getProducers()];
             }break;
             case 'channels' :{
-                res.json([...caspar.getChannels()]);
+                array = [...caspar.getChannels()];
             }break;
             case 'layers' :{
-                res.json([...caspar.getLayers()]);
+                array = [...caspar.getLayers()];
             }break;
             case 'medias' :{
-                res.json([...caspar.getMedias()]);
+              array = [...caspar.getMedias()];
             }break;
             case 'playlists' :{
-                res.json([...caspar.getPlaylists()]);
+               array = [...caspar.getPlaylists()];
             }break;
             default : {
                 res.json(apiReturn.requestErrorMessage('unknown object type'));
             }
         }
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
+        console.log(array);
+        res.json(array);
+
     },
 
 
@@ -450,10 +483,7 @@ module.exports = function(socket) {
 
         if (consumer instanceof Consumer){
             caspars.get(casparId).addConsumer(consumer);
-            res.json(consumer);
-            if(socket){
-                socket.emit('consumerAdd', JSON.stringify(consumer));
-            }
+            res.json(cleanObject(consumer));
         }else{
             res.json(apiReturn.requestErrorMessage('unknown consumer type : '+consumerType));
         }
@@ -484,17 +514,8 @@ module.exports = function(socket) {
 
         let consumer = caspars.get(casparId).getConsumer(consumerId);
             if (caspars.get(casparId).getChannel(consumer.getChannelId()) instanceof Channel){
-                consumer.run()
-                    .then(
-                            function(msg){
-                            res.json(apiReturn.successMessage('Consumer started'));
-                        },
-                        function(msg){
-                            res.json(apiReturn.amcpErrorMessage(msg));
-                        }
-                    ).catch(function(error){
-                        console.log(error);
-                        });           
+               consumer.run();
+                res.json(apiReturn.successMessage('Command summited !')); 
             }else{
                     res.json(apiReturn.notFoundMessage('consumers channel not found'))
             }        
@@ -510,17 +531,9 @@ module.exports = function(socket) {
         const consumerId = parseInt(req.params.consumerId);
         
         let consumer = caspars.get(casparId).getConsumer(consumerId);
-            consumer.stop()
-                .then(
-                        function(msg){
-                        res.json(apiReturn.successMessage('Consumer stoped'));
-                    },
-                    function(msg){
-                        res.json(apiReturn.amcpErrorMessage(msg));
-                    }
-                ).catch(function(error){
-                    console.log(error);
-                });      
+        consumer.stop();
+        res.json(apiReturn.successMessage('Command summited !')); 
+
     },
 
     /**
@@ -538,7 +551,7 @@ module.exports = function(socket) {
                 caspars.get(casparId).removeConsumer(consumerId);
                 res.json(apiReturn.successMessage('Consumer removed'));
                 if(socket){
-                    socket.emit('consumerDelete', JSON.stringify(consumer));
+                    socket.emit('consumerDelete', JSON.stringify(cleanObject(consumer)));
                 }
             },
             function(msg){
@@ -591,9 +604,9 @@ module.exports = function(socket) {
 
         if (producer instanceof Producer){
             caspar.addProducer(producer);
-            res.json(producer);
+            res.json(cleanObject(producer));
             if (socket) {
-                socket.emit('producerAdd',JSON.stringify(producer));
+                socket.emit('producerAdd',JSON.stringify(cleanObject(producer)));
             }
         }
     },
@@ -666,7 +679,7 @@ module.exports = function(socket) {
                         caspars.get(casparId).removeProducer(producerId);
                         res.json(apiReturn.successMessage('producer deleted'));
                         if(socket){
-                            socket.emit('producerDelete', JSON.stringify(producer));
+                            socket.emit('producerDelete', JSON.stringify(cleanObject(producer)));
                         }
                     },
                     function(msg){
@@ -717,6 +730,9 @@ module.exports = function(socket) {
         const channelId = parseInt(req.params.channelId);
         const audioLevels = caspars.get(casparId).getChannel(channelId).getAudioLevels();
         let array =  [...audioLevels];
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
         res.json(array);
     },
     
@@ -733,7 +749,7 @@ module.exports = function(socket) {
                 .then(
                     function(msg){  
                         res.json(apiReturn.successMessage('Channel\'s input switched'));
-                        socket.emit('channelEdit', JSON.stringify(channel));
+                        socket.emit('channelEdit', JSON.stringify(cleanObject(channel)));
                     },
                     function(msg){
                         res.json(apiReturn.amcpErrorMessage());
@@ -754,6 +770,9 @@ module.exports = function(socket) {
         const channel = caspars.get(casparId).getChannel(channelId);
 
         let array = [...channel.getLayers()];
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
         res.json(array);
         
     },  
@@ -783,8 +802,8 @@ module.exports = function(socket) {
 
         let layer = caspar.addLayer(settings);
         if (layer){
-            res.json(layer);
-            socket.emit('layerAdd',JSON.stringify(layer))
+            res.json(cleanObject(layer));
+            socket.emit('layerAdd',JSON.stringify(cleanObject(layer)))
         }else{
             res.json(apiReturn.notFoundMessage('Channel instance not found'));
         }
@@ -816,7 +835,7 @@ module.exports = function(socket) {
         if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
             layer.setInput(producerId);
             res.json(apiReturn.successMessage('Layer Input Switched'))
-            socket.emit('layerEdit', JSON.stringify(layer));
+            socket.emit('layerEdit', JSON.stringify(cleanObject(layer)));
         }else{
             res.json(apiReturn.notFoundMessage('producer not found'));
         }
@@ -834,7 +853,7 @@ module.exports = function(socket) {
                 function(msg){
                     res.json(apiReturn.successMessage('Layer started'))
                     layer.setIsActive(true);
-                    socket.emit('layerEdit', JSON.stringify(layer));
+                    socket.emit('layerEdit', JSON.stringify(cleanObject(layer)));
                 },
                 function(msg){
                     res.json(apiReturn.amcpErrorMessage(msg));
@@ -875,7 +894,7 @@ module.exports = function(socket) {
             let result = caspars.get(casparId).removeLayer(layerId);
             if (result){
                 res.json(apiReturn.successMessage('Layer deleted'));
-                socket.emit('layerDelete', JSON.stringify(layer))
+                socket.emit('layerDelete', JSON.stringify(cleanObject(layer)));
             }else{
                 res.json(apiReturn.notFoundMessage('Unable to delete layer'));
             }
@@ -1017,7 +1036,7 @@ module.exports = function(socket) {
         .then(
             function(msg){
                 res.json(apiReturn.successMessage('Ddr previous'))
-                socket.emit('ddrEdit', JSON.stringify(ddr));
+                socket.emit('ddrEdit', JSON.stringify(cleanObject(ddr)));
             },
             function(msg){
                 res.json(apiReturn.amcpErrorMessage(msg));
@@ -1048,7 +1067,7 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.setPlaylistLoop(!ddr.getPlaylistLoop());
         res.json(apiReturn.successMessage('playlistLoop toogled : '+ddr.getPlaylistLoop()));
-        socket.emit('ddrEdit', JSON.stringify(ddr));
+        socket.emit('ddrEdit', JSON.stringify(cleanObject(ddr)));
     },
 
     /**
@@ -1058,7 +1077,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        res.json(ddr.getPlaylist());
+        res.json(cleanObject(ddr.getPlaylist()));
     },
 
     /**
@@ -1068,7 +1087,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        res.json(ddr.getCurrentMedia());
+        res.json(cleanObject(ddr.getCurrentMedia()));
     },
 
 
@@ -1090,7 +1109,7 @@ module.exports = function(socket) {
 
         if (playlist instanceof Playlist ){
             // playlists.set(playlist.getId(), playlist);
-            res.json(playlist);
+            res.json(cleanObject(playlist));
         }else{
             res.json(apiReturn.requestErrorMessage('Failed to create Playlist'));
         }
@@ -1145,7 +1164,7 @@ module.exports = function(socket) {
 
         if (result instanceof Media){
             res.json(apiReturn.successMessage('Media Added'));
-            socket.emit('playlistEdit',JSON.stringify(playlist));
+            socket.emit('playlistEdit',JSON.stringify(cleanObject(playlist)));
         }else{
             res.json(apiReturn.notFoundMessage('Media not found'));
         }
@@ -1164,7 +1183,7 @@ module.exports = function(socket) {
 
         if (result) {
             res.json(apiReturn.successMessage('Media Removed'));
-            socket.emit('playlistEdit',JSON.stringify(playlist));
+            socket.emit('playlistEdit',JSON.stringify(cleanObject(playlist)));
         }else{
             res.json(apiReturn.notFoundMessage('Media not found'));
         }
@@ -1177,8 +1196,11 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const playlistId = parseInt(req.params.playlistId);
         let playlist = caspars.get(casparId).getPlaylist(playlistId);
-
-        res.json([...playlist.getList()]);
+        let array = [...playlist.getList()];
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
+        res.json(array);
     },
 
 
@@ -1192,8 +1214,11 @@ module.exports = function(socket) {
         const caspar = caspars.get(casparId);
 
         await caspar.scanMedias();
-        
-        res.json([...caspar.getMedias()]);
+        let array = [...caspar.getMedias()]
+        for(let n in array){
+            array[n][1] = cleanObject(array[n][1]); 
+        }
+        res.json(array);
     }
 
 
@@ -1296,7 +1321,7 @@ module.exports = function(socket) {
             if (ipAddr == sourceIpAddr){
                 let result = caspar.oscAnalyzer(msg);
                 if (result){                                                                // envoi de socketIO
-                    socket.emit(result[0],JSON.stringify(result[1]));
+                    socket.emit(result[0],JSON.stringify(cleanObject(result[1])));
                 }
             }
         });

@@ -25,12 +25,36 @@ class CasparConsumerNet extends CasparConsumer {
     run(){
         var req = `ADD ${this.channelId} ${this.type} ${this.protocol}://${this.host}:${this.port} 
         -vcodec ${this.vcodec} -tune ${this.tune} -preset ${this.preset} -crf ${this.crf} -format ${this.format} -vf scale=${this.pictureWidth}:${this.pictureHeight}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(true);
+                    consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     stop(){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.protocol}://${this.host}:${this.port}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(false);
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     edit(setting, value){

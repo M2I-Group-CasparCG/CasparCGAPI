@@ -6,12 +6,16 @@ class CasparConsumerFILE extends CasparConsumer {
     constructor(settings){
         CasparConsumer.totalInstances = (CasparConsumer.totalInstances || 0) + 1;
         super(settings);
-        console.log(CasparConsumer.totalInstances);
         this.id = CasparConsumer.totalInstances;
         this.type = 'FILE'
         this.fileName = settings['fileName'] || 'defaultVideoFile.mp4';
         this.filePath = settings['filePath'] || '';
-
+        this.frames = 0;
+        this.fullSizePath = this.generateTotaleFilePath();
+        this.formattedDuration = null;
+        this.frameRate = null;
+        this.started = false;
+       
         /**
          * -f // container format
             -vcodec // vicdeo codec
@@ -34,14 +38,71 @@ class CasparConsumerFILE extends CasparConsumer {
          */
     }
 
+    generateTotaleFilePath (){
+        let totalPath;
+        if (this.filePath.slice(-1) == "/" || this.filePath.slice(-1) == "\\"){
+            this.filePath = this.filePath.slice(0, -1);
+        }
+        return `${this.filePath}/${this.fileName}`;
+    }
+
+    /**
+     * Calcul the file time and return a formatted string 'HH:MM:SS:FF' format
+     * @param {*} frameNb number of frames of the media
+     * @param {*} frameRate frame rate of the media
+     * @return {String} The formatted duration
+     */
+    timeFormat(frameNb, frameRate){
+
+        let duration = frameNb*frameRate;                   // duration en seconds
+        let brutHours = duration / 3600;
+        let hours = Math.floor(brutHours);
+        let brutMinutes = (brutHours - hours) * 60;
+        let minutes = Math.floor(brutMinutes);
+        let brutSeconds = (brutMinutes - minutes) *60;
+        let seconds = Math.floor(brutSeconds);
+        let frames = Math.round((brutSeconds - seconds) / frameRate);
+        // this.started = false;
+        // let frames = frameNb - (seconds + 60*minutes + 3600*hours)/frameRate;
+
+        return `${('0'+hours).slice(-2)}:${('0'+minutes).slice(-2)}:${('0'+seconds).slice(-2)}:${('0'+frames).slice(-2)}`;
+    }
+
+
     run() {
         var req = `ADD ${this.channelId} ${this.type} ${this.filePath}${this.fileName}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        let result;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(true);
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                   
+                    result = true;
+                },function(reject){
+                    result = false;
+                }
+            )
+        return result;
     }
 
     stop() {
         var req = `REMOVE ${this.channelId} ${this.type}  ${this.filePath}${this.fileName}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        let result;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(false);
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    
+                    result = true;
+                },function(reject){
+                    result = false;
+                }
+            )
+            return result;
     }
 
     edit (setting, value) {
@@ -79,6 +140,21 @@ class CasparConsumerFILE extends CasparConsumer {
 
     getFilePath(){return this.filePath;}
     setFilePath(){this.filePath = this.filePath;}
+
+    setFrames(frames){
+        this.frames = frames;
+        if (this.frameRate){
+            this.formattedDuration = this.timeFormat(this.frames, this.frameRate);
+            this.getCasparCommon().sendSocketIo('recorderEdit', this);
+        }
+    }
+
+    getFrameRate(){ return this.frameRate; }
+    setFrameRate(frameRate){this.frameRate = frameRate; }
+
+    // setStarted(boolean){
+    //     this.started = boolean;
+    // }
 
 }
 

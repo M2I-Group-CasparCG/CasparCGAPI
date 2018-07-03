@@ -11,18 +11,41 @@ class CasparConsumerDECKLINK extends CasparConsumer {
         this.decklinkId = settings['decklinkId'] || 1;
         this.bufferDepth = settings['bufferDepth'] || 5;
         this.latency = settings['latency'] || 'default';
-        
     }
 
 
     run(){
         var req = `ADD ${this.channelId} ${this.type} ${this.decklinkId}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(true);
+                    consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     stop(){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.decklinkId}`;
-        return this.tcpPromise(req);
+        let consumer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    consumer.setStarted(false);
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     edit(setting, value){
