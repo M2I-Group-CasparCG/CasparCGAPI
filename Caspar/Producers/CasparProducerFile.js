@@ -19,15 +19,39 @@ class CasparProducerFILE extends CasparProducer{
 
     run() {
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.getFileName()} ${this.getPlayMode()}`;
-        console.log(req);
-        return this.tcpPromise(req);
+        let producer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    console.log('________________');
+                    console.log(producer.getStarted());
+                    producer.setStarted(true);
+                    console.log(producer.getStarted());
+                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     stop(){
-       
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        console.log(req);
-        return this.tcpPromise(req);
+        let producer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    producer.setStarted(false);
+                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
     edit(setting, value){

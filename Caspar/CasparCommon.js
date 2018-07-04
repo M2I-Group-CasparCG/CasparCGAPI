@@ -392,11 +392,15 @@ class CasparCommon {
             const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
             delete casparCommonCopy.socketIo;
             objectCopy.casparCommon = casparCommonCopy;
+            
             const playlistCopy =  Object.assign({}, objectCopy.playlist);
             if (playlistCopy){
                 playlistCopy.casparCommon = casparCommonCopy;
                 objectCopy.playlist = playlistCopy;
             }
+        }
+        if (objectCopy.pausedTimeout){
+            delete objectCopy.pausedTimeout;
         }
 
         const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));

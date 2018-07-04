@@ -191,7 +191,6 @@ class Caspar {
                             casparCommon.setDecklinkCard(index, element);
                         }   
                     }   
-                    console.log(casparCommon.getDecklinkCards());
                     /**
                      * Récupération des élements
                      * name
@@ -519,15 +518,10 @@ class Caspar {
         await this.getCasparCommon().tcpPromise('CLS')
             .then(
                 function(resolveResult){
-               
                     const fileList = resolveResult['data'];
-
-                    console.log(fileList);
-                   
-                    fileList.forEach(function(file) {
+                          fileList.forEach(function(file) {
                     
                         const settings = new Array();
-
                         const fileInfo = file.split(' ');
                         
                         /**
@@ -549,8 +543,6 @@ class Caspar {
                             indexes.frameNumber = 4;
                             indexes.frameRate = 5;
                         }
-                              
-
                         const fullPath = fileInfo[indexes.path].replace(/"/g,'');
 
                         const splittedPath = fullPath.split('/');
@@ -565,14 +557,8 @@ class Caspar {
                             const frameRate = parseInt(fileInfo[indexes.frameRate].split('/')[0])/parseInt(fileInfo[indexes.frameRate].split('/')[1]);
                             settings['frameRate'] = frameRate;
                         }
-                       
-                       
-
                         const media = new Media(settings);
-                        medias.set(media.getFullPath(),media);
-
-
-                  
+                        medias.set(media.getFullPath(),media);              
                     });
                 },  
                 function(rejectResult){
@@ -703,7 +689,7 @@ class Caspar {
                     if (this.getProducer(layerNb) instanceof ProducerDdr){
                         let old_index = this.getProducer(layerNb).getCurrentIndex();
                         this.getProducer(layerNb).setFileTime(value);        
-                        return ['ddrEdit', this.getProducer(layerNb)];
+                        // return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
             }else if (key.match(reChannelLayerFileFrame)){
@@ -718,7 +704,7 @@ class Caspar {
                         value = 0;
                         }
                         this.getProducer(layerNb).setCurrentFileFrame(parseInt(value));
-                        return ['ddrEdit', this.getProducer(layerNb)];
+                        // return ['ddrEdit', this.getProducer(layerNb)];
                     }
                 }
             }

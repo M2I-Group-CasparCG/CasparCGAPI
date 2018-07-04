@@ -14,6 +14,7 @@ class CasparProducerDDR extends CasparProducer{
         this.name = settings['name'] || 'DDR'+this.id;
         this.autoPlay = true;
         this.paused = true;
+        this.pausedTimeout = false;
         this.playlistLoop = settings['playlistLoop'] || false;
         this.mediaLoop = settings['mediaLoop'] || false;
         this.playlist = settings['playlist'] || new CasparPlaylist(new Array());   
@@ -27,76 +28,96 @@ class CasparProducerDDR extends CasparProducer{
         this.formattedRemainingTime = null;
 
         //playlist index
-        this.currentIndex = 0;
+        this.currentIndex = -1;
         this.nextIndex = null;
         this.currentMedia = null;
         this.nextMedia = null;
 
         this.lock = false;
-        this.initialized = false;
 
         this.playlist.setCasparCommon(this.getCasparCommon());
+
+        this.unpauseCount = 0;
+
     }
 
     /**
-     * Init the DDR by loading the first file of the playlist
+     * If set, load the first media of the playlist. 
      */
     async run() {
-        this.currentIndex = this.indexVerify(this.currentIndex);
+        if (this.playlist.getList().length > 0){
+            this.currentIndex = 0;
+            let req  = this.loadRequest(0);
 
-        let req = false;
-        if (this.currentIndex >= 0){
-            if (this.paused){
-               req = this.loadRequest(this.currentIndex);
-            }else{
-               req = this.playRequest(this.currentIndex);
-            }
-            let promise = this.tcpPromise(req);
-            if (this.autoPlay){
-                let nextIndex = this.indexVerify(this.currentIndex+1);
-                this.tcpPromise(this.loadBgRequest(nextIndex))
-                    .then(
-                        function(resolve){
-                            console.log(resolve);
-                        },
-                        function(reject){
-                            console.log(reject);
-                        }
-                    ) 
-            }
-            this.initialized = true;
-            this.lock = true;
+            let producer = this;
+            this.tcpPromise(req)
+                .then(
+                    function(resolve){
+                        producer.setStarted(true);
+                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                        console.log(resolve);
+                        return true;
+                    }, function(reject){
+                        console.log(reject);
+                        return false;
+                    }
+                )
         }
-        if (req){
-            return promise;
-        }else{
-            return Promise.resolve('no media in the playlist');
-        }
-        
     }
+
+    stop() {
+        let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
+        let producer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){
+                    producer.setCurrentIndex(-1);
+                    producer.setStarted(false);
+                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    return true;
+                },function(reject){
+                    return false;
+                }
+            )
+   }
 
     /**
      * Continue the playing after a pause
      */
-    resume(){
-        let req = `RESUME ${this.casparCommon.getMvId()}-${this.getId()}`;
-        let promise = this.tcpPromise(req);
+    async resume(){
+        let req = '';
+        if (this.currentIndex > -1){
+            req = `RESUME ${this.casparCommon.getMvId()}-${this.getId()}`;
+        }else{
+            this.currentIndex = 0;
+            req = this.playRequest(this.currentIndex);
+        } 
+        let producer = this;
+        let result = [];
+        await this.tcpPromise(req)
+            .then(
+                function(resolve){
+                    producer.setPaused(false);
+                    producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                    console.log(resolve);
+                    result.push(resolve);
+                },function(reject){
+                    result.push(reject);
+                }
+            )
         if (this.autoPlay){
-            console.log('AUTOPLAY');
             let nextIndex = this.indexVerify(this.currentIndex+1);
-            this.tcpPromise(this.loadBgRequest(nextIndex))
+            await this.tcpPromise(this.loadBgRequest(nextIndex))
                 .then(
                     function(resolve){
-                       console.log(resolve);
+                        producer.setNextIndex(nextIndex);
+                        result.push(resolve);
                     },function(reject){
-                        console.log(reject);
+                        result.push(reject);
                     }
                 );
-
         }
-        this.lock = true;
-        this.paused = false;
-        return promise;
+        return result;
     }
 
     /**
@@ -104,27 +125,57 @@ class CasparProducerDDR extends CasparProducer{
      */
     pause() {
         let req = `PAUSE ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.paused = true;
-        return this.tcpPromise(req);
+        let producer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){
+                    producer.setPaused(true);
+                    producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                    console.log(resolve);
+                    return true;
+                },function(reject){
+                    console.log(reject);
+                    return false;
+                }
+            )
     }
 
-    stop() {
-        let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.paused = true;
-        this.nextIndex=0;
-        this.currentIndex=0;
-        this.currentMedia = null;
-        this.nextMedia = null;
-        return this.tcpPromise(req);
-    }
 
-    playId(index){
+
+    async playId(index){
         if (this.playlist.list[index] instanceof CasparMedia){
-            this.currentIndex = index;
-            return this.run();
+            let req = this.loadRequest(index);
+            let producer = this;
+            let result = [];
+            await this.tcpPromise(req)
+                .then(
+                    function(resolve){
+                        producer.setCurrentIndex(index);
+                        producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                        producer.setLock(true);
+                        producer.unpauseCount = 3;
+                        result.push(resolve);
+                    },function(reject){
+                        result.push(reject);
+                    }
+                )
+            if (this.autoPlay){
+                let nextIndex = this.indexVerify(this.currentIndex+1);
+                await this.tcpPromise(this.loadBgRequest(nextIndex))
+                    .then(
+                        function(resolve){
+                            result.push(resolve);
+                            producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                            producer.setNextIndex(nextIndex);
+                        },function(reject){
+                            result.push(reject);
+                        }
+                    );
+            }
+            return result;
             
         }else{
-            return Promise.reject('index not found in playlist');
+            return false;
         }
 
     }
@@ -139,11 +190,13 @@ class CasparProducerDDR extends CasparProducer{
         }  
         req+= ' SEEK '+frame; 
         let promise = this.tcpPromise(req)
+        let producer = this;
         if (this.autoPlay){
             let nextIndex = this.indexVerify(this.currentIndex+1);
             this.tcpPromise(this.loadBgRequest(nextIndex))
                 .then(
                     function(resolve){
+                        producer.setLock(true);
                         console.log(resolve);
                     },function(reject){
                         console.log(reject);
@@ -155,65 +208,83 @@ class CasparProducerDDR extends CasparProducer{
 
     async next() {
         let nextIndex = this.indexVerify(this.currentIndex+1);
-        console.log('index : ' + nextIndex);
-        let req = '';
-        this.lock = true;
         if (this.currentIndex !== nextIndex){
-            this.currentIndex = nextIndex;
-            if (this.paused){
-                req = this.loadRequest(this.currentIndex)
+            // this.currentIndex = nextIndex;
+            let producer = this;
+            let result = [];
+            let req = '';
+            if (this.getPaused()){
+                req = this.loadRequest(nextIndex);
             }else{
-                req = this.playRequest(this.currentIndex)
+                req = this.playRequest(nextIndex);
             }
-            let promise = this.tcpPromise(req);
+            // if ( this.autoPlay){
+            //     req = req+' AUTO';
+            // }
+            await this.tcpPromise(req)
+                .then(
+                    function(resolve){
+                        producer.setCurrentIndex(nextIndex);
+                        producer.setLock(true);
+                        result.push(resolve);
+                    },function(reject){
+                        result.push(reject);
+                    }
+                )
             if (this.autoPlay){
-                console.log('AUTOPLAY');
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                this.tcpPromise(this.loadBgRequest(nextIndex))
+                await this.tcpPromise(this.loadBgRequest(nextIndex))
                     .then(
                         function(resolve){
-                            console.log(resolve);
+                            producer.setNextIndex(nextIndex);
+                            result.push(resolve);
                         },function(reject){
-                            console.log(reject);
+                            result.push(reject);
                         }
-                    )
+                    );
             }
-            this.lock = true;
-            return promise;
-        }else{
-            return Promise.reject('ERROR : next index and current index are the same');
+            
         }
     }
 
     async previous() {
-        let nextIndex= this.indexVerify(this.currentIndex-1);
-        console.log('index : ' + this.currentIndex);
-        this.lock = true;
-        let req = '';
+        let nextIndex = this.indexVerify(this.currentIndex-1);
         if (this.currentIndex !== nextIndex){
-            this.currentIndex = nextIndex;
-            if (this.paused){
-                req = this.loadRequest(this.currentIndex)
+            // this.currentIndex = nextIndex;
+            let producer = this;
+            let result = [];
+            let req = '';
+            if (this.getPaused()){
+                req = this.loadRequest(nextIndex);
             }else{
-                req = this.playRequest(this.currentIndex)
+                req = this.playRequest(nextIndex);
             }
-            let promise =this.tcpPromise(req);
+            // if ( this.autoPlay){
+            //     req = req+' AUTO';
+            // }
+            await this.tcpPromise(req)
+                .then(
+                    function(resolve){
+                        producer.setCurrentIndex(nextIndex);
+                        producer.setLock(true);
+                        result.push(resolve);
+                    },function(reject){
+                        result.push(reject);
+                    }
+                )
             if (this.autoPlay){
-                console.log('AUTOPLAY');
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                this.tcpPromise(this.loadBgRequest(nextIndex))
+                await this.tcpPromise(this.loadBgRequest(nextIndex))
                     .then(
                         function(resolve){
-                            console.log(resolve);
+                            producer.setNextIndex(nextIndex);
+                            result.push(resolve);
                         },function(reject){
-                            console.log(reject);
+                            result.push(reject);
                         }
-                    )
+                    );
             }
-            this.lock = true;
-            return promise;
-        }else{
-            return Promise.reject('ERROR : next index and current index are the same');
+            
         }
     }
 
@@ -243,6 +314,9 @@ class CasparProducerDDR extends CasparProducer{
             if (this.mediaLoop){
                 req = req+' LOOP';
             }
+            if ( this.autoPlay){
+                req = req+' AUTO';
+            }
             this.setCurrentMedia(media);
         }
         return req;
@@ -260,8 +334,6 @@ class CasparProducerDDR extends CasparProducer{
         if (this.autoPlay){
             req = req+' AUTO';
         }
-        this.nextMedia = media;
-        this.nextIndex = index;
         return req;
     }
 
@@ -357,6 +429,7 @@ class CasparProducerDDR extends CasparProducer{
                     console.log(reject);
                 }
             )
+        this.getCasparCommon().sendSocketIo('ddrEdit', this);
     }
 
     getMediaLoop() { return this.mediaLoop;}
@@ -374,6 +447,7 @@ class CasparProducerDDR extends CasparProducer{
                     console.log(reject);
                 }
             )
+        this.getCasparCommon().sendSocketIo('ddrEdit', this);
     }
 
     getNextIndex(){return this.nextIndex;}
@@ -390,33 +464,74 @@ class CasparProducerDDR extends CasparProducer{
 
     getFileTime () { return this.fileTime;}
     async setFileTime(time) {
-        // console.log(time +'|'+ this.fileTime)
+
+        // if (this.fileTime > time){ // media gone backward or new media detected
+        //     this.fileTime = time;
+        //     if (! this.lock){
+        //         this.fileTime = time;
+        //         console.log('NEW FILE ***************************************************');
+        //         this.currentIndex = this.nextIndex;
+        //         this.setCurrentMedia(this.nextMedia);
+        //         let nextIndex = this.indexVerify(this.currentIndex +1);
+        //         if (nextIndex != this.currentIndex){
+        //             await this.tcpPromise(this.loadBgRequest(nextIndex));
+        //         }
+        //     }       
+        // }
+        // this.fileTime = time;
+        // this.formattedFileTime = this.timeFormat(time);
+        // if (this.currentMedia != null){
+        //     this.remainingTime = this.currentMedia.getFrameNumber()*this.currentMedia.getFrameRate()-time;
+        //     this.formattedRemainingTime = this.timeFormat(this.remainingTime);
+        // }
+        // this.lock = false;
+        // console.log(time);
         if (this.fileTime > time){ // media gone backward or new media detected
+            console.log('nextIndex to be loaded');
             this.fileTime = time;
-            if (! this.lock){
-                this.fileTime = time;
-                console.log('NEW FILE ***************************************************');
+
+            if (!this.lock){
                 this.currentIndex = this.nextIndex;
-                this.setCurrentMedia(this.nextMedia);
                 let nextIndex = this.indexVerify(this.currentIndex +1);
-                 console.log( this.playlist.list.length);
-                 console.log(nextIndex);
-                 console.log(this.currentIndex);
+                // 
+                let producer = this;
                 if (nextIndex != this.currentIndex){
-                    console.log('load next');
-                   
-                    await this.tcpPromise(this.loadBgRequest(nextIndex));
+                    await this.tcpPromise(this.loadBgRequest(nextIndex))
+                        .then(
+                            function(resolve){
+                                // console.log('next index loaded !');
+                                producer.setNextIndex(nextIndex);
+                                console.log(resolve);
+                            }, function(reject){
+                                console.log(reject);
+                            }
+                        )
+                }else{
+                    // console.log('loading canceled, next and current index are the same');
                 }
-            }       
+            }else{
+                // console.log('loading canceled, lock is set');
+                this.setLock(false);
+            }
+
+        }else if(this.fileTime == time){
+                this.setPaused(true);
+        }else{
+            this.fileTime = time;
+            if (this.unpauseCount == 0){
+                this.setPaused(false);
+            }else{
+                this.unpauseCount -=1;
+            }
         }
-        this.fileTime = time;
+        
         this.formattedFileTime = this.timeFormat(time);
         if (this.currentMedia != null){
             this.remainingTime = this.currentMedia.getFrameNumber()*this.currentMedia.getFrameRate()-time;
             this.formattedRemainingTime = this.timeFormat(this.remainingTime);
         }
-        this.lock = false;
-       
+        
+        this.getCasparCommon().sendSocketIo('ddrEdit', this);   
     }
 
     getFormattedRemainingTime() { return this.formattedRemainingTime; }
@@ -432,13 +547,16 @@ class CasparProducerDDR extends CasparProducer{
     getTotalFileFrame () { return this.totalFileFrame;}
     setTotalFileFrame (frame) { this.totalFileFrame = frame;}
 
+    setCurrentIndex(index){this.currentIndex = index;}
     getCurrentIndex() { return this.currentIndex;}
 
     setCasparCommon(casparCommon){
         this.casparCommon = casparCommon;
     }
 
-    // getNextMediaIndex(){ return this.getNextMediaIndex;}
+    setLock(boolean){this.lock = boolean;}
+    getLock(){return this.lock;}
+
 }
 
 

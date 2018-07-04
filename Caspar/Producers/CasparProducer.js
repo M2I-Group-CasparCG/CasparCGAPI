@@ -8,6 +8,7 @@ class CasparProducer {
         this.type = "";
         this.id = 0;
         this.casparCommon = null;
+        this.started = false;
     }
 
     getType(){
@@ -33,6 +34,10 @@ class CasparProducer {
 
     getName() { return this.name; }
     setName(name) { this.name = name; }
+
+    getStarted(){return this.started;}
+    setStarted(boolean){this.started = boolean;}
+
 
     tcpPromise(msg){ return this.casparCommon.tcpPromise(msg); }
 }

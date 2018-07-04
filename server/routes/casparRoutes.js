@@ -44,7 +44,7 @@ module.exports = function(socket) {
      */
     
     let testCasparSettings = new Array();
-    testCasparSettings['ipAddr'] = '192.168.1.204';
+    testCasparSettings['ipAddr'] = '192.168.1.231';
     testCasparSettings['amcpPort'] = '5250';
     testCasparSettings['name'] = 'auto Test';
     testCasparSettings['socketIo'] = socket;
@@ -580,7 +580,6 @@ module.exports = function(socket) {
         const casparId = req.params.casparId;
         let caspar = caspars.get(parseInt(casparId));
         let producer = null;
-        console.log(producerSettings);
         switch (producerType){
             case 'file' : {
                 producer = new ProducerFile(producerSettings);
@@ -601,7 +600,6 @@ module.exports = function(socket) {
                 res.json(apiReturn.requestErrorMessage('unknown producer type'));
             }
         }   
-
         if (producer instanceof Producer){
             caspar.addProducer(producer);
             res.json(cleanObject(producer));
@@ -632,17 +630,8 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
         let producer = caspars.get(casparId).getProducer(producerId);
-            producer.run()
-                .then(
-                    function(msg){
-                        res.json(apiReturn.successMessage('producer started'));
-                    },
-                    function(msg){
-                        res.json(apiReturn.amcpErrorMessage(msg));
-                    }
-                ).catch(function(error){
-                    console.log(error);
-                });           
+            producer.run();
+            res.json(apiReturn.successMessage('producer start command sended'));          
     },
     
     /**
@@ -652,16 +641,8 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const producerId = parseInt(req.params.producerId);
         let producer = caspars.get(casparId).getProducer(producerId);
-            producer.stop().then(
-                function(msg){
-                    res.json(apiReturn.successMessage('producer stoped'));
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }
-            ).catch(function(error){
-                console.log(error);
-            });
+            producer.stop();
+            res.json(apiReturn.successMessage('producer stop command sended'));          
 
     },
 
@@ -933,15 +914,8 @@ module.exports = function(socket) {
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.resume()
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Ddr play'))
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        res.json(apiReturn.successMessage('Ddr play command sended'));
+              
     },
 
     /**
@@ -952,16 +926,8 @@ module.exports = function(socket) {
         const ddrId = parseInt(req.params.ddrId);
         const index = parseInt(req.params.index);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        ddr.playId(index)
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Ddr play'))
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        ddr.playId(index);
+        res.json(apiReturn.successMessage('Ddr playId command sended'));
         
     },
 
@@ -974,15 +940,7 @@ module.exports = function(socket) {
         const frame = parseInt(req.params.frame);
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.seek(frame)
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Ddr play'))
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        res.json(apiReturn.successMessage('Ddr seek command sended'));
     },
 
     /**
@@ -992,16 +950,9 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        ddr.pause()
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Ddr pause'))
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        ddr.pause();
+        res.json(apiReturn.successMessage('Ddr pause command sended'));
+    
     }
 
     /**
@@ -1013,16 +964,7 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
 
         ddr.next()
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Ddr next'))
-                    socket.emit('ddrEdit', JSON.stringify(ddr));
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        res.json(apiReturn.successMessage('Ddr next command sended'));
     },
 
     /**
@@ -1033,16 +975,7 @@ module.exports = function(socket) {
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.previous()
-        .then(
-            function(msg){
-                res.json(apiReturn.successMessage('Ddr previous'))
-                socket.emit('ddrEdit', JSON.stringify(cleanObject(ddr)));
-            },
-            function(msg){
-                res.json(apiReturn.amcpErrorMessage(msg));
-            }).catch(function(error){
-                console.log(error);
-            });
+        res.json(apiReturn.successMessage('Ddr previous command sended'));
     },
 
     /**
@@ -1054,7 +987,6 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.setAutoPlay(!ddr.getAutoPlay());
         res.json(apiReturn.successMessage('autoPlay toogled : '+ddr.getAutoPlay()));
-        socket.emit('ddrEdit', JSON.stringify(ddr));
 
     },
 
@@ -1067,7 +999,6 @@ module.exports = function(socket) {
         let ddr = caspars.get(casparId).getProducer(ddrId);
         ddr.setPlaylistLoop(!ddr.getPlaylistLoop());
         res.json(apiReturn.successMessage('playlistLoop toogled : '+ddr.getPlaylistLoop()));
-        socket.emit('ddrEdit', JSON.stringify(cleanObject(ddr)));
     },
 
     /**
