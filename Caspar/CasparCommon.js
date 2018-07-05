@@ -405,7 +405,7 @@ class CasparCommon {
 
         const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));
         if(! succes){
-            console.log('error while sending socket.IO : '+key+' - '+value);
+            console.log('error while sending socket.IO : '+key+' - '+object);
         }
     }
 }

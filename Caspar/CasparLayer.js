@@ -17,6 +17,7 @@ class CasparLayer {
         this.scaleY = settings['scaleY'] || 1;
         this.casparCommon = settings['casparCommon'] || null;
         this.isActive = false;
+        this.started = false;
     }
 
     /**
@@ -39,16 +40,38 @@ class CasparLayer {
      */
     start(){
         let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${this.selectedInput}`;
-        return this.tcpPromise(req);
+        let layer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    layer.setStarted(true);
+                    layer.getCasparCommon().sendSocketIo('layerEdit', layer);
+                    return resolve;
+                },function(reject){
+                    return reject;
+                }
+            )
     }
 
     /**
      * Stop the play of the layer
      * @return {Promise} tcpPromise
      */
-    stop(){
+    stop(sendSocketIo = true){
         let req = `STOP ${this.channelId}-${this.layerId}`;
-        return this.tcpPromise(req);
+        let layer = this;
+        this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    layer.setStarted(false);
+                    if(sendSocketIo){
+                        layer.getCasparCommon().sendSocketIo('layerEdit', layer);
+                    }
+                    return resolve;
+                },function(reject){
+                    return reject;
+                }
+            )
     }
 
     /**
@@ -160,6 +183,9 @@ class CasparLayer {
 
     getIsActive() { return this.isActive; }
     setIsActive(boolean) {this.isActive = boolean;}
+
+    setStarted(boolean){ this.started = boolean;}
+    getStarted(){ return this.started; }
 
 }
 

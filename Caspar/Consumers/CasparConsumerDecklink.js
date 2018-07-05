@@ -14,38 +14,40 @@ class CasparConsumerDECKLINK extends CasparConsumer {
     }
 
 
-    run(){
+    async run(){
         var req = `ADD ${this.channelId} ${this.type} ${this.decklinkId}`;
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(true);
                     consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
-                    console.log(resolve);
-                    return true;
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
-    stop(){
+    async stop(sendSocketIo = true){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.decklinkId}`;
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(false);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
-                    console.log(resolve);
-                    return true;
+                    if(sendSocketIo){
+                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    }
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     edit(setting, value){
@@ -95,24 +97,11 @@ class CasparConsumerDECKLINK extends CasparConsumer {
     setLatency(latency){ this.latency = latency; }
 
     async setChannelId(id) {
-        await this.stop()
-            .then(
-                function(resolve){
-                    console.log(resolve);
-                },
-                function(reject){
-                    console.log(reject);
-                }
-            )
-        this.channelId = id;
-        await  this.run()
-        .then(
-            function(resolve){
-                console.log(resolve);
-            },function(reject){
-                console.log(reject);
-            }
-        )
+
+        let  result1 = await this.stop();
+        this.channelId = id; 
+        let  result2 =await  this.run();
+        return result1.concat(result2);
        
     }
 

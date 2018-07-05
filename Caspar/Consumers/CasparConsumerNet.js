@@ -22,39 +22,40 @@ class CasparConsumerNet extends CasparConsumer {
         this.crf = settings['crf'] || 25        // constant frame factor - compression factor from 0 (high quality) to 51 (low quality)80
     }   
 
-    run(){
-        var req = `ADD ${this.channelId} ${this.type} ${this.protocol}://${this.host}:${this.port} 
-        -vcodec ${this.vcodec} -tune ${this.tune} -preset ${this.preset} -crf ${this.crf} -format ${this.format} -vf scale=${this.pictureWidth}:${this.pictureHeight}`;
+    async run(){
+        var req = `ADD ${this.channelId} ${this.type} ${this.protocol}://${this.host}:${this.port} -vcodec ${this.vcodec} -tune ${this.tune} -preset ${this.preset} -crf ${this.crf} -format ${this.format} -vf scale=${this.pictureWidth}:${this.pictureHeight}`;
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(true);
                     consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
-                    console.log(resolve);
-                    return true;
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
-    stop(){
+    async stop(sendSocketIo = true){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.protocol}://${this.host}:${this.port}`;
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(false);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
-                    console.log(resolve);
-                    return true;
+                    if(sendSocketIo){
+                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    }
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                   result.push(reject);
                 }
             )
+        return result;
     }
 
     edit(setting, value){
@@ -70,9 +71,19 @@ class CasparConsumerNet extends CasparConsumer {
                 response[setting] = this.getChannelId();
             }
             break;
-            case 'url' : {
-                this.setUrl(value);
-                response[setting] = this.getUrl();
+            case 'protocol' : {
+                this.setProtocol(value);
+                response[setting] = this.getProtocol();
+            }
+            break;
+            case 'host' : {
+                this.setHost(value);
+                response[setting] = this.getHost();
+            }
+            break;
+            case 'port' : {
+                this.setPort(value);
+                response[setting] = this.getPort();
             }
             break;
             case 'vcodec' : {
@@ -116,6 +127,9 @@ class CasparConsumerNet extends CasparConsumer {
         }
         return response;
     }
+
+    getUrl(){return this.getUrl};
+    setUrl(url){this.url = url}
 
     getProtocol(){return this.protocol; }
     setProtocol(protocol){this.protocol=protocol;}

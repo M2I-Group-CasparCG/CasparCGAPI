@@ -31,14 +31,16 @@ class CasparProducerNET extends CasparProducer{
             )
     }
 
-    stop(){
+    stop(sendSocketIo = true){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         let producer = this;
         this.tcpPromise(req)
             .then(
                 function(resolve){  
                     producer.setStarted(false);
-                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    if (sendSocketIo){
+                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    }
                     console.log(resolve);
                     return true;
                 },function(reject){

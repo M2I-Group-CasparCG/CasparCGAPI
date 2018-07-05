@@ -69,37 +69,37 @@ class CasparConsumerFILE extends CasparConsumer {
     }
 
 
-    run() {
+    async run() {
         var req = `ADD ${this.channelId} ${this.type} ${this.filePath}${this.fileName}`;
         let consumer = this;
-        let result;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
+                    result.push(resolve);
                     consumer.setStarted(true);
                     consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
-                   
-                    result = true;
                 },function(reject){
-                    result = false;
+                    result.push(reject);
                 }
             )
         return result;
     }
 
-    stop() {
+    async stop(sendSocketIo = true) {
         var req = `REMOVE ${this.channelId} ${this.type}  ${this.filePath}${this.fileName}`;
         let consumer = this;
-        let result;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(false);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
-                    
-                    result = true;
+                    if (sendSocketIo){
+                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    }
+                    result.push(resolve);
                 },function(reject){
-                    result = false;
+                    result.push(reject);
                 }
             )
             return result;
@@ -139,7 +139,7 @@ class CasparConsumerFILE extends CasparConsumer {
     setFileName(fileName){this.fileName = fileName;}
 
     getFilePath(){return this.filePath;}
-    setFilePath(){this.filePath = this.filePath;}
+    setFilePath(filePath){this.filePath = filePath;}
 
     setFrames(frames){
         this.frames = frames;

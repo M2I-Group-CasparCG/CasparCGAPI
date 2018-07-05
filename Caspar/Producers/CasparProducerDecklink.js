@@ -29,31 +29,33 @@ class CasparProducerDECKLINK extends CasparProducer{
 
     }
 
-    run(){
+    async run(){
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} DECKLINK ${this.decklinkId}`;
         let producer = this;
-        this.tcpPromise(req)
+        let result = []
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
+                    result.push(resolve);
                     producer.setStarted(true);
                     producer.getCasparCommon().sendSocketIo('producerEdit', producer);
-                    console.log(resolve);
-                    return true;
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
-    stop(){
+    stop(sendSocketIo = true){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()} DECKLINK ${this.decklinkId}`;
         let producer = this;
         this.tcpPromise(req)
             .then(
                 function(resolve){  
                     producer.setStarted(false);
-                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    if (sendSocketIo){
+                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    }
                     console.log(resolve);
                     return true;
                 },function(reject){

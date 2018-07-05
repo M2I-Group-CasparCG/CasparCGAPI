@@ -334,6 +334,7 @@ class Caspar {
     removeProducer (producerId) {
         var producer = this.producers.get(producerId);
         if (producer instanceof Producer) {
+            producer.stop(false);
             this.producers.delete(producerId);
             if (this.getCasparCommon().getMvId()){
                 this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
@@ -386,7 +387,7 @@ class Caspar {
         var consumer = this.consumers.get(consumerId);
         if (consumer instanceof Consumer) {
             this.consumers.delete(consumerId);
-            consumer.stop();
+            consumer.stop(false);
             return consumer;
         }else{
             return false

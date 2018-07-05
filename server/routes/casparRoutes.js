@@ -44,84 +44,84 @@ module.exports = function(socket) {
      */
     
     let testCasparSettings = new Array();
-    testCasparSettings['ipAddr'] = '192.168.1.231';
+    testCasparSettings['ipAddr'] = '192.168.1.204';
     testCasparSettings['amcpPort'] = '5250';
     testCasparSettings['name'] = 'auto Test';
     testCasparSettings['socketIo'] = socket;
     let testCaspar = new Caspar(testCasparSettings);
-    testCaspar.restart()
-        .then(
-            function(resolve){
-                console.log('restart');
-            },
-            function(reject){
-                console.log(reject);
-            }
-        )
+    // testCaspar.restart()
+    //     .then(
+    //         function(resolve){
+    //             console.log('restart');
+    //         },
+    //         function(reject){
+    //             console.log(reject);
+    //         }
+    //     )
 
-    setTimeout(
-        function(){
-            console.log('timeout');
-            caspars.set(testCaspar.getId(),testCaspar);
-            testCaspar.getInfo()
-                .then(function(){
-                   console.log('default caspar added')
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+    // setTimeout(
+    //     function(){
+    //         console.log('timeout');
+    //         caspars.set(testCaspar.getId(),testCaspar);
+    //         testCaspar.getInfo()
+    //             .then(function(){
+    //                console.log('default caspar added')
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //             });
 
-            setTimeout(
-                function(){
-                    testCasparConsumer = new Array();
-                    testCasparConsumer['channelId'] = 1;
-                    testCasparConsumer['name'] = 'Consumer1';
-                    // testCasparConsumer['fullscreen'] = true;
-                    testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
-                    let testConsumer = new ConsumerScreen(testCasparConsumer)
-                    testCaspar.addConsumer(testConsumer);
-                    // testConsumer.run();
+    //         setTimeout(
+    //             function(){
+    //                 testCasparConsumer = new Array();
+    //                 testCasparConsumer['channelId'] = 1;
+    //                 testCasparConsumer['name'] = 'Consumer1';
+    //                 // testCasparConsumer['fullscreen'] = true;
+    //                 testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
+    //                 let testConsumer = new ConsumerScreen(testCasparConsumer)
+    //                 testCaspar.addConsumer(testConsumer);
+    //                 // testConsumer.run();
 
-                    testFileSettings = new Array();
-                    testFileSettings['name'] = 'AMB';
-                    testFileSettings['fileName'] = 'amb';
-                    testFileSettings['playMode'] = 'loop';
-                    let testFile = new ProducerFile(testFileSettings);
-                    testCaspar.addProducer(testFile);
+    //                 testFileSettings = new Array();
+    //                 testFileSettings['name'] = 'AMB';
+    //                 testFileSettings['fileName'] = 'amb';
+    //                 testFileSettings['playMode'] = 'loop';
+    //                 let testFile = new ProducerFile(testFileSettings);
+    //                 testCaspar.addProducer(testFile);
 
-                    testFileSettings2 = new Array();
-                    testFileSettings2['name'] = 'GO';
-                    testFileSettings2['fileName'] = 'GO1080P25';
-                    testFileSettings2['playMode'] = 'loop';
-                    let testFile2 = new ProducerFile(testFileSettings2);
-                    testCaspar.addProducer(testFile2);
+    //                 testFileSettings2 = new Array();
+    //                 testFileSettings2['name'] = 'GO';
+    //                 testFileSettings2['fileName'] = 'GO1080P25';
+    //                 testFileSettings2['playMode'] = 'loop';
+    //                 let testFile2 = new ProducerFile(testFileSettings2);
+    //                 testCaspar.addProducer(testFile2);
 
-                    testFileSettings3 = new Array();
-                    testFileSettings3['name'] = 'itescia';
-                    testFileSettings3['fileName'] = 'itescia';
-                    testFileSettings3['playMode'] = 'loop';
-                    let testFile3 = new ProducerFile(testFileSettings3);
-                    testCaspar.addProducer(testFile3);
+    //                 testFileSettings3 = new Array();
+    //                 testFileSettings3['name'] = 'itescia';
+    //                 testFileSettings3['fileName'] = 'itescia';
+    //                 testFileSettings3['playMode'] = 'loop';
+    //                 let testFile3 = new ProducerFile(testFileSettings3);
+    //                 testCaspar.addProducer(testFile3);
 
-                    playlistSettings = new Array();
-                    playlistSettings['name'] = 'autoPlaylist';
-                    let playlist = testCaspar.addPlaylist(playlistSettings)
-                        playlist.addMedia(3);    
-                        playlist.addMedia(74);
-                        playlist.addMedia(73);
-                        playlist.addMedia(4);
+    //                 playlistSettings = new Array();
+    //                 playlistSettings['name'] = 'autoPlaylist';
+    //                 let playlist = testCaspar.addPlaylist(playlistSettings)
+    //                     playlist.addMedia(3);    
+    //                     playlist.addMedia(74);
+    //                     playlist.addMedia(73);
+    //                     playlist.addMedia(4);
                     
-                    ddrSettings = new Array();
-                    ddrSettings['name']  = 'autoDDR';
-                    ddrSettings['playlist']  = playlist;
-                    let ddr = new ProducerDdr(ddrSettings);
-                    testCaspar.addProducer(ddr);
+    //                 ddrSettings = new Array();
+    //                 ddrSettings['name']  = 'autoDDR';
+    //                 ddrSettings['playlist']  = playlist;
+    //                 let ddr = new ProducerDdr(ddrSettings);
+    //                 testCaspar.addProducer(ddr);
 
 
-                },2000);
-        },
-        2000
-    );
+    //             },2000);
+    //     },
+    //     2000
+    // );
     
 
     /**playlistCopy
@@ -545,21 +545,9 @@ module.exports = function(socket) {
         const consumer = caspars.get(casparId).getConsumer(consumerId);
 
         if (consumer instanceof Consumer){
-            consumer.stop()
-            .then(
-                function(msg){
-                caspars.get(casparId).removeConsumer(consumerId);
-                res.json(apiReturn.successMessage('Consumer removed'));
-                if(socket){
-                    socket.emit('consumerDelete', JSON.stringify(cleanObject(consumer)));
-                }
-            },
-            function(msg){
-                res.json(apiReturn.amcpErrorMessage(msg));
-            }
-            ).catch(function(error){
-                console.log(error);
-            });      
+            caspars.get(casparId).removeConsumer(consumerId);
+            res.json(apiReturn.successMessage('Consumer removed'));
+            socket.emit('consumerDelete', JSON.stringify(cleanObject(consumer)));      
         }else{
             res.json(apiReturn.notFoundMessage('Consumer instance not found'));
         }
@@ -654,20 +642,11 @@ module.exports = function(socket) {
         const producerId = parseInt(req.params.producerId);
         const producer = caspars.get(casparId).getProducer(producerId);
         if (producer instanceof Producer){
-            producer.stop()
-                .then(
-                    function(msg){
-                        caspars.get(casparId).removeProducer(producerId);
-                        res.json(apiReturn.successMessage('producer deleted'));
-                        if(socket){
-                            socket.emit('producerDelete', JSON.stringify(cleanObject(producer)));
-                        }
-                    },
-                    function(msg){
-                        res.json(apiReturn.amcpErrorMessage(msg));
-                    }).catch(function(error){
-                        console.log(error);
-                    });
+            caspars.get(casparId).removeProducer(producerId);
+            res.json(apiReturn.successMessage('producer deleted'));
+            if(socket){
+                socket.emit('producerDelete', JSON.stringify(cleanObject(producer)));
+            }
         }else{
             res.json(apiReturn.notFoundMessage('producer instance not found'));
         }
@@ -829,18 +808,8 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
         let layer = caspars.get(casparId).getLayer(layerId);
-        layer.start()
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Layer started'))
-                    layer.setIsActive(true);
-                    socket.emit('layerEdit', JSON.stringify(cleanObject(layer)));
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        layer.start();
+        res.json(apiReturn.successMessage('Layer start command sended'));
     },
 
     /**
@@ -850,18 +819,8 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const layerId = parseInt(req.params.layerId);
         let layer = caspars.get(casparId).getLayer(layerId);
-        layer.stop()
-            .then(
-                function(msg){
-                    res.json(apiReturn.successMessage('Layer stoped'))
-                    layer.setIsActive(false);
-                    socket.emit('layerEdit', JSON.stringify(layer));
-                },
-                function(msg){
-                    res.json(apiReturn.amcpErrorMessage(msg));
-                }).catch(function(error){
-                    console.log(error);
-                });
+        layer.stop();
+        res.json(apiReturn.successMessage('Layer start command sended'));
     },
 
     /**
@@ -939,7 +898,7 @@ module.exports = function(socket) {
         const ddrId = parseInt(req.params.ddrId);
         const frame = parseInt(req.params.frame);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        ddr.seek(frame)
+        ddr.seek(frame);
         res.json(apiReturn.successMessage('Ddr seek command sended'));
     },
 

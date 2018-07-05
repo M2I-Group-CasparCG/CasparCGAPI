@@ -50,7 +50,7 @@ class CasparChannel {
 
         if (this.layers.get(layerId) instanceof Layer){
             let layer = this.layers.get(layerId);
-            layer.stop();
+            layer.stop(false);
             this.layers.delete(layer.getId());
             return layer;
         }else{

@@ -17,41 +17,43 @@ class CasparConsumerSCREEN extends CasparConsumer {
     }
 
 
-    run() {
+    async run() {
         var req = `ADD ${this.channelId} ${this.type} ${this.id} name ${this.name}-${this.channelName}`;
         if(this.fullscreen){
             req = `${req} FULLSCREEN`;
         }
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(true);
-                    consumer.getCasparCommon().sendSocketIo('consumerAdd', consumer);
-                    console.log(resolve);
-                    return true;
+                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                   result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
-    stop(){
+    async stop(sendSocketIo = true){
         var req = `REMOVE ${this.channelId} ${this.type} ${this.id}`;
         let consumer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     consumer.setStarted(false);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
-                    console.log(resolve);
-                    return true;
+                    if(sendSocketIo){
+                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    }
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     edit(setting, value){
