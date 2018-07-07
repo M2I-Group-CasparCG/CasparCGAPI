@@ -17,8 +17,8 @@ class CasparConsumerNet extends CasparConsumer {
         this.tune = settings['tune'] || 'zerolatency';
         this.preset = settings['preset'] || 'ultrafast';
         this.format = settings['format'] || 'mpegts'
-        this.pictureWidth = settings['pictureWidth'] || '720';
-        this.pictureHeight = settings['pictureHeight'] || '576';
+        this.pictureWidth = settings['pictureWidth'] || '1920';
+        this.pictureHeight = settings['pictureHeight'] || '1080';
         this.crf = settings['crf'] || 25        // constant frame factor - compression factor from 0 (high quality) to 51 (low quality)80
     }   
 
