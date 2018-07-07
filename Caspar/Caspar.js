@@ -60,7 +60,10 @@ class Caspar {
         settings['id'] = this.id;
         settings['medias'] = this.medias;
         this.casparCommon = new CasparCommon(settings);     // création d'un objet CasparCommon, commun entre tous les élements (partage de mémoire)
-      }  
+        
+        this.getInfo();
+        
+    }  
 
 
     /** 
@@ -79,7 +82,11 @@ class Caspar {
             this.casparCommon.setMvId(mv.getId());
         }else{
             let mv = this.channels.get(this.getCasparCommon().getMvId());
-            mv.ini();
+            console.log(mv.id);
+            if (mv instanceof ChannelMultiview){
+                mv.ini(null);
+            }
+         
         }
 
         if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
@@ -109,18 +116,19 @@ class Caspar {
         const casparCommon = this.getCasparCommon();
         const caspar = this;
 
-        // récupération des informations.
-        console.log('retrieving informations from the server...');
-        await this.getCasparCommon().tcpPromise('VERSION')
-                .then(
-                    function(resolveResult){
-                        casparCommon.setCasparVersion(resolveResult['data']);
-                    },  
-                    function(rejectResult){
-                        console.log(rejectResult);
-                    }
-                )
         if (this.getCasparCommon().getOnline()){
+            // récupération des informations.
+            console.log('retrieving informations from the server...');
+            await this.getCasparCommon().tcpPromise('VERSION')
+                    .then(
+                        function(resolveResult){
+                            casparCommon.setCasparVersion(resolveResult['data']);
+                        },  
+                        function(rejectResult){
+                            console.log(rejectResult);
+                        }
+                    )
+        
 
             await this.getCasparCommon().tcpPromise('INFO')
             .then(
@@ -129,10 +137,11 @@ class Caspar {
                     resolveResult['data'].forEach(element => {
                         element = element.split(' ');
                         let settings = new Array();
+                            console.log(parseInt(element[0]));
                             settings['id'] = parseInt(element[0]);
                             settings['name'] = 'default';
                             settings['videoMode'] = element[1];
-                            settings['statcaspare'] = element[2];
+                            settings['state'] = element[2];
                         let channel = new Channel(settings);
                         caspar.addChannel(channel);
                     });
@@ -184,6 +193,7 @@ class Caspar {
                     // console.log(resolveResult['data']);
                     const xmlHandler = new XMLHelper(resolveResult['data']);
                     let resultArray = xmlHandler.getDecklinkValue().split(' ').join('').split('\n');
+                    casparCommon.setDecklinkCards([]);
                     for(let n in resultArray){
                         const element = resultArray[n];
                         if (element.indexOf('DeckLink') > -1){
@@ -205,9 +215,11 @@ class Caspar {
 
             await this.scanMedias();
             this.ini();
+            // this.getCasparCommon().sendSocketIo('casparAdd',this);
 
+        }else{
+            this.getCasparCommon().sendSocketIo('casparAdd',this);
         }        
-
     }
 
     /**
@@ -233,10 +245,10 @@ class Caspar {
     editObject(settings, object){
         let result = new Object();
         for (let setting in settings){
-            console.log(object);
+            // console.log(object);
             let response =  object.edit(setting, settings[setting]);
             for (let key in response){
-                console.log(response);
+                // console.log(response);
                 result[key] = response[key];
             }
         }
@@ -308,6 +320,9 @@ class Caspar {
             }
             this.producers.set(producer.getId(), producer);
             if (this.getCasparCommon().getMvId()){
+                console.log('_______');
+                console.log(this.getCasparCommon().getMvId());
+                console.log(this.channels.get(this.getCasparCommon().getMvId()));
                 this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
             }
             if (this.getCasparCommon().getOnline()){
@@ -576,6 +591,16 @@ class Caspar {
      */
     restart () {
         const req = 'RESTART';
+        const caspar = this;
+        this.getCasparCommon().setMvId(null);
+        this.getCasparCommon().setPgmId(null);
+        this.getCasparCommon().setPvwId(null);
+        setTimeout(
+            function(){
+                caspar.getInfo();
+            },  
+            2000
+        )
         return this.tcpPromise(req);
     }
 
@@ -600,6 +625,7 @@ class Caspar {
         clearTimeout(onlineTimeout);
         if (! this.getCasparCommon().getOnline()){
             this.getCasparCommon().setOnline(true);
+            this.getInfo();
             this.getCasparCommon().sendSocketIo('casparEdit',this);
         }
         
@@ -806,9 +832,8 @@ class Caspar {
         onlineTimeout = setTimeout(
             function(){
                 caspar.getCasparCommon().setOnline(false);
-                caspar.getCasparCommon().sendSocketIo('casparEdit',caspar);
             },
-            1000);
+            100);
     }
 
     /**

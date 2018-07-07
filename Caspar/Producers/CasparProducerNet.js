@@ -10,7 +10,7 @@ class CasparProducerNET extends CasparProducer{
         this.type = 'NET';
         this.id = CasparProducer.totalInstances;
         this.name = settings['name'] || 'Stream';
-        this.url = settings['url'] || 'rtp://127.0.0.1:5004';       
+        this.url = settings['url'] || 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov';       
         
     }
 

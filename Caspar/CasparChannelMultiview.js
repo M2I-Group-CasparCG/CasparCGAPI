@@ -16,6 +16,7 @@ class CasparChannelMultiview extends CasparChannel{
         this.casparCommon = null;
         this.patterId = settings['patternId'] || 0;
         this.producers = producers;
+        this.test = 'test';
     }
 
 

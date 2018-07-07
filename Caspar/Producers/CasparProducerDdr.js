@@ -107,6 +107,7 @@ class CasparProducerDDR extends CasparProducer{
             .then(
                 function(resolve){
                     producer.setPaused(false);
+                    producer.setStarted(true);
                     result.push(resolve);
                     producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
                 },function(reject){
@@ -159,6 +160,7 @@ class CasparProducerDDR extends CasparProducer{
             await this.tcpPromise(req)
                 .then(
                     function(resolve){
+                        producer.setStarted(true);
                         producer.setCurrentIndex(index);
                         producer.setCurrentMedia(media);
                         producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
