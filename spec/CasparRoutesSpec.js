@@ -10,8 +10,6 @@ let request = require('supertest');
 
 describe('capsarRoutes', function(){
 
-       
-
         beforeEach(() => {
 
         });

@@ -46,23 +46,24 @@ class CasparProducerDECKLINK extends CasparProducer{
         return result;
     }
 
-    stop(sendSocketIo = true){
+    async stop(sendSocketIo = true){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()} DECKLINK ${this.decklinkId}`;
         let producer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     producer.setStarted(false);
                     if (sendSocketIo){
                         producer.getCasparCommon().sendSocketIo('producerEdit', producer);
                     }
-                    console.log(resolve);
-                    return true;
+                    result.push(resolve);
                 },function(reject){
                     console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     edit(setting, value){

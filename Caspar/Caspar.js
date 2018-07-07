@@ -597,6 +597,13 @@ class Caspar {
      */
     oscAnalyzer(oscData){        
 
+        clearTimeout(onlineTimeout);
+        if (! this.getCasparCommon().getOnline()){
+            this.getCasparCommon().setOnline(true);
+            this.getCasparCommon().sendSocketIo('casparEdit',this);
+        }
+        
+        this.startOnlineTimeout();
         
         let caspar = this;
 
@@ -712,9 +719,6 @@ class Caspar {
         }
 
         }
-        
-
-
 
         // oscData.forEach(function(value, key, map){
 
@@ -793,20 +797,19 @@ class Caspar {
         //         returnVal = null;
         //     }
         // });
-
         
     }
 
 
-    // startOnlineTimeout(){
-    //     const caspar = this;
-    //     let timeout = setTimeout(
-    //         function(){
-    //             caspar.getCasparCommon().setOnline(false);
-    //         },
-    //         1000);
-    //     return timeout;
-    // }
+    startOnlineTimeout(){
+        const caspar = this;
+        onlineTimeout = setTimeout(
+            function(){
+                caspar.getCasparCommon().setOnline(false);
+                caspar.getCasparCommon().sendSocketIo('casparEdit',caspar);
+            },
+            1000);
+    }
 
     /**
      *   Getters / Setters

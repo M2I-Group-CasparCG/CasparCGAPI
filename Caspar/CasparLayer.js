@@ -16,7 +16,6 @@ class CasparLayer {
         this.scaleX = settings['scaleX'] || 1;
         this.scaleY = settings['scaleY'] || 1;
         this.casparCommon = settings['casparCommon'] || null;
-        this.isActive = false;
         this.started = false;
     }
 
@@ -28,7 +27,7 @@ class CasparLayer {
     setInput(producerId){
         // let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${producerId}`;
         this.selectedInput = producerId;
-        if (this.isActive){
+        if (this.started){
             this.start();
         }
         // return this.tcpPromise(req);
@@ -126,10 +125,6 @@ class CasparLayer {
                 response[setting] = this.getScaleY();
             }
             break;
-            case 'isActive' : {
-                this.setIsActive(value);
-                response[setting] = this.getIsActive();
-            }
             default : {
                 response[setting] = "not found";
             }
@@ -180,9 +175,6 @@ class CasparLayer {
 
     tcpPromise(req) { return this.getCasparCommon().tcpPromise(req); }
     tcpSend(req, callback) { return this.getCasparCommon().tcpSend(req, callback); }
-
-    getIsActive() { return this.isActive; }
-    setIsActive(boolean) {this.isActive = boolean;}
 
     setStarted(boolean){ this.started = boolean;}
     getStarted(){ return this.started; }

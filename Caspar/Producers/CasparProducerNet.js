@@ -14,40 +14,40 @@ class CasparProducerNET extends CasparProducer{
         
     }
 
-    run(){
+    async run(){
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.url}`;
         let producer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     producer.setStarted(true);
                     producer.getCasparCommon().sendSocketIo('producerEdit', producer);
-                    console.log(resolve);
-                    return true;
+                    result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
-    stop(sendSocketIo = true){
+    async stop(sendSocketIo = true){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         let producer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     producer.setStarted(false);
                     if (sendSocketIo){
                         producer.getCasparCommon().sendSocketIo('producerEdit', producer);
                     }
-                    console.log(resolve);
-                    return true;
+                   result.push(resolve);
                 },function(reject){
-                    console.log(reject);
-                    return false;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     edit(setting, value){

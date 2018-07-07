@@ -20,24 +20,26 @@ class CasparProducerDDR extends CasparProducer{
         this.playlist = settings['playlist'] || new CasparPlaylist(new Array());   
 
         // file times
-        this.currentFileFrame = null;
-        this.totalFileFrame = null;
-        this.fileTime = -1;
-        this.formattedFileTime = null;
-        this.remainingTime = null;
-        this.formattedRemainingTime = null;
+        this.currentFileFrame = null;       // the current file frames of the current media
+        this.totalFileFrame = null;         // the total file frames of the current media
+
+        this.fileTime = -1;                 // the file time in seconds
+        this.formattedFileTime = null;      // the formatted current file time HH:MM:SS:FF
+        this.remainingTime = null;          // the remaining time in seconds
+        this.formattedRemainingTime = null; //the formatted remaining time HH:MM:SS:FF
 
         //playlist index
-        this.currentIndex = -1;
-        this.nextIndex = null;
-        this.currentMedia = null;
-        this.nextMedia = null;
+        this.currentIndex = -1;             // the current index of the playlist
+        this.nextIndex = null;              // the next index to be played
 
-        this.lock = false;
+        this.currentMedia = null;           // the current media in the playlist
+        // this.nextMedia = null;              // the next media to be played
+
+        this.lock = false;                  // lock used to disable osc callback action after a manual action
 
         this.playlist.setCasparCommon(this.getCasparCommon());
 
-        this.unpauseCount = 0;
+        this.unpauseCount = 0;              // delay in osc count before considering the mediaPlayer is paused
 
     }
 
@@ -151,12 +153,14 @@ class CasparProducerDDR extends CasparProducer{
     async playId(index){
         if (this.playlist.list[index] instanceof CasparMedia){
             let req = this.loadRequest(index);
+            let media = this.playlist.list[index];
             let producer = this;
             let result = [];
             await this.tcpPromise(req)
                 .then(
                     function(resolve){
                         producer.setCurrentIndex(index);
+                        producer.setCurrentMedia(media);
                         producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
                         producer.setLock(true);
                         producer.unpauseCount = 3;
@@ -236,10 +240,12 @@ class CasparProducerDDR extends CasparProducer{
             }else{
                 req = this.playRequest(nextIndex);
             }
+            let media = this.playlist.list[nextIndex];
             await this.tcpPromise(req)
                 .then(
                     function(resolve){
                         producer.setCurrentIndex(nextIndex);
+                        producer.setCurrentMedia(media);
                         producer.setLock(true);
                         result.push(resolve);
                     },function(reject){
@@ -277,10 +283,12 @@ class CasparProducerDDR extends CasparProducer{
             }else{
                 req = this.playRequest(nextIndex);
             }
+            let media = this.playlist.list[nextIndex];
             await this.tcpPromise(req)
                 .then(
                     function(resolve){
                         producer.setCurrentIndex(nextIndex);
+                        producer.setCurrentMedia(media);
                         producer.setLock(true);
                         result.push(resolve);
                     },function(reject){
@@ -315,7 +323,6 @@ class CasparProducerDDR extends CasparProducer{
         if (this.mediaLoop){
             req = req+' LOOP';
         }
-        this.setCurrentMedia(media);
         return req;
     }
 
@@ -334,7 +341,6 @@ class CasparProducerDDR extends CasparProducer{
             if ( this.autoPlay){
                 req = req+' AUTO';
             }
-            this.setCurrentMedia(media);
         }
         return req;
     }
