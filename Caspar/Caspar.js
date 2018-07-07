@@ -73,39 +73,39 @@ class Caspar {
     */
     async ini(){     
         console.log('ini');
-        if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
+        // if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
             let mvSettings = new Array();
                 mvSettings['name'] = 'MVW';
                 mvSettings['id'] = 1;
             let mv = new ChannelMultiview(mvSettings,this.producers)
             this.addChannel(mv);
             this.casparCommon.setMvId(mv.getId());
-        }else{
-            let mv = this.channels.get(this.getCasparCommon().getMvId());
-            console.log(mv.id);
+        // }else{
+            // let mv = this.channels.get(this.getCasparCommon().getMvId());
+            // console.log(mv.id);
             if (mv instanceof ChannelMultiview){
                 mv.ini(null);
             }
          
-        }
+        // }
 
-        if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
+        // if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
             let pgmSettings = new Array();
             pgmSettings['name'] = 'PGM';
             pgmSettings['id'] = 2;
             let pgm = new Channel(pgmSettings);
             this.addChannel(pgm);
             this.casparCommon.setPgmId(pgm.getId());
-        }
+        // }
         
-        if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
+        // if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
             let pvwSettings = new Array();
             pvwSettings['name'] = 'PVW';
             pvwSettings['id'] = 3;
             let pvw = new Channel(pvwSettings);
             this.addChannel(pvw);
             this.casparCommon.setPvwId(pvw.getId());
-        }
+        // }
     }
 
     /**
