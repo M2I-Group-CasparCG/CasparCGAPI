@@ -193,7 +193,7 @@ class CasparProducerDDR extends CasparProducer{
     }
 
     async seek(frame){
-        if (this.currentMedia){
+        if (this.getCurrentMedia()){
             this.lock = true;
             let req = '';      
             if (this.paused){
@@ -224,6 +224,7 @@ class CasparProducerDDR extends CasparProducer{
                         }
                     )
             }  
+
             return result;
         }else{
             return ['no media loaded !'];
@@ -335,7 +336,7 @@ class CasparProducerDDR extends CasparProducer{
     loadRequest(index){
         let media = this.playlist.getMedia(index);
         let req = '';
-        if (media != undefined){
+        if (media instanceof CasparMedia){
             req =   `LOAD ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
             if (this.mediaLoop){
                 req = req+' LOOP';
@@ -352,12 +353,15 @@ class CasparProducerDDR extends CasparProducer{
      */
     loadBgRequest (index){
         let media = this.playlist.getMedia(index);
-        let req = `LOADBG ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
-        if (this.mediaLoop){
-            req = req+' LOOP';
-        }
-        if (this.autoPlay){
-            req = req+' AUTO';
+        let req = '';
+        if (media instanceof CasparMedia){
+            req = `LOADBG ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
+            if (this.mediaLoop){
+                req = req+' LOOP';
+            }
+            if (this.autoPlay){
+                req = req+' AUTO';
+            }
         }
         return req;
     }
@@ -412,7 +416,7 @@ class CasparProducerDDR extends CasparProducer{
             break;
             case 'mediaLoop' : {
                 this.setMediaLoop(value);
-                response[setting] = this.mediaLoop();
+                response[setting] = this.getMediaLoop();
             }
             break;
             case 'autoPlay' : {
@@ -428,9 +432,15 @@ class CasparProducerDDR extends CasparProducer{
     }
 
     timeFormat(duration){
-        let seconds = (duration-duration % 1) % 60 ;
-        let minutes = (duration - duration % 60) / 60;
-        let hours = (duration - duration % 3600) / 3600;
+      
+                // duration en seconds
+        let brutHours = duration / 3600;
+        let hours = Math.floor(duration / 3600);
+        let brutMinutes = (brutHours - hours) * 60;
+        let minutes = Math.floor(brutMinutes);
+        let brutSeconds = (brutMinutes - minutes) *60;
+        let seconds = Math.floor(brutSeconds); 
+        // let frames = frameNb - (seconds + 60*minutes + 3600*hours)/frameRate;
 
         return `${('0'+hours).slice(-2)}:${('0'+minutes).slice(-2)}:${('0'+seconds).slice(-2)}`;
     }

@@ -24,53 +24,65 @@ class CasparLayer {
      * @param {int} producerId id of the producer to set in the Layer
      * @return {Promise} tcpPromise
      */
-    setInput(producerId){
+    async setInput(producerId){
         // let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${producerId}`;
         this.selectedInput = producerId;
+        let result = ["not started"];
         if (this.started){
-            this.start();
+            await this.start()
+                .then(
+                    function(resolve){
+                       result = resolve;
+                    },function(reject){
+                        result = reject;
+                    }
+                )
         }
-        // return this.tcpPromise(req);
+        return result;
     }
 
     /**
      * Start the play of the layer
      * @return {Promise} tcpPromise
      */
-    start(){
+    async start(){
         let req = `PLAY ${this.channelId}-${this.layerId} route://${this.getCasparCommon().getMvId()}-${this.selectedInput}`;
         let layer = this;
-        this.tcpPromise(req)
+        let result = []
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     layer.setStarted(true);
                     layer.getCasparCommon().sendSocketIo('layerEdit', layer);
-                    return resolve;
+                    result.push(resolve);
                 },function(reject){
-                    return reject;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     /**
      * Stop the play of the layer
      * @return {Promise} tcpPromise
      */
-    stop(sendSocketIo = true){
+    async stop(sendSocketIo = true){
         let req = `STOP ${this.channelId}-${this.layerId}`;
         let layer = this;
-        this.tcpPromise(req)
+        let result = [];
+        await this.tcpPromise(req)
             .then(
                 function(resolve){  
                     layer.setStarted(false);
                     if(sendSocketIo){
                         layer.getCasparCommon().sendSocketIo('layerEdit', layer);
                     }
-                    return resolve;
+                    result.push(resolve);
                 },function(reject){
-                    return reject;
+                    result.push(reject);
                 }
             )
+        return result;
     }
 
     /**
@@ -148,7 +160,7 @@ class CasparLayer {
     setProducerId(producerId) { this.producerId = producerId; }
 
     getChannelId() { return this.channelId; }
-    setChannelId(channelid) { this.channelId = channelId; }
+    setChannelId(channelId) { this.channelId = channelId; }
 
     getPosX() { return this.posX; }
     setPosX(posX) { 
