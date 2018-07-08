@@ -316,10 +316,6 @@ class CasparProducerDDR extends CasparProducer{
         }
     }
 
-    getCurrentMedia(){
-        return this.currentMedia;
-    }   
-
     playRequest(index){
         let media = this.playlist.getMedia(index);
         let req =  `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;

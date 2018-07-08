@@ -568,9 +568,6 @@ module.exports = function(socket) {
             case 'stream' : {
                 producer = new ProducerNet(producerSettings);
             }break;
-            case 'ddr' : {
-                producer = new ProducerDdr(producerSettings);
-            }break;
             case 'decklink' : {
                 producer = new ProducerDecklink(producerSettings);
             }break;
