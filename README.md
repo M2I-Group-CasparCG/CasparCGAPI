@@ -13,7 +13,10 @@ Return states of the server are catched with the OSC protocol and send back to t
 
 ### 1. Install and configure the CasparCG server
 
-* Download the last CasparCG stable version [here](http://casparcg.com/download.html).
+* Download the CasparCG Server 2.1.0 Beta 1 for Windows version [here](http://casparcg.com/download.html).
+> Why a beta version ?
+>
+> The stable version of CasparCG is very limited regarding the osc informations available. With the latest stable version, it would be impossible to get some very usefull informations like the currently playling file time, the recording time, etc.
 * Edit the CasparCG configuration file in order to :
   * Have a least 3 channels
   * Have a predefined OSC client matching with the server on which you run the API
