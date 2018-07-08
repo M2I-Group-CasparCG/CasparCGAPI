@@ -59,6 +59,11 @@ class XMLHelper{
         return pathsBlock.getElementsByTagName('media-path')[0].textContent;
     }
 
+    getDecklinkValue(){
+        var pathsBlock = this.openConfigFile().getElementsByTagName('system')[0];
+        return pathsBlock.getElementsByTagName('decklink')[0].textContent;
+    }
+
     setLogPathValue(document, value){
         var pathsBlock = document.getElementsByTagName('paths')[0];
         pathsBlock.getElementsByTagName('log-path')[0].textContent = value;

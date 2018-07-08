@@ -1,1 +1,4 @@
 https://documenter.getpostman.com/view/3948879/RVnZgd9U
+
+newman run CasparCGAPI_tests.postman_collection.json -e CasparCGAPI.postman_environment.json --delay-request 200 --color --folder Caspar_Tests
+

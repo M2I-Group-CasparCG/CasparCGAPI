@@ -7,28 +7,79 @@ class CasparProducerNET extends CasparProducer{
     constructor(settings){
         CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
         super(settings);
+        this.type = 'NET';
         this.id = CasparProducer.totalInstances;
-        this.url = settings['url'] || 'rtp://127.0.0.1:5004';        
+        this.name = settings['name'] || 'Stream';
+        this.url = settings['url'] || 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov';       
         
     }
 
-    run(){
+    async run(){
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.url}`;
-        this.tcpSend(req, function(){});
+        let producer = this;
+        let result = [];
+        await this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    producer.setStarted(true);
+                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    result.push(resolve);
+                },function(reject){
+                    result.push(reject);
+                }
+            )
+        return result;
     }
 
-    stop(){
+    async stop(sendSocketIo = true){
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
-        this.tcpSend(req, function(){});
+        let producer = this;
+        let result = [];
+        await this.tcpPromise(req)
+            .then(
+                function(resolve){  
+                    producer.setStarted(false);
+                    if (sendSocketIo){
+                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    }
+                   result.push(resolve);
+                },function(reject){
+                    result.push(reject);
+                }
+            )
+        return result;
     }
 
-    getId(){
-        return this.id;
+    edit(setting, value){
+        let response = new Object();
+        switch (setting){
+            case 'name' : {
+                this.setName(value);
+                response[setting] = this.getName();
+            }
+            break;
+            case 'url' : {
+                this.setUrl(value);
+                response[setting] = this.getUrl();
+            }
+            break;
+            default : {
+                response[setting] = "not found";
+            }
+        }
+        return response;
     }
-    
-    tcpSend(msg, callback){
-        this.casparCommon.tcpSend(msg, callback);
-    }
+
+    getId(){ return this.id; }
+
+    getName () { return this.name; }
+    setName (name) { this.name = name; }
+
+    getUrl () { return this.url; }
+    setUrl (url) { this.url = url; }
+
+
+
 }
 
 
