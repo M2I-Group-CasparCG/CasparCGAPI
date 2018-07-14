@@ -58,8 +58,10 @@ class CasparProducerDDR extends CasparProducer{
                     function(resolve){
                         producer.setStarted(true);
                         producer.setCurrentMedia(currentMedia);
-                        producer.setNextIndex(producer.indexVerify(producer.getCurrentIndex()+1));
+                        
+                        // producer.setNextIndex(producer.indexVerify(producer.getCurrentIndex()+1));
                         producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                        // producer.setLock(true);
                         result.push(resolve);
                     }, function(reject){
                         result.push(reject);
@@ -80,6 +82,7 @@ class CasparProducerDDR extends CasparProducer{
                 function(resolve){
                     producer.setCurrentIndex(-1);
                     producer.setStarted(false);
+                   
                     if(sendSocketIo){
                         producer.getCasparCommon().sendSocketIo('producerEdit', producer);
                     }
@@ -109,6 +112,7 @@ class CasparProducerDDR extends CasparProducer{
                 function(resolve){
                     producer.setPaused(false);
                     producer.setStarted(true);
+                    producer.setNextIndex(producer.indexVerify(producer.getCurrentIndex()+1));
                     producer.setCurrentMedia(producer.getPlaylist().getMedia(producer.getCurrentIndex()));
                     result.push(resolve);
                     producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
@@ -118,7 +122,8 @@ class CasparProducerDDR extends CasparProducer{
             )
         if (this.autoPlay){
             let nextIndex = this.indexVerify(this.currentIndex+1);
-            await this.tcpPromise(this.loadBgRequest(nextIndex))
+            if(this.currentIndex != nextIndex){
+                await this.tcpPromise(this.loadBgRequest(nextIndex))
                 .then(
                     function(resolve){
                         result.push(resolve);
@@ -127,6 +132,7 @@ class CasparProducerDDR extends CasparProducer{
                         result.push(reject);
                     }
                 );
+            }
         }
         return result;
     }
@@ -142,6 +148,7 @@ class CasparProducerDDR extends CasparProducer{
             .then(
                 function(resolve){
                     producer.setPaused(true);
+                    producer.unpauseCount = 3;
                     producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
                     result.push(resolve);
                 },function(reject){
@@ -182,16 +189,21 @@ class CasparProducerDDR extends CasparProducer{
                 )
             if (this.autoPlay){
                 let nextIndex = this.indexVerify(this.currentIndex+1);
-                await this.tcpPromise(this.loadBgRequest(nextIndex))
+                console.log('_________');
+                console.log(this.currentIndex);
+                if (this.currentIndex != nextIndex && this.currentIndex != -1){
+                    await this.tcpPromise(this.loadBgRequest(nextIndex))
                     .then(
                         function(resolve){
                             result.push(resolve);
-                            producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
                             producer.setNextIndex(nextIndex);
+                            producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                            producer.setLock(false);
                         },function(reject){
                             result.push(reject);
                         }
                     );
+                }
             }
             return result;
             
@@ -375,7 +387,7 @@ class CasparProducerDDR extends CasparProducer{
     loadBgRequest (index){
         let media = this.playlist.getMedia(index);
         let req = '';
-        if (media instanceof CasparMedia){
+        if (media instanceof CasparMedia && this.currentIndex != index){
             req = `LOADBG ${this.casparCommon.getMvId()}-${this.getId()} ${media.getFullPath()}`;
             if (this.mediaLoop){
                 req = req+' LOOP';
@@ -520,11 +532,11 @@ class CasparProducerDDR extends CasparProducer{
 
     getFileTime () { return this.fileTime;}
     async setFileTime(time) {
-        console.log(time);
+        // console.log(time);
         if (this.fileTime > time){ // media gone backward or new media detected
             console.log('nextIndex to be loaded');
             this.fileTime = time;
-            if (!this.lock){
+            if (!this.lock && this.currentIndex != this.nextIndex){
                 this.currentIndex = this.nextIndex;
                 this.setCurrentMedia(this.playlist.getList()[this.currentIndex]);
                 console.log('auto next !');
@@ -590,6 +602,9 @@ class CasparProducerDDR extends CasparProducer{
         this.formattedFileTime = this.timeFormat(time);
         if (this.currentMedia != null){
             this.remainingTime = this.currentMedia.getFrameNumber()*this.currentMedia.getFrameRate()-time;
+            if (this.remainingTime < 0){
+                this.remainingTime = 0;
+            }
             this.formattedRemainingTime = this.timeFormat(this.remainingTime);
         }
         
