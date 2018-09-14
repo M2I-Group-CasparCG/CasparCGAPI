@@ -1,10 +1,10 @@
 
-var http =  require('http');
-var dgram =             require('dgram');
-var express = require('express');
-var router = express.Router();
+var http        =  require('http');
+var dgram       = require('dgram');
+var express     = require('express');
+var router      = express.Router();
  
-var auth = require('./auth.js');
+var auth        = require('./auth.js');
 
 
 /**
@@ -20,7 +20,8 @@ var io = require('socket.io').listen(socketServer);
 
     socketServer.listen(3001);
 
-    var casparRoutes= require('./casparRoutes.js')(io);
+    var casparRoutes    = require('./casparRoutes.js')(io);
+    var hyperdeckRoutes = require('./HyperdeckRoutes.js')(io);
 
 /**
  * socket UDP pour CasparOSC
@@ -51,6 +52,9 @@ let udpServer = dgram.createSocket('udp4');
 
     router.post('/login', auth.login);
 
+/**
+ * CASPAR ROUTES ----------------------------------------------------------
+ */
 
     /**
      *  Caspar Settings
@@ -66,7 +70,6 @@ let udpServer = dgram.createSocket('udp4');
     router.put('/api/v1/caspars/:casparId/:objectType/:objectId/', casparRoutes.editObject);
     router.get('/api/v1/caspars/:casparId/:objectType/:objectId/', casparRoutes.getObject);
     router.get('/api/v1/caspars/:casparId/:objectType/', casparRoutes.getAllObjects);
-
 
     /**
      * Consumers
@@ -106,7 +109,6 @@ let udpServer = dgram.createSocket('udp4');
     router.post('/api/v1/caspars/:casparId/layers/:layerId/start', casparRoutes.layerStart);
     router.post('/api/v1/caspars/:casparId/layers/:layerId/stop', casparRoutes.layerStop);
 
-
     /**
      * DDR
      */
@@ -122,8 +124,6 @@ let udpServer = dgram.createSocket('udp4');
     router.get('/api/v1/caspars/:casparId/ddr/:ddrId/playlist', casparRoutes.ddrGetPlaylist)
     router.get('/api/v1/caspars/:casparId/ddr/:ddrId/file', casparRoutes.ddrGetCurrentMedia)
 
-
-
     /**
      * PLAYLIST
      */
@@ -133,8 +133,7 @@ let udpServer = dgram.createSocket('udp4');
     router.post('/api/v1/caspars/:casparId/playlists/:playlistId/files/:fileId', casparRoutes.playlistAddFile);
     router.delete('/api/v1/caspars/:casparId/playlists/:playlistId/index/:index', casparRoutes.playlistRemoveFile);
     router.get('/api/v1/caspars/:casparId/playlists/:playlistId/files', casparRoutes.playlistGetFiles);
-    
-    
+
      /**
       * MEDIAS
       */
@@ -144,4 +143,15 @@ let udpServer = dgram.createSocket('udp4');
      * XMLHandler
      */
     router.post('/api/v1/caspars/:casparId/settings/send', casparRoutes.setXmlValues);
+
+/**
+ * HYPERDECK ROUTES ----------------------------------------------------------
+ */
+
+    router.get('/api/v1/hyperdecks/', hyperdeckRoutes.getAll);
+    router.post('/api/v1/hyperdecks/', hyperdeckRoutes.add);
+
+    router.get('/api/v1/hyperdecks/:hyperdeckId/:objectType/', hyperdeckRoutes.getAllObjects);
+
+
 module.exports = router;
