@@ -150,8 +150,12 @@ let udpServer = dgram.createSocket('udp4');
 
     router.get('/api/v1/hyperdecks/', hyperdeckRoutes.getAll);
     router.post('/api/v1/hyperdecks/', hyperdeckRoutes.add);
-
+    router.all('/api/v1/hyperdecks/:hyperdeckId/*', hyperdeckRoutes.check);
+    router.delete('/api/v1/hyperdecks/:hyperdeckId/', hyperdeckRoutes.delete);
     router.get('/api/v1/hyperdecks/:hyperdeckId/:objectType/', hyperdeckRoutes.getAllObjects);
+    router.post('/api/v1/hyperdecks/:hyperdeckId/scanDisks/', hyperdeckRoutes.scanDisks);
+    router.post('/api/v1/hyperdecks/:hyperdeckId/infos/', hyperdeckRoutes.getInfos);
+    router.post('/api/v1/hyperdecks/:hyperdeckId/controls/:control/', hyperdeckRoutes.control);
 
 
 module.exports = router;

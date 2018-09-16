@@ -124,17 +124,21 @@ module.exports = function(socket) {
      * Remove socketIO
      */
    cleanObject  = function(object){
-        const objectCopy = Object.assign({}, object);
+    const objectCopy = Object.assign({}, object);
+    if (objectCopy.casparCommon){
         const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
-                delete casparCommonCopy.socketIo;
-                objectCopy.casparCommon = casparCommonCopy;
-
-            const playlistCopy =  Object.assign({}, objectCopy.playlist);
-            if (playlistCopy){
-                playlistCopy.casparCommon = casparCommonCopy;
-                objectCopy.playlist = playlistCopy;
-            }
-
+        delete casparCommonCopy.socketIo;
+        objectCopy.casparCommon = casparCommonCopy;
+        
+        const playlistCopy =  Object.assign({}, objectCopy.playlist);
+        if (playlistCopy){
+            playlistCopy.casparCommon = casparCommonCopy;
+            objectCopy.playlist = playlistCopy;
+        }
+    }
+    if (objectCopy.pausedTimeout){
+        delete objectCopy.pausedTimeout;
+    }
 
         return objectCopy;
     }
@@ -166,7 +170,7 @@ module.exports = function(socket) {
      */
     casparRoutes.getAll = function(req, res, next){
         console.log('getAll');
-
+        
         let array = [...caspars];
         for(let n in array){
             array[n][1] = cleanObject(array[n][1]);

@@ -39,12 +39,21 @@ class ApiReturn {
         return error;
     }
 
-    requestErrorMessage ( description ) {
+    clientErrorMessage ( description ) {
         let error = new Error();
             error.object = 'message';
-            error.code = 400;
-            error.type = 'Request Error';
+            error.code = 406;
+            error.type = 'Not Acceptable';
             error.description = description;
+        return error;
+    }
+
+    errorMessage ( description ){
+        let error = new Error();
+        error.object = 'message';
+        error.code = 400;
+        error.type = 'Request Error';
+        error.description = description;
     return error;
     }
 
@@ -57,7 +66,7 @@ class ApiReturn {
             message.code = code;
             message.type = type;
             message.description = description;
-    return message;
+        return message;
     }
 
 }
