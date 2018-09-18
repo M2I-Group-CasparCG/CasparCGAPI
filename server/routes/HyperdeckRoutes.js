@@ -7,6 +7,8 @@ const Timeline          = require('../../Hyperdeck/HyperdeckTimeline.js')
 
 let hyperdecks = new Map();
 
+require('events').EventEmitter.prototype._maxListeners = 100;
+
 module.exports = function(socket){
 
     var hyperdeckRoutes = {};
@@ -17,6 +19,7 @@ module.exports = function(socket){
      */
     hyperdeckRoutes.cleanObject  = function(object){
         const objectCopy = Object.assign({}, object);
+            delete objectCopy.loop;
         const commonCopy = Object.assign({}, objectCopy.common);
             delete commonCopy.socketIo;
             delete commonCopy.socket;
@@ -46,18 +49,12 @@ module.exports = function(socket){
             hyperdeckSettings.socketIo = socket;
             let hyperdeck = new Hyperdeck(hyperdeckSettings);
             hyperdecks.set(hyperdeck.getId(),hyperdeck);
-            hyperdeck.getCommon().tcpSocketIni();
             setTimeout(
                 async function(){
-                    if (hyperdeck.getCommon().getSocketActive()){
-                        await hyperdeck.getInfos();
-                    }
-                },200
+                    res.json(hyperdeckRoutes.cleanObject(hyperdeck));
+                    socket.emit('hyperdeckAdd',JSON.stringify(hyperdeckRoutes.cleanObject(hyperdeck)));
+                },2000
             )
-           
-           
-            res.json(hyperdeckRoutes.cleanObject(hyperdeck));
-            socket.emit('hyperdeckAdd',JSON.stringify(hyperdeckRoutes.cleanObject(hyperdeck)));
         }
     }
 
@@ -153,7 +150,12 @@ module.exports = function(socket){
         const hyperdeck = hyperdecks.get(hyperdeckId);
         if (hyperdeck instanceof Hyperdeck){
             hyperdeck.closeSocket();
-            hyperdecks.delete(hyperdeck.getId());
+            hyperdeck.setLoop(false);
+            setTimeout(
+                function(){
+                    hyperdecks.delete(hyperdeck.getId());
+                },2000
+            )
             res.json(apiReturn.successMessage('hyperdeck instance deleted'));
             socket.emit('hyperdeckDelete',JSON.stringify(hyperdeckRoutes.cleanObject(hyperdeck)));
         }else{

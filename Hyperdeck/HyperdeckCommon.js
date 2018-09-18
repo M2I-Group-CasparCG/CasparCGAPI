@@ -1,6 +1,34 @@
-const net       = require('net');
-const Slot      = require('./HyperdeckSlot.js');
-const Clip      = require('./HyperdeckClip.js');
+const net               = require('net');
+const Slot              = require('./HyperdeckSlot.js');
+const Clip              = require('./HyperdeckClip.js');
+
+const color             = {}
+
+color['reset']          = "\x1b[0m";
+color['bright']         = "\x1b[1m";
+color['dim']            = "\x1b[2m";
+color['underscore']     = "\x1b[4m";
+color['blink']          = "\x1b[5m";
+color['reverse']        = "\x1b[7m";
+color['hidden']         = "\x1b[8m";
+
+color['black']        = "\x1b[30m";
+color['red']          = "\x1b[31m";
+color['green']        = "\x1b[32m";
+color['yellow']       = "\x1b[33m";
+color['blue']         = "\x1b[34m";
+color['magenta']      = "\x1b[35m";
+color['cyan']         = "\x1b[36m";
+color['white']        = "\x1b[37m";
+
+color['bgBlack']        = "\x1b[40m";
+color['bgRed']          = "\x1b[41m";
+color['bgGreen']        = "\x1b[42m";
+color['bgYellow']       = "\x1b[43m";
+color['bgBlue']         = "\x1b[44m";
+color['bgMagenta']      = "\x1b[45m";
+color['bgCyan']         = "\x1b[46m";
+color['bgWhite']        = "\x1b[47m";
 
 class HyperdeckCommon {
 
@@ -47,48 +75,77 @@ class HyperdeckCommon {
         // custom settings
         this.recordName             = 'VeoRecord';
         this.previewEnable          = false;
-        this.debugMode              = false;
+        this.debugMode              = true;
+
+        this.lastResponseTime       = null;
+        this.socketTimeout          = 400;
+
+        this.initialized            = false;
     }
 
     /**
      * Initialize the tcp socket
      */
     async tcpSocketIni(){
-        
         const hyperdeck = this; 
-        
+
         this.socket.connect(this.tcpPort, this.ipAddr, function(){
-            hyperdeck.debug(`\x1b[34m[INFO] \t\t\t Socket Initalized`);
-            hyperdeck.setSocketActive(true);
-        });
+            hyperdeck.debug(`${color.yellow}[INFO] \t\t\t Trying to connect to socket...`);
 
-        this.socket.on('error', function(error){
-            console.log('error : ')
-            console.log(error);
-            hyperdeck.setSocketActive(false);
-        })
+            hyperdeck.socket.on('data', function(data){
+                hyperdeck.hyperdeckDataParser(data);
+                hyperdeck.lastResponseTime = new Date();
+            })
+            
+            hyperdeck.socket.on('close', function(data){
+                hyperdeck.debug(`${color.yellow}[INFO] \t\t Connection closed`);
+                hyperdeck.getSocket().end();
+                hyperdeck.getSocket().destroy();
+            })  
+            hyperdeck.socket.on('finish', function(){
+                hyperdeck.debug(`${color.yellow}[INFO] \t\t Connection finished`);
+                hyperdeck.getSocket().end();
+                hyperdeck.getSocket().destroy();
+            })  
 
-        this.socket.on('timeout', function(error){
-            console.log('timeout : ')
-            console.log(error);
-            hyperdeck.setSocketActive(false);
-        })
+            hyperdeck.socket.on('end', function(data){
+                hyperdeck.debug(`${color.yellow}[INFO] \t\t Connection ended`);
+                hyperdeck.getSocket().end();
+                hyperdeck.getSocket().destroy();
+            })
 
-        this.socket.on('data', function(data){
-            hyperdeck.hyperdeckDataParser(data);
-        })
+            hyperdeck.socket.on('timeout', function(error){
+                hyperdeck.debug(`${color.red}[ERROR] \t\t Connection timed out`);
+                // console.log(error);
+                hyperdeck.getSocket().end();
+                hyperdeck.getSocket().destroy();
+            })
 
-        this.socket.on('end', function(data){
-            console.log('end');
-            hyperdeck.setSocketActive(false);
-        })
-
-        this.socket.on('close', function(data){
-            console.log('close');
-            hyperdeck.setSocketActive(false);
-        })  
-
-        return true;
+               
+            });
+            hyperdeck.socket.on('error', function(error){
+                hyperdeck.debug(`${color.red}[ERROR] \t\t Error : ${error.code}`);
+                hyperdeck.getSocket().end();
+                hyperdeck.getSocket().destroy();
+            })
+            
+            return new Promise(async function(resolve,reject){
+                setTimeout(
+                    function(){
+                        const date = new Date();
+                        if (date-hyperdeck.lastResponseTime < hyperdeck.socketTimeout){
+                            hyperdeck.setSocketActive(true);
+                            hyperdeck.debug(`${color.green}[INFO] \t\t\t Connection successfull`);
+                            resolve();
+                        }else{      
+                            // hyperdeck.setSocketActive(false);
+                            hyperdeck.debug(`${color.red}[ERROR] \t\t Unable to connect`);
+                            reject();
+                        }
+                    },10);   
+            });
+    
+    
     }
 
     /**
@@ -105,7 +162,6 @@ class HyperdeckCommon {
         const messageType = message.shift();
         let attribute = null;
         let value = null;
-        this.debug(`\x1b[34m[INFO] [RECEIVED]\t ${messageType}`);
         const hyperdeck = this;
         switch (messageType){
             case '120 connection rejected' : {
@@ -343,14 +399,28 @@ class HyperdeckCommon {
      */
     async tcpSocketSend(message){
         const hyperdeck = this;
-        
         return new Promise(async function(resolve,reject){
             if (hyperdeck.socketActive){
                 await hyperdeck.socket.write(message+'\r\n', function(){
                     setTimeout(
                         function(){
-                            resolve(`\x1b[35m[INFO] [SENDED] \t ${message}`);
-                        },10
+                            let date = new Date();
+                            if (date-hyperdeck.lastResponseTime < hyperdeck.socketTimeout){
+                                if(!hyperdeck.getSocketActive()){
+                                    hyperdeck.setSocketActive(true);
+                                    hyperdeck.sendSocketIo('hyperdeckEdit',hyperdeck);
+                                }
+                            }else{  
+                                reject(`\x1b[35m[ERROR] [SCOCKET TIMEOUT] \t Socket's last response older than ${hyperdeck.socketTimeout}ms`);
+                                if (hyperdeck.getSocketActive()){
+                                    hyperdeck.setSocketActive(false);
+                                    hyperdeck.sendSocketIo('hyperdeckEdit',hyperdeck);
+                                }
+                                
+                                
+                            }
+                            resolve(`${color.magenta}[INFO] [SENDED] \t ${message}`);
+                        },40
                     )
                 });
             }else{
@@ -373,6 +443,9 @@ class HyperdeckCommon {
         }
         if (objectCopy.socket){
             delete objectCopy.socket;
+        }
+        if (object.loop){
+            delete objectCopy.loop;
         }
         
         const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));
@@ -491,7 +564,7 @@ class HyperdeckCommon {
 
     debug (message){
         if (this.debugMode){
-            console.log(message);
+            console.log(`[${this.ipAddr}] ${message}${color.reset}`);
         }
     }
 }

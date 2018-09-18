@@ -2,8 +2,11 @@ const net                   = require('net');
 const Slot                  = require('./HyperdeckSlot.js');
 const Clip                  = require('./HyperdeckClip.js');
 const HyperdeckCommon       = require('./HyperdeckCommon.js');
-class Hyperdeck {
 
+
+
+class Hyperdeck {
+    
     constructor(settings){
 
         Hyperdeck.totalInstances    = (Hyperdeck.totalInstances || 0) + 1;
@@ -11,10 +14,11 @@ class Hyperdeck {
         this.object                 = 'Hyperdeck';
         settings['hyperdeckId']     = this.id;
         this.common                 = new HyperdeckCommon(settings);
-        this.socketActiveRemind     = null;
-        this.statusLoopInterval     = 40;
+        this.recollectInfo          = false;
+        this.statusLoopInterval     = 100;
         let slot1 = new Slot({});
         let slot2 = new Slot({});
+        this.loop = true;
         this.getCommon().getSlots().set(1, slot1);
         this.getCommon().getSlots().set(2, slot2);
 
@@ -24,31 +28,44 @@ class Hyperdeck {
     statusLoop () {
         const hyperdeck = this;
         setTimeout (
-            function(){
-                let succes;
+            async function(){
                 if (hyperdeck.getCommon().getSocketActive()){
-                    if (this.socketActiveRemind){
-                        this.getInfos();
-                        this.socketActiveRemind = true;
-                        this.statusLoopInterval = 40;
+                    if (hyperdeck.recollectInfo){
+                        hyperdeck.getInfos();
+                        hyperdeck.statusLoopInterval = hyperdeck.statusLoopInterval;
+                        hyperdeck.recollectInfo = false;
                     }
                    
                     hyperdeck.getCommon().tcpSocketSend('transport info')
-                    .then(resolve => {
-                        this.socketActiveRemind = true;
-                    }, reject =>{
-                        hyperdeck.getCommon().setSocketActive(false);
-                    }).catch(reject =>{
-                        hyperdeck.getCommon().setSocketActive(false);
-                        hyperdeck.getCommon().sendSocketIo('hyperdeckEdit', hyperdeck.getCommon());
-                    })
+                        .then(resolve => {
+                            hyperdeck.statusLoopInterval = 400;
+                        }, reject =>{
+                            hyperdeck.statusLoopInterval = 1000;
+                        }).catch(error =>{
+                            hyperdeck.statusLoopInterval = 1000;
+                            hyperdeck.getCommon().sendSocketIo('hyperdeckEdit', hyperdeck.getCommon());
+                        })
+                    if (hyperdeck.loop){
+                        hyperdeck.statusLoop();
+                    }
+                   
                 }else{
-                    this.statusLoopInterval = 1000
-                    this.socketActiveRemind = false;
-                    hyperdeck.getCommon().tcpSocketIni();
+                    hyperdeck.statusLoopInterval = 1000;
+                    hyperdeck.recollectInfo = true;
+                    
+                    await hyperdeck.getCommon().tcpSocketIni()
+                        .then(resolve =>{
+                            hyperdeck.statusLoop();
+                        }, reject =>{
+                            hyperdeck.getCommon().getSocket().destroy();
+                            console.log(hyperdeck.loop);
+                            if (hyperdeck.loop){
+                                hyperdeck.statusLoop();
+                            }
+                        })
                 }
-                hyperdeck.statusLoop();
-            }, this.statusLoopInterval
+                
+            }, hyperdeck.statusLoopInterval
         );
     }
 
@@ -57,103 +74,95 @@ class Hyperdeck {
      * @return : boolean (true) when finished
      */
     async getInfos () {
-
+        const hyperdeck = this;
         if (this.getCommon().getSocketActive()){
             await this.getCommon().tcpSocketSend('remote: enable: true')
             .then(resolve => {
-                console.log(resolve);   
+                hyperdeck.getCommon().debug(resolve);   
             }).catch(reject =>{
                 console.log(reject);
             })
-        await this.getCommon().tcpSocketSend('remote: override: true')
-            .then(resolve => {
-                console.log(resolve);   
-            }).catch(reject =>{
-                console.log(reject);
-            })
+            await this.getCommon().tcpSocketSend('remote: override: true')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);   
+                }).catch(reject =>{
+                    console.log(reject);
+                })
 
-        await this.getCommon().tcpSocketSend('remote')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
+            await this.getCommon().tcpSocketSend('remote')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
 
-        await this.getCommon().tcpSocketSend('device info')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-        await  this.getCommon().tcpSocketSend('slot info: slot id: 1')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-        await  this.getCommon().tcpSocketSend('slot info: slot id: 2')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-        await this.getCommon().tcpSocketSend('transport info')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-        await this.getCommon().tcpSocketSend('clips get')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('configuration')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('notify: remote: true')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('notify: transport: true')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('notify: slot: true')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('notify: configuration: true')
-            .then(resolve => {
-                console.log(resolve);
-            }).catch(reject =>{
-                console.log(reject);
-            })
-
-        await this.getCommon().tcpSocketSend('notify')
-            .then(resolve => {
-                console.log(resolve);   
-            }).catch(reject =>{
-                console.log(reject);
-            })
+            await this.getCommon().tcpSocketSend('device info')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await  this.getCommon().tcpSocketSend('slot info: slot id: 1')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await  this.getCommon().tcpSocketSend('slot info: slot id: 2')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('transport info')
+                .then(resolve => {
+                    // hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('clips get')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('configuration')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('notify: remote: true')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('notify: transport: true')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('notify: slot: true')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('notify: configuration: true')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
+            await this.getCommon().tcpSocketSend('notify')
+                .then(resolve => {
+                    hyperdeck.getCommon().debug(resolve);   
+                }).catch(reject =>{
+                    hyperdeck.getCommon().debug(reject);
+                })
         }
-        
-        
 
         return true;
     }
@@ -314,6 +323,8 @@ class Hyperdeck {
      */
     getId () { return this.id; }
     getCommon () { return this.common; }
+
+    setLoop(boolean){this.loop = boolean;}
 }   
 
 module.exports = Hyperdeck;
