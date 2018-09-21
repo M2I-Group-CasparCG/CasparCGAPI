@@ -78,7 +78,7 @@ class HyperdeckCommon {
         this.debugMode              = true;
 
         this.lastResponseTime       = null;
-        this.socketTimeout          = 400;
+        this.socketTimeout          = 1000;
 
         this.initialized            = false;
     }
@@ -420,7 +420,7 @@ class HyperdeckCommon {
                                 
                             }
                             resolve(`${color.magenta}[INFO] [SENDED] \t ${message}`);
-                        },40
+                        },20
                     )
                 });
             }else{
@@ -431,6 +431,7 @@ class HyperdeckCommon {
     }
 
     sendSocketIo(key, object){
+        console.log('-');
         const objectCopy = Object.assign({}, object);
         if ( objectCopy.common ){
             const commonCopy = Object.assign({}, objectCopy.common);
