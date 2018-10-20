@@ -41,7 +41,7 @@ class HyperdeckCommon {
         this.socketIo               = settings['socketIo'];
         this.hyperdeckId            = settings['hyperdeckId'];
         this.grouped                = settings['grouped'] || false;
-        this.recordName             = settings['recordName'] || 'VeoRecord';
+        this.recordName             = settings['recordName'] || this.name;
 
         // hyperdeck informations
         this.online                 = false;
@@ -596,7 +596,7 @@ class HyperdeckCommon {
     getRecordName () { 
         let date = new Date();
             date = date.toISOString().replace(/-/g,'').replace('T','_').replace(/:/g,'').replace('.','').replace('Z','');
-            return `${date}_${this.recordName}`;
+            return `${date}_${this.recordName}_`;
     }
     setRecordName ( name ) { this.recordName = name; }
 
