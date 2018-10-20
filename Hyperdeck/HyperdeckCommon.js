@@ -40,6 +40,8 @@ class HyperdeckCommon {
         this.name                   = settings['name'] || `Hyperdeck ${Hyperdeck.totalInstances}`;
         this.socketIo               = settings['socketIo'];
         this.hyperdeckId            = settings['hyperdeckId'];
+        this.grouped                = settings['grouped'] || false;
+        this.recordName             = settings['recordName'] || 'VeoRecord';
 
         // hyperdeck informations
         this.online                 = false;
@@ -65,6 +67,7 @@ class HyperdeckCommon {
         this.activeTimeline         = null;
         this.activeClipId           = null;
         this.activeClip             = null;
+        
 
         this.timelines              = new Map();
         this.slots                  = new Map();
@@ -73,7 +76,7 @@ class HyperdeckCommon {
         this.socketActive           = false;
 
         // custom settings
-        this.recordName             = 'VeoRecord';
+       
         this.previewEnable          = false;
         this.debugMode              = true;
 
@@ -431,7 +434,7 @@ class HyperdeckCommon {
     }
 
     sendSocketIo(key, object){
-        console.log('-');
+        // console.log('-');
         const objectCopy = Object.assign({}, object);
         if ( objectCopy.common ){
             const commonCopy = Object.assign({}, objectCopy.common);
@@ -455,9 +458,49 @@ class HyperdeckCommon {
         }
     }
 
+
+    edit(settings){
+
+        let result = new Object();
+            result['hyperdeckId'] = this.getHyperdeckId();
+
+        for (let [key, value] of Object.entries(settings)) {
+            switch (key){
+                case 'ipAddr' : {
+                    this.setIpAddr(value);
+                    result['ipAddr'] = this.getIpAddr();
+                }
+                break;
+                case 'tcpPort' : {
+
+                }
+                break;
+                case 'name' : {
+                    this.setName(value);
+                    result['name'] = this.getName();
+                }
+                break;
+                case 'grouped' : {
+                    this.setGrouped(value);
+                    result['grouped'] = this.getGrouped();
+                }
+                break; 
+                case 'recordName' : {
+                    this.setRecordName(value);
+                    result['recordName'] = this.getRecordName();
+                }
+                break;
+            }
+        }
+
+        return result;
+    }
+
     /**
      * GETTERS / SETTERS
      */
+    getIpAddr () { return this.ipAddr; }
+    setIpAddr ( ipAddr ) { this.ipAddr = ipAddr; }
 
     getTcpPort () { return this.tcpPort; }
     setTcpPort ( tcpPort ) { this.tcpPort = tcpPort; }
@@ -568,6 +611,11 @@ class HyperdeckCommon {
             console.log(`[${this.ipAddr}] ${message}${color.reset}`);
         }
     }
+
+    getGrouped () { return this.grouped; }
+    setGrouped(boolean) { this.grouped = boolean; }
+
+    getHyperdeckId () { return this.hyperdeckId; }
 }
 
 module.exports = HyperdeckCommon;

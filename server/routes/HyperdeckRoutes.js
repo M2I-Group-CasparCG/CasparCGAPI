@@ -131,11 +131,29 @@ module.exports = function(socket){
             });
     }
 
+
+    /**
+     * to refactor -> group management.
+     */
     hyperdeckRoutes.control = async function (req, res){
         const hyperdeckId = parseInt(req.params.hyperdeckId);
         const hyperdeck = hyperdecks.get(hyperdeckId);
         const control = req.params.control;
-        hyperdeck.control(control)
+        if (hyperdeck.getCommon().getGrouped() ){
+            hyperdecks.forEach(hpd => {
+                if (hpd.getCommon().getGrouped()){
+                    hpd.control(control)
+                    .then(resolve => {
+                        res.json(apiReturn.successMessage(`${control} command sended`));
+                    }, reject => {
+                        res.json(apiReturn.successMessage(`error whilde sending ${control} command`));
+                    }).catch( error => {
+                        res.json(apiReturn.successMessage(`exception whilde sending ${control} command`));
+                    })
+                }
+            });
+        }else{
+            hyperdeck.control(control)
             .then(resolve => {
                 res.json(apiReturn.successMessage(`${control} command sended`));
             }, reject => {
@@ -143,6 +161,21 @@ module.exports = function(socket){
             }).catch( error => {
                 res.json(apiReturn.successMessage(`exception whilde sending ${control} command`));
             })
+        }
+       
+    }
+
+    hyperdeckRoutes.edit = async function (req, res){
+        const hyperdeckId = parseInt(req.params.hyperdeckId);
+        const hyperdeck = hyperdecks.get(hyperdeckId);
+        const hyperdeckSettings = req.body;
+        if (hyperdeck instanceof Hyperdeck){
+            const result = hyperdeck.getCommon().edit(hyperdeckSettings);
+            res.json(result);
+            socket.emit('hyperdeckEdit',JSON.stringify(result));
+        }else{
+            res.json(apiReturn.notFoundMessage('hyperdeck instance not found'));
+        }
     }
 
     hyperdeckRoutes.delete = async function (req, res){
