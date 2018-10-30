@@ -15,6 +15,7 @@ class CasparConsumerFILE extends CasparConsumer {
         this.formattedDuration = null;
         this.frameRate = null;
         this.started = false;
+        this.lastUpdate = 0;
        
         /**
          * -f // container format
@@ -145,7 +146,10 @@ class CasparConsumerFILE extends CasparConsumer {
         this.frames = frames;
         if (this.frameRate){
             this.formattedDuration = this.timeFormat(this.frames, this.frameRate);
-            this.getCasparCommon().sendSocketIo('recorderEdit', this);
+            if( Date.now() - this.lastUpdate > 200){
+                this.getCasparCommon().sendSocketIo('recorderEdit', this);
+                this.lastUpdate = Date.now();
+            }
         }
     }
 
