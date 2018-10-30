@@ -71,7 +71,7 @@ class CasparConsumerFILE extends CasparConsumer {
 
 
     async run() {
-        var req = `ADD ${this.channelId} ${this.type} ${this.filePath}${this.fileName}`;
+        var req = `ADD ${this.channelId} ${this.type} ${this.fullSizePath}`;
         let consumer = this;
         let result = [];
         await this.tcpPromise(req)

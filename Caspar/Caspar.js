@@ -676,11 +676,11 @@ class Caspar {
             if (recInfo.frame && recInfo.path){ //if the record is detected
 
                 for (let consumer of this.consumers.values()){
-                    let consumerFullPath = consumer.fileName;
-                    if (consumer.filePath != ""){
-                        consumerFullPath = consumer.filePath+consumer.fileName;
-                    }
-                    if (consumerFullPath == recInfo.path){
+                    // let consumerFullPath = consumer.fileName;
+                    // if (consumer.filePath != ""){
+                    //     consumerFullPath = consumer.filePath+consumer.fileName;
+                    // }
+                    if (consumer.fullSizePath == recInfo.path){
                        recorder = consumer;
                        if (recorder.getFrameRate() != recInfo.fps){
                            recorder.setFrameRate(recInfo.fps);
