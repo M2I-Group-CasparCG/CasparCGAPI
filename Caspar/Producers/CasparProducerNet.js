@@ -5,16 +5,14 @@ class CasparProducerNET extends CasparProducer{
 
 
     constructor(settings){
-        CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
+       
         super(settings);
         this.type = 'NET';
-        this.id = CasparProducer.totalInstances;
-        this.name = settings['name'] || 'Stream';
         this.url = settings['url'] || 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov';       
-        
     }
 
     async run(){
+        super.run();
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.url}`;
         let producer = this;
         let result = [];
@@ -32,6 +30,7 @@ class CasparProducerNET extends CasparProducer{
     }
 
     async stop(sendSocketIo = true){
+        super.stop();
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         let producer = this;
         let result = [];

@@ -6,18 +6,16 @@ class CasparConsumerSCREEN extends CasparConsumer {
     
 
     constructor(settings){
-        CasparConsumer.totalInstances = (CasparConsumer.totalInstances || 0) + 1;
         super(settings);
         this.type = 'SCREEN';
-        this.id = CasparConsumer.totalInstances;
         this.bufferDepth = settings['bufferDepth'] || 4;
         this.channelName = settings['channelName'] || 'Screen';
-        this.channelId = settings['channelId'] || 0;
         this.fullscreen = settings['fullscreen'] || false;                        
     }
 
 
     async run() {
+        super.run();
         var req = `ADD ${this.channelId} ${this.type} ${this.id} name ${this.name}-${this.channelName}`;
         if(this.fullscreen){
             req = `${req} FULLSCREEN`;
@@ -38,6 +36,7 @@ class CasparConsumerSCREEN extends CasparConsumer {
     }
 
     async stop(sendSocketIo = true){
+        super.stop();
         var req = `REMOVE ${this.channelId} ${this.type} ${this.id}`;
         let consumer = this;
         let result = [];
@@ -55,36 +54,6 @@ class CasparConsumerSCREEN extends CasparConsumer {
             )
         return result;
     }
-
-    // edit(setting, value){
-    //     let response = new Object();
-    //     switch (setting){
-    //         case 'name' : {
-    //             this.setName(value);
-    //             response[setting] = this.getName();
-    //         }
-    //         break;
-    //         case 'bufferDepth' : {
-    //             this.setBufferDepth(value);
-    //             response[setting] = this.getBufferDepth();
-    //         }
-    //         break;
-    //         case 'channelId' : {
-    //             this.setChannelId(value);
-    //             response[setting] = this.getChannelId();
-    //         }
-    //         break;
-    //         case 'channelName' : {
-    //             this.setChannelName(value);
-    //             response[setting] = this.getChannelName();
-    //         }
-    //         break; 
-    //         default : {
-    //             response[setting] = "not found";
-    //         }
-    //     }
-    //     return response;
-    // }
 
     edit(settings){
 

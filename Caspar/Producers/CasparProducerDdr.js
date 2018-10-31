@@ -7,11 +7,9 @@ class CasparProducerDDR extends CasparProducer{
 
     constructor(settings){
 
-        CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
+       
         super(settings);
         this.type = "DDR";
-        this.id = CasparProducer.totalInstances;
-        this.name = settings['name'] || 'DDR'+this.id;
         this.autoPlay = true;
         this.paused = true;
         this.pausedTimeout = false;
@@ -51,6 +49,7 @@ class CasparProducerDDR extends CasparProducer{
      * If set, load the first media of the playlist. 
      */
     async run() {
+        super.run();
         if (this.playlist.getList().length > 0){
             this.currentIndex = 0;
             let currentMedia = this.playlist.getList()[0];
@@ -76,6 +75,7 @@ class CasparProducerDDR extends CasparProducer{
     }
 
     async stop(sendSocketIo = true) {
+        super.stop();
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         let producer = this;
         let result = [];

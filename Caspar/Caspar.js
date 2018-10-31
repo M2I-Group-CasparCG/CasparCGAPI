@@ -149,6 +149,7 @@ class Caspar {
                             channel = new Channel(settings);
                         }
                         caspar.addChannel(channel);
+                        caspar.getCasparCommon().getSocketIo().emit('channelAdd',JSON.stringify(channel.clean()));
                     });
                     
                 },  
@@ -311,9 +312,6 @@ class Caspar {
             }
             this.producers.set(producer.getId(), producer);
             if (this.getCasparCommon().getMvId()){
-                console.log('_______');
-                console.log(this.getCasparCommon().getMvId());
-                console.log(this.channels.get(this.getCasparCommon().getMvId()));
                 this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
             }
             if (this.getCasparCommon().getOnline()){

@@ -112,6 +112,12 @@ class CasparChannel {
         return result;
     }
 
+    clean () {
+        const copy = Object.assign({}, this);
+        copy.casparCommon = copy.casparCommon.clean();
+        return copy;
+    }
+
 
     getName(){ return this.name; }
     setName(name){ this.name = name; }

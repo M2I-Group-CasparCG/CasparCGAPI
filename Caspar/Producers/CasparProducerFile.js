@@ -5,10 +5,9 @@ class CasparProducerFILE extends CasparProducer{
 
 
     constructor(settings){
-        CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
+        
         super(settings);
         this.type = "FILE";
-        this.id = CasparProducer.totalInstances;
         this.fileName = settings['fileName'] || 'none';
         this.playMode = settings['playMode'] || 'loop';
         this.seek = settings['seek'] || false;
@@ -18,6 +17,7 @@ class CasparProducerFILE extends CasparProducer{
     }
 
     async run() {
+        super.run();
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} ${this.getFileName()} ${this.getPlayMode()}`;
         let producer = this;
         let result = [];
@@ -35,6 +35,7 @@ class CasparProducerFILE extends CasparProducer{
     }
 
     async stop(sendSocketIo = true){
+        super.stop();
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()}`;
         let producer = this;
         let result = [];

@@ -1,9 +1,9 @@
 var net =               require('net');
 var appRoot =           require('app-root-path');
 var XMLHelper =         require(appRoot + '/XMLHandler/bin/xmlhelper.js');
-var dgram =             require('dgram');
 
-let socketIo;
+const utils             = require('../utils.js');
+
 
 class CasparCommon {
 
@@ -106,7 +106,7 @@ class CasparCommon {
         let ipAddr = this.ipAddr;
         let casparCommon = this;
 
-        console.log(msg);
+        utils.debug('magenta',`AMCP SEND (${ipAddr}) : "${msg}"`);
 
         return new Promise(function(resolve,reject){
             
@@ -347,22 +347,28 @@ class CasparCommon {
         return result;
     }
 
+
+    clean(){
+        const copy = Object.assign({}, this);
+        delete copy.socketIo;
+        return copy;
+    }
+
     /**
     * Remove socketIO
     */
-
-   cleanObject(object){
-        const objectCopy = Object.assign({}, object);
-        if (objectCopy.casparCommon){
-            const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
-            delete casparCommonCopy.socketIo;
-            objectCopy.casparCommon = casparCommonCopy;
-            // if (object.playlist){
-            //     object.playlist.casparCommon = casparCommonCopy
-            // }
-        }
-        return objectCopy;
-    }   
+    cleanObject(object){
+            const objectCopy = Object.assign({}, object);
+            if (objectCopy.casparCommon){
+                const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+                delete casparCommonCopy.socketIo;
+                objectCopy.casparCommon = casparCommonCopy;
+                // if (object.playlist){
+                //     object.playlist.casparCommon = casparCommonCopy
+                // }
+            }
+            return objectCopy;
+        }   
 
     /**
      *  SETTERS / GETTERS
@@ -439,7 +445,6 @@ class CasparCommon {
     }
 
     getSocketIo (){
-        console.log('socketIo !');
         return this.socketIo;
     }
 

@@ -39,84 +39,84 @@ module.exports = function(socket) {
      * Add a default caspar instance with screen
      */
     
-    // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '127.0.0.1';
-    // testCasparSettings['amcpPort'] = '5250';
-    // testCasparSettings['name'] = 'auto Test';
-    // testCasparSettings['socketIo'] = socket;
-    // let testCaspar = new Caspar(testCasparSettings);
-    // testCaspar.restart()
-    //     .then(
-    //         function(resolve){
-    //             console.log('restart');
-    //         },
-    //         function(reject){
-    //             console.log(reject);
-    //         }
-    //     )
+    let testCasparSettings = new Array();
+    testCasparSettings['ipAddr'] = '192.168.1.204';
+    testCasparSettings['amcpPort'] = '5250';
+    testCasparSettings['name'] = 'auto Test';
+    testCasparSettings['socketIo'] = socket;
+    let testCaspar = new Caspar(testCasparSettings);
+    testCaspar.restart()
+        .then(
+            function(resolve){
+                console.log('restart');
+            },
+            function(reject){
+                console.log(reject);
+            }
+        )
 
-    // setTimeout(
-    //     function(){
-    //         console.log('timeout');
-    //         caspars.set(testCaspar.getId(),testCaspar);
-    //         testCaspar.getInfo()
-    //             .then(function(){
-    //                console.log('default caspar added')
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //             });
+    setTimeout(
+        function(){
+            console.log('timeout');
+            caspars.set(testCaspar.getId(),testCaspar);
+            testCaspar.getInfo()
+                .then(function(){
+                   console.log('default caspar added')
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
-    //         setTimeout(
-    //             function(){
-    //                 testCasparConsumer = new Array();
-    //                 testCasparConsumer['channelId'] = 1;
-    //                 testCasparConsumer['name'] = 'Consumer1';
-    //                 // testCasparConsumer['fullscreen'] = true;
-    //                 let testConsumer = new ConsumerScreen(testCasparConsumer)
-    //                 testCaspar.addConsumer(testConsumer);
-    //                 // testConsumer.run();
+            setTimeout(
+                function(){
+                    testCasparConsumer = new Array();
+                    testCasparConsumer['channelId'] = 1;
+                    testCasparConsumer['name'] = 'Consumer1';
+                    // testCasparConsumer['fullscreen'] = true;
+                    let testConsumer = new ConsumerScreen(testCasparConsumer)
+                    testCaspar.addConsumer(testConsumer);
+                    // testConsumer.run();
 
-    //                 testFileSettings = new Array();
-    //                 testFileSettings['name'] = 'AMB';
-    //                 testFileSettings['fileName'] = 'amb';
-    //                 testFileSettings['playMode'] = 'loop';
-    //                 let testFile = new ProducerFile(testFileSettings);
-    //                 testCaspar.addProducer(testFile);
+                    testFileSettings = new Array();
+                    testFileSettings['name'] = 'AMB';
+                    testFileSettings['fileName'] = 'amb';
+                    testFileSettings['playMode'] = 'loop';
+                    let testFile = new ProducerFile(testFileSettings);
+                    testCaspar.addProducer(testFile);
 
-    //                 testFileSettings2 = new Array();
-    //                 testFileSettings2['name'] = 'GO';
-    //                 testFileSettings2['fileName'] = 'GO1080P25';
-    //                 testFileSettings2['playMode'] = 'loop';
-    //                 let testFile2 = new ProducerFile(testFileSettings2);
-    //                 testCaspar.addProducer(testFile2);
+                    testFileSettings2 = new Array();
+                    testFileSettings2['name'] = 'GO';
+                    testFileSettings2['fileName'] = 'GO1080P25';
+                    testFileSettings2['playMode'] = 'loop';
+                    let testFile2 = new ProducerFile(testFileSettings2);
+                    testCaspar.addProducer(testFile2);
 
-    //                 testFileSettings3 = new Array();
-    //                 testFileSettings3['name'] = 'itescia';
-    //                 testFileSettings3['fileName'] = 'itescia';
-    //                 testFileSettings3['playMode'] = 'loop';
-    //                 let testFile3 = new ProducerFile(testFileSettings3);
-    //                 testCaspar.addProducer(testFile3);
+                    testFileSettings3 = new Array();
+                    testFileSettings3['name'] = 'itescia';
+                    testFileSettings3['fileName'] = 'itescia';
+                    testFileSettings3['playMode'] = 'loop';
+                    let testFile3 = new ProducerFile(testFileSettings3);
+                    testCaspar.addProducer(testFile3);
 
-    //                 playlistSettings = new Array();
-    //                 playlistSettings['name'] = 'autoPlaylist';
-    //                 let playlist = testCaspar.addPlaylist(playlistSettings)
-    //                     playlist.addMedia(3);    
-    //                     playlist.addMedia(74);
-    //                     playlist.addMedia(73);
-    //                     playlist.addMedia(4);
+                    playlistSettings = new Array();
+                    playlistSettings['name'] = 'autoPlaylist';
+                    let playlist = testCaspar.addPlaylist(playlistSettings)
+                        playlist.addMedia(3);    
+                        playlist.addMedia(74);
+                        playlist.addMedia(73);
+                        playlist.addMedia(4);
                     
-    //                 ddrSettings = new Array();
-    //                 ddrSettings['name']  = 'autoDDR';
-    //                 ddrSettings['playlist']  = playlist;
-    //                 let ddr = new ProducerDdr(ddrSettings);
-    //                 testCaspar.addProducer(ddr);
+                    ddrSettings = new Array();
+                    ddrSettings['name']  = 'autoDDR';
+                    ddrSettings['playlist']  = playlist;
+                    let ddr = new ProducerDdr(ddrSettings);
+                    testCaspar.addProducer(ddr);
 
 
-    //             },2000);
-    //     },
-    //     2000
-    // );
+                },2000);
+        },
+        4000
+    );
     
 
     /**playlistCopy
@@ -335,9 +335,9 @@ module.exports = function(socket) {
         if (object){
             const response = object.edit(settings);
             res.json(apiReturn.successMessage(response));
-            socket.emit(objectType.slice(0, -1)+'Edit', JSON.stringify(cleanObject(object)));
+            socket.emit(objectType.slice(0, -1)+'Edit', object.clean());
         }else{
-            res.json(apiReturn.requestErrorMessage('unkown object type'));
+            res.json(apiReturn.errorMessage('unkown object type'));
         }
     },
 
@@ -475,7 +475,8 @@ module.exports = function(socket) {
 
         if (consumer instanceof Consumer){
             caspars.get(casparId).addConsumer(consumer);
-            res.json(cleanObject(consumer));
+            res.json(consumer.clean());
+            socket.emit('consumerAdd',consumer.clean());
         }else{
             res.json(apiReturn.requestErrorMessage('unknown consumer type : '+consumerType));
         }
@@ -539,7 +540,7 @@ module.exports = function(socket) {
         if (consumer instanceof Consumer){
             caspars.get(casparId).removeConsumer(consumerId);
             res.json(apiReturn.successMessage('Consumer removed'));
-            socket.emit('consumerDelete', JSON.stringify(cleanObject(consumer)));
+            socket.emit('consumerDelete', consumer.clean());
         }else{
             res.json(apiReturn.notFoundMessage('Consumer instance not found'));
         }
@@ -581,7 +582,7 @@ module.exports = function(socket) {
             caspar.addProducer(producer);
             res.json(cleanObject(producer));
             if (socket) {
-                socket.emit('producerAdd',JSON.stringify(cleanObject(producer)));
+                socket.emit('producerAdd',JSON.stringify(producer.clean()));
             }
         }
     },

@@ -4,9 +4,7 @@ var CasparConsumer = require('./CasparConsumer.js');
 class CasparConsumerFILE extends CasparConsumer {
 
     constructor(settings){
-        CasparConsumer.totalInstances = (CasparConsumer.totalInstances || 0) + 1;
         super(settings);
-        this.id = CasparConsumer.totalInstances;
         this.type = 'FILE'
         this.fileName = settings['fileName'] || 'defaultVideoFile.mov';
         this.filePath = settings['filePath'] || '';
@@ -24,6 +22,7 @@ class CasparConsumerFILE extends CasparConsumer {
                 const date = new Date();
                 if(date - consumer.lastUpdate > 500){
                     consumer.setStarted(false);
+                    consumer.getCasparCommon().getSocketIo().emit('consumerEdit',JSON.stringify(consumer.clean()));
                 }
             },500);
        
@@ -86,6 +85,7 @@ class CasparConsumerFILE extends CasparConsumer {
 
 
     async run() {
+        super.run();
         this.setCurrentRecordName();
         var req = `ADD ${this.channelId} ${this.type} ${this.getCurrentRecordName()}`;
         let consumer = this;
@@ -104,6 +104,7 @@ class CasparConsumerFILE extends CasparConsumer {
     }
 
     async stop(sendSocketIo = true) {
+        super.stop();
         var req = `REMOVE ${this.channelId} ${this.type}  ${this.filePath}${this.fileName}`;
         let consumer = this;
         let result = [];
@@ -121,37 +122,6 @@ class CasparConsumerFILE extends CasparConsumer {
             )
             return result;
     }
-
-    // edit (setting, value) {
-    //     let response = new Object();
-    //     switch (setting){
-    //         case 'name' : {
-    //             this.setName(value);
-    //             response[setting] = this.getName();
-    //         }
-    //         break;
-    //         case 'channelId' : {
-    //             this.setChannelId(value);
-    //             response[setting] = this.getChannelId();
-    //         }
-    //         break;
-    //         case 'fileName' : {
-    //             this.setFileName(value);
-    //             response[setting] = this.getFileName();
-    //         }
-    //         break;
-    //         case 'filePath' : {
-    //             this.setFilePath(value);
-    //             response[setting] = this.getFilePath();
-    //         }
-    //         break;
-    //         default : {
-    //             response[setting] = "not found";
-    //         }
-    //     }
-    //     return response;
-    // }
-
 
     edit(settings){
 
@@ -209,9 +179,6 @@ class CasparConsumerFILE extends CasparConsumer {
     getFrameRate(){ return this.frameRate; }
     setFrameRate(frameRate){this.frameRate = frameRate; }
 
-    setStarted(boolean){
-        this.started = boolean;
-    }
 
     getCurrentRecordName () { return this.currentRecordName; }
     setCurrentRecordName () { 

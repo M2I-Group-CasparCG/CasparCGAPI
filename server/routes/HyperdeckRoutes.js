@@ -141,15 +141,27 @@ module.exports = function(socket){
         const control = req.params.control;
         if (hyperdeck.getCommon().getGrouped() ){
             hyperdecks.forEach(hpd => {
+                let result;
                 if (hpd.getCommon().getGrouped()){
                     hpd.control(control)
                     .then(resolve => {
-                        res.json(apiReturn.successMessage(`${control} command sended`));
+                        result = 'resolve';
                     }, reject => {
-                        res.json(apiReturn.successMessage(`error whilde sending ${control} command`));
+                        result = 'reject';
                     }).catch( error => {
-                        res.json(apiReturn.successMessage(`exception whilde sending ${control} command`));
+                        result = 'exception';
                     })
+                }
+                switch (result){
+                    case 'resolve' : {
+                        res.json(apiReturn.successMessage(`${control} command sended`));
+                    }break;
+                    case 'reject' : {
+                        res.json(apiReturn.successMessage(`error whilde sending ${control} command`));
+                    }break;
+                    case 'exception' : {
+                        res.json(apiReturn.successMessage(`exception whilde sending ${control} command`));
+                    }break;
                 }
             });
         }else{

@@ -4,12 +4,11 @@ var CasparProducer = require('./CasparProducer.js');
 class CasparProducerDECKLINK extends CasparProducer{
 
     constructor(settings, casparCommon){
-        CasparProducer.totalInstances = (CasparProducer.totalInstances || 0) + 1;
+       
         super(settings, casparCommon);
         this.type = 'DECKLINK';
         this.decklinkId = settings['decklinkId'] || 0;
         this.casparCommon = casparCommon;
-        this.id = CasparProducer.totalInstances;
         this.embeddedAudio = null;
         this.channelLayout = null;
         this.latency = null;
@@ -30,6 +29,7 @@ class CasparProducerDECKLINK extends CasparProducer{
     }
 
     async run(){
+        super.run();
         let req = `PLAY ${this.casparCommon.getMvId()}-${this.getId()} DECKLINK ${this.decklinkId}`;
         let producer = this;
         let result = []
@@ -47,6 +47,7 @@ class CasparProducerDECKLINK extends CasparProducer{
     }
 
     async stop(sendSocketIo = true){
+        super.stop();
         let req = `STOP ${this.casparCommon.getMvId()}-${this.getId()} DECKLINK ${this.decklinkId}`;
         let producer = this;
         let result = [];
