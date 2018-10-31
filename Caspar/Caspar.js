@@ -73,39 +73,38 @@ class Caspar {
     */
     async ini(){     
         console.log('ini');
-        // if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
-            let mvSettings = new Array();
-                mvSettings['name'] = 'MVW';
-                mvSettings['id'] = 1;
-            let mv = new ChannelMultiview(mvSettings,this.producers)
-            this.addChannel(mv);
-            this.casparCommon.setMvId(mv.getId());
-        // }else{
-            // let mv = this.channels.get(this.getCasparCommon().getMvId());
-            // console.log(mv.id);
-            if (mv instanceof ChannelMultiview){
-                mv.ini(null);
-            }
+        this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
+        // // if( this.getCasparCommon().getMvId() == null){  // vérification que le channel n'est pas déjà init
+        //     let mvSettings = new Array();
+        //         mvSettings['name'] = 'multiview';
+        //     this.channels.get(1).edit(mvSettings);
+        //     this.casparCommon.setMvId(1);
+        // // }else{
+        //     // let mv = this.channels.get(this.getCasparCommon().getMvId());
+        //     // console.log(mv.id);
+        //     if (mv instanceof ChannelMultiview){
+        //         mv.ini(null);
+        //     }
          
         // }
 
-        // if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
-            let pgmSettings = new Array();
-            pgmSettings['name'] = 'PGM';
-            pgmSettings['id'] = 2;
-            let pgm = new Channel(pgmSettings);
-            this.addChannel(pgm);
-            this.casparCommon.setPgmId(pgm.getId());
-        // }
+        // // if( this.getCasparCommon().getPgmId() == null){     // vérification que le channel n'est pas déjà init
+        //     let pgmSettings = new Array();
+        //     pgmSettings['name'] = 'PGM';
+        //     pgmSettings['id'] = 2;
+        //     let pgm = new Channel(pgmSettings);
+        //     this.addChannel(pgm);
+        //     this.casparCommon.setPgmId(pgm.getId());
+        // // }
         
-        // if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
-            let pvwSettings = new Array();
-            pvwSettings['name'] = 'PVW';
-            pvwSettings['id'] = 3;
-            let pvw = new Channel(pvwSettings);
-            this.addChannel(pvw);
-            this.casparCommon.setPvwId(pvw.getId());
-        // }
+        // // if( this.getCasparCommon().getPvwId() == null){ // vérification que le channel n'est pas déjà init
+        //     let pvwSettings = new Array();
+        //     pvwSettings['name'] = 'PVW';
+        //     pvwSettings['id'] = 3;
+        //     let pvw = new Channel(pvwSettings);
+        //     this.addChannel(pvw);
+        //     this.casparCommon.setPvwId(pvw.getId());
+        // // }
     }
 
     /**
@@ -137,12 +136,18 @@ class Caspar {
                     resolveResult['data'].forEach(element => {
                         element = element.split(' ');
                         let settings = new Array();
-                            console.log(parseInt(element[0]));
                             settings['id'] = parseInt(element[0]);
-                            settings['name'] = 'default';
+                            settings['name'] = `channel-${settings.id-1}`;
                             settings['videoMode'] = element[1];
                             settings['state'] = element[2];
-                        let channel = new Channel(settings);
+                        let channel = null;
+                        if (settings.id == 1 ){
+                            settings['name'] = `multiview`;
+                            channel = new ChannelMultiview(settings);
+                            caspar.getCasparCommon().setMvId(1);
+                        }else{
+                            channel = new Channel(settings);
+                        }
                         caspar.addChannel(channel);
                     });
                     
@@ -227,13 +232,7 @@ class Caspar {
      * @param {Array} settings key : setting to edit, value : value to apply to the setting
      */
     edit(settings){
-        let result = new Object();
-        for (let setting in settings){
-            let response =  this.getCasparCommon().edit(setting, settings[setting]);
-            for (let key in response){
-                result[key] = response[key];
-            }
-        }
+        const result =  this.getCasparCommon().edit(settings);
         return result;
     }
 
@@ -243,15 +242,7 @@ class Caspar {
      * @param {Object} object Object to edit (Producer, Consumer, Channel, Layer)
      */
     editObject(settings, object){
-        let result = new Object();
-        for (let setting in settings){
-            // console.log(object);
-            let response =  object.edit(setting, settings[setting]);
-            for (let key in response){
-                // console.log(response);
-                result[key] = response[key];
-            }
-        }
+        const result  =  object.edit(settings);
         return result;
     }
 
@@ -676,17 +667,12 @@ class Caspar {
             if (recInfo.frame && recInfo.path){ //if the record is detected
 
                 for (let consumer of this.consumers.values()){
-                    // let consumerFullPath = consumer.fileName;
-                    // if (consumer.filePath != ""){
-                    //     consumerFullPath = consumer.filePath+consumer.fileName;
-                    // }
-                    if (consumer.fullSizePath == recInfo.path){
+                    if (consumer.currentRecordName == recInfo.path){
                        recorder = consumer;
                        if (recorder.getFrameRate() != recInfo.fps){
                            recorder.setFrameRate(recInfo.fps);
                        }
-                       recorder.setFrames(recInfo.frame)
-                    //    return ['recorderEdit', recorder];
+                       recorder.setFrames(recInfo.frame);
                     }
                 };
                

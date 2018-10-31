@@ -66,45 +66,91 @@ class CasparProducerDECKLINK extends CasparProducer{
         return result;
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'decklinkId' : {
-                this.setDecklinkId(value);
-                response[setting] = this.getDecklinkId();
-            }
-            break;
-            case 'embeddedAudio' : {
-                this.setEmbeddedAudio(value);
-                response[setting] = this.getEmbeddedAudio();
-            }
-            break;
-            case 'channelLayout' : {
-                this.setChannelLayout(value);
-                response[setting] = this.getChannelLayout();
-            }
-            break;
-            case 'latency' : {
-                this.setLatency(value);
-                response[setting] = this.getLatency();
-            }
-            break;
-            case 'bufferDepth' : {
-                this.setBufferDepth(value);
-                response[setting] = this.getBufferDepth();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'decklinkId' : {
+    //             this.setDecklinkId(value);
+    //             response[setting] = this.getDecklinkId();
+    //         }
+    //         break;
+    //         case 'embeddedAudio' : {
+    //             this.setEmbeddedAudio(value);
+    //             response[setting] = this.getEmbeddedAudio();
+    //         }
+    //         break;
+    //         case 'channelLayout' : {
+    //             this.setChannelLayout(value);
+    //             response[setting] = this.getChannelLayout();
+    //         }
+    //         break;
+    //         case 'latency' : {
+    //             this.setLatency(value);
+    //             response[setting] = this.getLatency();
+    //         }
+    //         break;
+    //         case 'bufferDepth' : {
+    //             this.setBufferDepth(value);
+    //             response[setting] = this.getBufferDepth();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     console.log(response);
+    //     return response;
+    // }
+
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'decklinkId' : {
+                    this.setDecklinkId(value);
+                    result[setting] = this.getDecklinkId();
+                }
+                break;
+                case 'embeddedAudio' : {
+                    this.setEmbeddedAudio(value);
+                    result[setting] = this.getEmbeddedAudio();
+                }
+                break;
+                case 'channelLayout' : {
+                    this.setChannelLayout(value);
+                    result[setting] = this.getChannelLayout();
+                }
+                break;
+                case 'latency' : {
+                    this.setLatency(value);
+                    result[setting] = this.getLatency();
+                }
+                break;
+                case 'bufferDepth' : {
+                    this.setBufferDepth(value);
+                    result[setting] = this.getBufferDepth();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        console.log(response);
-        return response;
+        return result;
     }
 
     getDecklinkId () { return this.decklinkId; }

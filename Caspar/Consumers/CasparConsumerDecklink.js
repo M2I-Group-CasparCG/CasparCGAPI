@@ -50,41 +50,79 @@ class CasparConsumerDECKLINK extends CasparConsumer {
         return result;
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'bufferDepth' : {
-                this.setBufferDepth(value);
-                response[setting] = this.getBufferDepth();
-            }
-            break;
-            case 'channelId' : {
-                this.setChannelId(value);
-                response[setting] = this.getChannelId();
-            }
-            break;
-            case 'decklinkId' : {
-                this.setDecklinkId(value);
-                response[setting] = this.getDecklinkId();
-            }
-            break;
-            case 'latency' : {
-                this.setLatency(value);
-                response[setting] = this.getLatency();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'bufferDepth' : {
+    //             this.setBufferDepth(value);
+    //             response[setting] = this.getBufferDepth();
+    //         }
+    //         break;
+    //         case 'channelId' : {
+    //             this.setChannelId(value);
+    //             response[setting] = this.getChannelId();
+    //         }
+    //         break;
+    //         case 'decklinkId' : {
+    //             this.setDecklinkId(value);
+    //             response[setting] = this.getDecklinkId();
+    //         }
+    //         break;
+    //         case 'latency' : {
+    //             this.setLatency(value);
+    //             response[setting] = this.getLatency();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'bufferDepth' : {
+                    this.setBufferDepth(value);
+                    result[setting] = this.getBufferDepth();
+                }
+                break;
+                case 'channelId' : {
+                    this.setChannelId(value);
+                    result[setting] = this.getChannelId();
+                }
+                break;
+                case 'decklinkId' : {
+                    this.setDecklinkId(value);
+                    result[setting] = this.getDecklinkId();
+                }
+                break;
+                case 'latency' : {
+                    this.setLatency(value);
+                    result[setting] = this.getLatency();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+        return result;
     }
-
 
 
     getDecklinkId(){ return this.decklinkId; }

@@ -228,66 +228,124 @@ class CasparCommon {
         });
     }
 
-    /**
-     * @param {String} setting setting to edit 
-     * @param {*} value value of the setting
-     */
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'ipAddr' : {
-                this.setIpAddr(value);
-                response[setting] = this.getIpAddr();
-            }
-            break;
-            case 'oscDefaultPort' : {
-                this.setOscDefaultPort(value);
-                response[setting] = this.getOscDefaultPort();
-            }
-            break;
-            case 'oscPredefinedClient' : {
-                this.setOscPredefinedClient(value.address, value.port);
-                response[setting] = this.getOscPredefinedClient();
-            }
-            break;
-            case 'logLevel' : {
-                this.setLogLevel(value);
-                response[setting] = this.getLogLevel();
-            }
-            break;
-            case 'logPath' : {  
-                this.setLogPath(value);
-                response[setting] = this.getLogPath();
-            }
-            break;
-            case 'mediaPath' : {
-                this.setMediaPath(value);
-                response[setting] = this.getMediaPath();
-            }
-            break;
-            case 'templatePath' : { 
-                this.setTemplatePath(value);
-                response[setting] = this.getTemplatePath();
-            }
-            break;
-            case 'thumbnailsPath' : {
-                this.setThumbnailsPath(value);
-                response[setting] = this.getThumbnailsPath();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // /**
+    //  * @param {String} setting setting to edit 
+    //  * @param {*} value value of the setting
+    //  */
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'ipAddr' : {
+    //             this.setIpAddr(value);
+    //             response[setting] = this.getIpAddr();
+    //         }
+    //         break;
+    //         case 'oscDefaultPort' : {
+    //             this.setOscDefaultPort(value);
+    //             response[setting] = this.getOscDefaultPort();
+    //         }
+    //         break;
+    //         case 'oscPredefinedClient' : {
+    //             this.setOscPredefinedClient(value.address, value.port);
+    //             response[setting] = this.getOscPredefinedClient();
+    //         }
+    //         break;
+    //         case 'logLevel' : {
+    //             this.setLogLevel(value);
+    //             response[setting] = this.getLogLevel();
+    //         }
+    //         break;
+    //         case 'logPath' : {  
+    //             this.setLogPath(value);
+    //             response[setting] = this.getLogPath();
+    //         }
+    //         break;
+    //         case 'mediaPath' : {
+    //             this.setMediaPath(value);
+    //             response[setting] = this.getMediaPath();
+    //         }
+    //         break;
+    //         case 'templatePath' : { 
+    //             this.setTemplatePath(value);
+    //             response[setting] = this.getTemplatePath();
+    //         }
+    //         break;
+    //         case 'thumbnailsPath' : {
+    //             this.setThumbnailsPath(value);
+    //             response[setting] = this.getThumbnailsPath();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'ipAddr' : {
+                    this.setIpAddr(value);
+                    result[setting] = this.getIpAddr();
+                }
+                break;
+                case 'oscDefaultPort' : {
+                    this.setOscDefaultPort(value);
+                    result[setting] = this.getOscDefaultPort();
+                }
+                break;
+                case 'oscPredefinedClient' : {
+                    this.setOscPredefinedClient(value.address, value.port);
+                    result[setting] = this.getOscPredefinedClient();
+                }
+                break;
+                case 'logLevel' : {
+                    this.setLogLevel(value);
+                    result[setting] = this.getLogLevel();
+                }
+                break;
+                case 'logPath' : {  
+                    this.setLogPath(value);
+                    result[setting] = this.getLogPath();
+                }
+                break;
+                case 'mediaPath' : {
+                    this.setMediaPath(value);
+                    result[setting] = this.getMediaPath();
+                }
+                break;
+                case 'templatePath' : { 
+                    this.setTemplatePath(value);
+                    result[setting] = this.getTemplatePath();
+                }
+                break;
+                case 'thumbnailsPath' : {
+                    this.setThumbnailsPath(value);
+                    result[setting] = this.getThumbnailsPath();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+        return result;
     }
-
-
 
     /**
     * Remove socketIO

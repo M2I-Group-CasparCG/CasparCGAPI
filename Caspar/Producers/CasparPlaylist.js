@@ -79,31 +79,56 @@ class CasparPlaylist {
         }
     }
 
-    /**
-     * Edit a setting of the playlist 
-     * Used for the API
-     * @param {*} setting the attribute name to be edited
-     * @param {*} value the new value to set
-     * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
-     */
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'list' : {
-                this.setList(value);
-                response[setting] = this.getList();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // /**
+    //  * Edit a setting of the playlist 
+    //  * Used for the API
+    //  * @param {*} setting the attribute name to be edited
+    //  * @param {*} value the new value to set
+    //  * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
+    //  */
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'list' : {
+    //             this.setList(value);
+    //             response[setting] = this.getList();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'list' : {
+                    this.setList(value);
+                    result[setting] = this.getList();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+        return result;
     }
 
 

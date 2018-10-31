@@ -58,74 +58,149 @@ class CasparConsumerNet extends CasparConsumer {
         return result;
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'channelId' : {
-                this.setChannelId(value);
-                response[setting] = this.getChannelId();
-            }
-            break;
-            case 'protocol' : {
-                this.setProtocol(value);
-                response[setting] = this.getProtocol();
-            }
-            break;
-            case 'host' : {
-                this.setHost(value);
-                response[setting] = this.getHost();
-            }
-            break;
-            case 'port' : {
-                this.setPort(value);
-                response[setting] = this.getPort();
-            }
-            break;
-            case 'vcodec' : {
-                this.setVcodec(value);
-                response[setting] = this.getVcodec();
-            }
-            break;
-            case 'tune' : {
-                this.setTune(value);
-                response[setting] = this.getTune();
-            }
-            break;
-            case 'preset' : {
-                this.setPreset(value);
-                response[setting] = this.getPreset();
-            }
-            break;
-            case 'format' : {
-                this.setFormat(value);
-                response[setting] = this.getFormat();
-            }
-            break;
-            case 'pictureWidth' : {
-                this.setPictureWidth(value);
-                response[setting] = this.getPictureWidth();
-            }
-            break;
-            case 'pictureHeight' : {
-                this.setPictureHeight(value);
-                response[setting] = this.getPictureHeight();
-            }
-            break;
-            case 'crf' : {
-                this.setCrf(value);
-                response[setting] = this.getCrf();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'channelId' : {
+    //             this.setChannelId(value);
+    //             response[setting] = this.getChannelId();
+    //         }
+    //         break;
+    //         case 'protocol' : {
+    //             this.setProtocol(value);
+    //             response[setting] = this.getProtocol();
+    //         }
+    //         break;
+    //         case 'host' : {
+    //             this.setHost(value);
+    //             response[setting] = this.getHost();
+    //         }
+    //         break;
+    //         case 'port' : {
+    //             this.setPort(value);
+    //             response[setting] = this.getPort();
+    //         }
+    //         break;
+    //         case 'vcodec' : {
+    //             this.setVcodec(value);
+    //             response[setting] = this.getVcodec();
+    //         }
+    //         break;
+    //         case 'tune' : {
+    //             this.setTune(value);
+    //             response[setting] = this.getTune();
+    //         }
+    //         break;
+    //         case 'preset' : {
+    //             this.setPreset(value);
+    //             response[setting] = this.getPreset();
+    //         }
+    //         break;
+    //         case 'format' : {
+    //             this.setFormat(value);
+    //             response[setting] = this.getFormat();
+    //         }
+    //         break;
+    //         case 'pictureWidth' : {
+    //             this.setPictureWidth(value);
+    //             response[setting] = this.getPictureWidth();
+    //         }
+    //         break;
+    //         case 'pictureHeight' : {
+    //             this.setPictureHeight(value);
+    //             response[setting] = this.getPictureHeight();
+    //         }
+    //         break;
+    //         case 'crf' : {
+    //             this.setCrf(value);
+    //             response[setting] = this.getCrf();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'channelId' : {
+                    this.setChannelId(value);
+                    result[setting] = this.getChannelId();
+                }
+                break;
+                case 'protocol' : {
+                    this.setProtocol(value);
+                    result[setting] = this.getProtocol();
+                }
+                break;
+                case 'host' : {
+                    this.setHost(value);
+                    result[setting] = this.getHost();
+                }
+                break;
+                case 'port' : {
+                    this.setPort(value);
+                    result[setting] = this.getPort();
+                }
+                break;
+                case 'vcodec' : {
+                    this.setVcodec(value);
+                    result[setting] = this.getVcodec();
+                }
+                break;
+                case 'tune' : {
+                    this.setTune(value);
+                    result[setting] = this.getTune();
+                }
+                break;
+                case 'preset' : {
+                    this.setPreset(value);
+                    result[setting] = this.getPreset();
+                }
+                break;
+                case 'format' : {
+                    this.setFormat(value);
+                    response[setting] = this.getFormat();
+                }
+                break;
+                case 'pictureWidth' : {
+                    this.setPictureWidth(value);
+                    response[setting] = this.getPictureWidth();
+                }
+                break;
+                case 'pictureHeight' : {
+                    this.setPictureHeight(value);
+                    response[setting] = this.getPictureHeight();
+                }
+                break;
+                case 'crf' : {
+                    this.setCrf(value);
+                    response[setting] = this.getCrf();
+                }
+                break;
+                default : {
+                    response[setting] = "not found";
+                }       
             }
         }
-        return response;
+        return result;
     }
 
     getUrl(){return this.getUrl};

@@ -8,14 +8,24 @@ class CasparConsumerFILE extends CasparConsumer {
         super(settings);
         this.id = CasparConsumer.totalInstances;
         this.type = 'FILE'
-        this.fileName = settings['fileName'] || 'defaultVideoFile.mp4';
+        this.fileName = settings['fileName'] || 'defaultVideoFile.mov';
         this.filePath = settings['filePath'] || '';
         this.frames = 0;
         this.fullSizePath = this.generateTotaleFilePath();
+        this.currentRecordName = null;
         this.formattedDuration = null;
         this.frameRate = null;
         this.started = false;
         this.lastUpdate = 0;
+
+        const consumer = this;
+        setInterval(
+            function () {
+                const date = new Date();
+                if(date - consumer.lastUpdate > 500){
+                    consumer.setStarted(false);
+                }
+            },500);
        
         /**
          * -f // container format
@@ -44,7 +54,12 @@ class CasparConsumerFILE extends CasparConsumer {
         if (this.filePath.slice(-1) == "/" || this.filePath.slice(-1) == "\\"){
             this.filePath = this.filePath.slice(0, -1);
         }
-        return `${this.filePath}/${this.fileName}`;
+        if (this.filePath != '') {
+            return `${this.filePath}/${this.fileName}`;
+        }else{
+            return `${this.fileName}`;
+        }
+        
     }
 
     /**
@@ -71,7 +86,8 @@ class CasparConsumerFILE extends CasparConsumer {
 
 
     async run() {
-        var req = `ADD ${this.channelId} ${this.type} ${this.fullSizePath}`;
+        this.setCurrentRecordName();
+        var req = `ADD ${this.channelId} ${this.type} ${this.getCurrentRecordName()}`;
         let consumer = this;
         let result = [];
         await this.tcpPromise(req)
@@ -106,34 +122,71 @@ class CasparConsumerFILE extends CasparConsumer {
             return result;
     }
 
-    edit (setting, value) {
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'channelId' : {
-                this.setChannelId(value);
-                response[setting] = this.getChannelId();
-            }
-            break;
-            case 'fileName' : {
-                this.setFileName(value);
-                response[setting] = this.getFileName();
-            }
-            break;
-            case 'filePath' : {
-                this.setFilePath(value);
-                response[setting] = this.getFilePath();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit (setting, value) {
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'channelId' : {
+    //             this.setChannelId(value);
+    //             response[setting] = this.getChannelId();
+    //         }
+    //         break;
+    //         case 'fileName' : {
+    //             this.setFileName(value);
+    //             response[setting] = this.getFileName();
+    //         }
+    //         break;
+    //         case 'filePath' : {
+    //             this.setFilePath(value);
+    //             response[setting] = this.getFilePath();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'channelId' : {
+                    this.setChannelId(value);
+                    result[setting] = this.getChannelId();
+                }
+                break;
+                case 'fileName' : {
+                    this.setFileName(value);
+                    result[setting] = this.getFileName();
+                }
+                break;
+                case 'filePath' : {
+                    this.setFilePath(value);
+                    result[setting] = this.getFilePath();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+
+        return result;
     }
 
     getFileName(){return this.fileName;}
@@ -146,7 +199,7 @@ class CasparConsumerFILE extends CasparConsumer {
         this.frames = frames;
         if (this.frameRate){
             this.formattedDuration = this.timeFormat(this.frames, this.frameRate);
-            if( Date.now() - this.lastUpdate > 200){
+            if( Date.now() - this.lastUpdate > 120){
                 this.getCasparCommon().sendSocketIo('recorderEdit', this);
                 this.lastUpdate = Date.now();
             }
@@ -156,9 +209,21 @@ class CasparConsumerFILE extends CasparConsumer {
     getFrameRate(){ return this.frameRate; }
     setFrameRate(frameRate){this.frameRate = frameRate; }
 
-    // setStarted(boolean){
-    //     this.started = boolean;
-    // }
+    setStarted(boolean){
+        this.started = boolean;
+    }
+
+    getCurrentRecordName () { return this.currentRecordName; }
+    setCurrentRecordName () { 
+        let date = new Date();
+            date = date.toISOString().replace(/-/g,'').replace('T','_').replace(/:/g,'').replace('.','').replace('Z','');
+            if (this.fileName != ''){
+                this.currentRecordName = `${date}_${this.fileName}`;
+            }else{
+                this.currentRecordName = `${this.filePath}/${date}_${this.fileName}`;
+            }
+            
+    }
 
 }
 

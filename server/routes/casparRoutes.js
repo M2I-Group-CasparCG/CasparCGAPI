@@ -40,7 +40,7 @@ module.exports = function(socket) {
      */
     
     // let testCasparSettings = new Array();
-    // testCasparSettings['ipAddr'] = '192.168.1.231';
+    // testCasparSettings['ipAddr'] = '127.0.0.1';
     // testCasparSettings['amcpPort'] = '5250';
     // testCasparSettings['name'] = 'auto Test';
     // testCasparSettings['socketIo'] = socket;
@@ -73,7 +73,6 @@ module.exports = function(socket) {
     //                 testCasparConsumer['channelId'] = 1;
     //                 testCasparConsumer['name'] = 'Consumer1';
     //                 // testCasparConsumer['fullscreen'] = true;
-    //                 testCasparConsumer['channelName'] = testCaspar.getChannel(1).getName();
     //                 let testConsumer = new ConsumerScreen(testCasparConsumer)
     //                 testCaspar.addConsumer(testConsumer);
     //                 // testConsumer.run();
@@ -334,12 +333,8 @@ module.exports = function(socket) {
             }break;
         }
         if (object){
-            let result = new Object();
-            for (let setting in settings){
-                let response = object.edit(setting, settings[setting]);
-                result[setting] = response[setting];
-            }
-            res.json(apiReturn.successMessage(result));
+            const response = object.edit(settings);
+            res.json(apiReturn.successMessage(response));
             socket.emit(objectType.slice(0, -1)+'Edit', JSON.stringify(cleanObject(object)));
         }else{
             res.json(apiReturn.requestErrorMessage('unkown object type'));

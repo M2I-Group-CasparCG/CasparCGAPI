@@ -41,7 +41,9 @@ class CasparChannel {
     }
 
     addLayer(layer) {
-        layer.edit('layerId', this.lastLayerId++);
+        const settings = new Object();
+            settings['layerId'] = this.lastLayerId++;
+        layer.edit(settings);
         this.layers.set(layer.getId(), layer);
         return layer;
     }
@@ -70,25 +72,46 @@ class CasparChannel {
         return this.layers;
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'videoMode' : {
-                this.setVideoMode(value);
-                response[setting] = this.getVideoMode();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'videoMode' : {
+    //             this.setVideoMode(value);
+    //             response[setting] = this.getVideoMode();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['channelId'] = this.getId();
+
+        for (let [key, value] of Object.entries(settings)) {
+            switch (key){
+                case 'name' : {
+                    this.setName(value);
+                    result['name'] = this.getName();
+                }
+                break;
+                default : {
+                    result[key] = 'ERROR : setting not found';
+                }   
             }
         }
-        return response;
+        return result;
     }
+
 
     getName(){ return this.name; }
     setName(name){ this.name = name; }

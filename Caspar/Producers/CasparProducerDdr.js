@@ -418,46 +418,88 @@ class CasparProducerDDR extends CasparProducer{
         }   
     }
 
-    /**
-     * Edit a setting of the playlist 
-     * Used for the API
-     * @param {*} setting the attribute name to be edited
-     * @param {*} value the new value to set
-     * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
-     */
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'playlist' : {
-                this.setPlaylist(value);
-                response[setting] = this.getPlaylist();
-            }
-            break;
-            case 'playlistLoop' : {
-                this.setPlaylistLoop(value);
-                response[setting] = this.getPlaylistLoop();
-            }
-            break;
-            case 'mediaLoop' : {
-                this.setMediaLoop(value);
-                response[setting] = this.getMediaLoop();
-            }
-            break;
-            case 'autoPlay' : {
-                this.setAutoPlay(value);
-                response[setting] = this.getAutoPlay();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // /**
+    //  * Edit a setting of the playlist 
+    //  * Used for the API
+    //  * @param {*} setting the attribute name to be edited
+    //  * @param {*} value the new value to set
+    //  * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
+    //  */
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'playlist' : {
+    //             this.setPlaylist(value);
+    //             response[setting] = this.getPlaylist();
+    //         }
+    //         break;
+    //         case 'playlistLoop' : {
+    //             this.setPlaylistLoop(value);
+    //             response[setting] = this.getPlaylistLoop();
+    //         }
+    //         break;
+    //         case 'mediaLoop' : {
+    //             this.setMediaLoop(value);
+    //             response[setting] = this.getMediaLoop();
+    //         }
+    //         break;
+    //         case 'autoPlay' : {
+    //             this.setAutoPlay(value);
+    //             response[setting] = this.getAutoPlay();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'playlist' : {
+                    this.setPlaylist(value);
+                    result[setting] = this.getPlaylist();
+                }
+                break;
+                case 'playlistLoop' : {
+                    this.setPlaylistLoop(value);
+                    result[setting] = this.getPlaylistLoop();
+                }
+                break;
+                case 'mediaLoop' : {
+                    this.setMediaLoop(value);
+                    result[setting] = this.getMediaLoop();
+                }
+                break;
+                case 'autoPlay' : {
+                    this.setAutoPlay(value);
+                    result[setting] = this.getAutoPlay();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+        return result;
     }
 
     timeFormat(duration){

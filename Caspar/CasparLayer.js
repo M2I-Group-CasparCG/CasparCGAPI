@@ -94,55 +94,111 @@ class CasparLayer {
         this.tcpPromise(req).then(function(){}, function(){}).catch(function(){});
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'layerId' : {
-                this.setLayerId(value);
-                response[setting] = this.getLayerId();
-            }
-            break;
-            case 'producerId' : {
-                this.setProducerId(value);
-                response[setting] = this.getProducerId();
-            }
-            break;
-            case 'channelId' : {
-                this.setChannelId(value);
-                response[setting] = this.getChannelId();
-            }
-            break;
-            case 'posX' : {
-                this.setPosX(value);
-                response[setting] = this.getPosX();
-            }
-            break;
-            case 'posY' : {
-                this.setPosY(value);
-                response[setting] = this.getPosY();
-            }
-            break;
-            case 'scaleX' : {
-                this.setScaleX(value);
-                response[setting] = this.getScaleX();
-            }
-            break;
-            case 'scaleY' : {
-                this.setScaleY(value);
-                response[setting] = this.getScaleY();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'layerId' : {
+    //             this.setLayerId(value);
+    //             response[setting] = this.getLayerId();
+    //         }
+    //         break;
+    //         case 'producerId' : {
+    //             this.setProducerId(value);
+    //             response[setting] = this.getProducerId();
+    //         }
+    //         break;
+    //         case 'channelId' : {
+    //             this.setChannelId(value);
+    //             response[setting] = this.getChannelId();
+    //         }
+    //         break;
+    //         case 'posX' : {
+    //             this.setPosX(value);
+    //             response[setting] = this.getPosX();
+    //         }
+    //         break;
+    //         case 'posY' : {
+    //             this.setPosY(value);
+    //             response[setting] = this.getPosY();
+    //         }
+    //         break;
+    //         case 'scaleX' : {
+    //             this.setScaleX(value);
+    //             response[setting] = this.getScaleX();
+    //         }
+    //         break;
+    //         case 'scaleY' : {
+    //             this.setScaleY(value);
+    //             response[setting] = this.getScaleY();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['channelId'] = this.getId();
+
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'layerId' : {
+                    this.setLayerId(value);
+                    result[setting] = this.getLayerId();
+                }
+                break;
+                case 'producerId' : {
+                    this.setProducerId(value);
+                    result[setting] = this.getProducerId();
+                }
+                break;
+                case 'channelId' : {
+                    this.setChannelId(value);
+                    result[setting] = this.getChannelId();
+                }
+                break;
+                case 'posX' : {
+                    this.setPosX(value);
+                    result[setting] = this.getPosX();
+                }
+                break;
+                case 'posY' : {
+                    this.setPosY(value);
+                    result[setting] = this.getPosY();
+                }
+                break;
+                case 'scaleX' : {
+                    this.setScaleX(value);
+                    result[setting] = this.getScaleX();
+                }
+                break;
+                case 'scaleY' : {
+                    this.setScaleY(value);
+                    result[setting] = this.getScaleY();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        return response;
+        return result;
     }
+
 
     /**
      * GETTERS / SETTERS

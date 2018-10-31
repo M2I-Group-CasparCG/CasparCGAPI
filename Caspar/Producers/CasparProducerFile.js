@@ -53,30 +53,60 @@ class CasparProducerFILE extends CasparProducer{
         return result;
     }
 
-    edit(setting, value){
-        let response = new Object();
-        switch (setting){
-            case 'name' : {
-                this.setName(value);
-                response[setting] = this.getName();
-            }
-            break;
-            case 'fileName' : {
-                this.setFileName(value);
-                response[setting] = this.getFileName();
-            }
-            break;
-            case 'playMode' : {
-                this.setPlayMode(value);
-                response[setting] = this.getPlayMode();
-            }
-            break;
-            default : {
-                response[setting] = "not found";
+    // edit(setting, value){
+    //     let response = new Object();
+    //     switch (setting){
+    //         case 'name' : {
+    //             this.setName(value);
+    //             response[setting] = this.getName();
+    //         }
+    //         break;
+    //         case 'fileName' : {
+    //             this.setFileName(value);
+    //             response[setting] = this.getFileName();
+    //         }
+    //         break;
+    //         case 'playMode' : {
+    //             this.setPlayMode(value);
+    //             response[setting] = this.getPlayMode();
+    //         }
+    //         break;
+    //         default : {
+    //             response[setting] = "not found";
+    //         }
+    //     }
+    //     console.log(response);
+    //     return response;
+    // }
+
+    edit(settings){
+
+        let result = new Object();
+            result['consumerId'] = this.getId();
+            
+        for (let [setting, value] of Object.entries(settings)) {
+            switch (setting){
+                case 'name' : {
+                    this.setName(value);
+                    result[setting] = this.getName();
+                }
+                break;
+                case 'fileName' : {
+                    this.setFileName(value);
+                    result[setting] = this.getFileName();
+                }
+                break;
+                case 'playMode' : {
+                    this.setPlayMode(value);
+                    result[setting] = this.getPlayMode();
+                }
+                break;
+                default : {
+                    result[setting] = "not found";
+                }
             }
         }
-        console.log(response);
-        return response;
+        return result;
     }
 
 
