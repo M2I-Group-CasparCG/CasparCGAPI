@@ -169,7 +169,8 @@ class CasparConsumerFILE extends CasparConsumer {
         this.frames = frames;
         if (this.frameRate){
             this.formattedDuration = this.timeFormat(this.frames, this.frameRate);
-            if( Date.now() - this.lastUpdate > 120){
+            this.setStarted(true);
+            if( Date.now() - this.lastUpdate > 200){
                 this.getCasparCommon().getSocketIo().emit('consumerEdit', this.clean());
                 this.lastUpdate = Date.now();
             }
@@ -184,7 +185,7 @@ class CasparConsumerFILE extends CasparConsumer {
     setCurrentRecordName () { 
         let date = new Date();
             date = date.toISOString().replace(/-/g,'').replace('T','_').replace(/:/g,'').replace('.','').replace('Z','');
-            if (this.fileName != ''){
+            if (this.filePath == ''){
                 this.currentRecordName = `${date}_${this.fileName}`;
             }else{
                 this.currentRecordName = `${this.filePath}/${date}_${this.fileName}`;

@@ -371,7 +371,9 @@ class Caspar {
             this.consumers.set(consumer.getId(), consumer);
             const caspar = this;
             if (this.getCasparCommon().getOnline()){
-                consumer.run();
+                if (consumer.getType() != 'FILE'){
+                    consumer.run();
+                }
             }
             return true;
         }

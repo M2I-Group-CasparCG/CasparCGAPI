@@ -8,14 +8,14 @@ class CasparConsumerDECKLINK extends CasparConsumer {
         super(settings);
         this.type = 'DECKLINK';
         this.decklinkId = settings['decklinkId'] || 1;
-        this.bufferDepth = settings['bufferDepth'] || 5;
+        this.bufferDepth = settings['bufferDepth'] || 30;
         this.latency = settings['latency'] || 'default';
     }
 
 
     async run(){
-        super.run();
-        var req = `ADD ${this.channelId} ${this.type} ${this.decklinkId}`;
+        super.run(); 
+        var req = `ADD ${this.channelId} ${this.type} ${this.decklinkId} EMBEDDED_AUDIO BUFFER_DEPTH ${this.bufferDepth}`;
         let consumer = this;
         let result = [];
         await this.tcpPromise(req)

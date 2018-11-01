@@ -15,7 +15,7 @@ class Hyperdeck {
         settings['hyperdeckId']     = this.id;
         this.common                 = new HyperdeckCommon(settings);
         this.recollectInfo          = false;
-        this.statusLoopInterval     = 120;
+        this.statusLoopInterval     = 200;
         let slot1 = new Slot({});
         let slot2 = new Slot({});
         this.loop = true;
@@ -38,7 +38,7 @@ class Hyperdeck {
                    
                     hyperdeck.getCommon().tcpSocketSend('transport info')
                         .then(resolve => {
-                            hyperdeck.statusLoopInterval = 120;
+                            hyperdeck.statusLoopInterval = 200;
                         }, reject =>{
                             hyperdeck.statusLoopInterval = 1000;
                         }).catch(error =>{
