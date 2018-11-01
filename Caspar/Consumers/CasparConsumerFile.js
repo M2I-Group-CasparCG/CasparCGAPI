@@ -22,7 +22,7 @@ class CasparConsumerFILE extends CasparConsumer {
                 const date = new Date();
                 if(date - consumer.lastUpdate > 500){
                     consumer.setStarted(false);
-                    consumer.getCasparCommon().getSocketIo().emit('consumerEdit',JSON.stringify(consumer.clean()));
+                    consumer.getCasparCommon().getSocketIo().emit('consumerEdit',consumer.clean());
                 }
             },500);
        
@@ -95,7 +95,7 @@ class CasparConsumerFILE extends CasparConsumer {
                 function(resolve){  
                     result.push(resolve);
                     consumer.setStarted(true);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    consumer.getCasparCommon().getSocketIo().emit('consumerEdit', consumer.clean());
                 },function(reject){
                     result.push(reject);
                 }
@@ -113,7 +113,7 @@ class CasparConsumerFILE extends CasparConsumer {
                 function(resolve){  
                     consumer.setStarted(false);
                     if (sendSocketIo){
-                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                        consumer.getCasparCommon().getSocketIo().emit('consumerEdit', consumer.clean());
                     }
                     result.push(resolve);
                 },function(reject){
@@ -170,7 +170,7 @@ class CasparConsumerFILE extends CasparConsumer {
         if (this.frameRate){
             this.formattedDuration = this.timeFormat(this.frames, this.frameRate);
             if( Date.now() - this.lastUpdate > 120){
-                this.getCasparCommon().sendSocketIo('recorderEdit', this);
+                this.getCasparCommon().getSocketIo().emit('consumerEdit', this.clean());
                 this.lastUpdate = Date.now();
             }
         }

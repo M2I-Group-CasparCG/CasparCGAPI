@@ -61,7 +61,7 @@ class CasparProducerDDR extends CasparProducer{
                     function(resolve){
                         producer.setStarted(true);
                         producer.setCurrentMedia(currentMedia);
-                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                         producer.autoLoadBg = false;
                         result.push(resolve);
                     }, function(reject){
@@ -86,7 +86,7 @@ class CasparProducerDDR extends CasparProducer{
                     producer.setCurrentIndex(-1);
                     producer.setStarted(false);
                     if(sendSocketIo){
-                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                     }
                     result.push(resolve);
                 },function(reject){

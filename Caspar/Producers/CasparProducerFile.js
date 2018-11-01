@@ -26,7 +26,7 @@ class CasparProducerFILE extends CasparProducer{
                 function(resolve){  
                     result.push(resolve);
                     producer.setStarted(true);
-                    producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                    producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                 },function(reject){
                     result.push(reject);
                 }
@@ -44,7 +44,7 @@ class CasparProducerFILE extends CasparProducer{
                 function(resolve){  
                     producer.setStarted(false);
                     if(sendSocketIo){
-                        producer.getCasparCommon().sendSocketIo('producerEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                     }
                     result.push(resolve);
                 },function(reject){

@@ -53,7 +53,7 @@ class CasparLayer {
             .then(
                 function(resolve){  
                     layer.setStarted(true);
-                    layer.getCasparCommon().sendSocketIo('layerEdit', layer);
+                    layer.getCasparCommon().getSocketIo().emit('layerEdit', layer.clean());
                     result.push(resolve);
                 },function(reject){
                     result.push(reject);
@@ -75,7 +75,7 @@ class CasparLayer {
                 function(resolve){  
                     layer.setStarted(false);
                     if(sendSocketIo){
-                        layer.getCasparCommon().sendSocketIo('layerEdit', layer);
+                        layer.getCasparCommon().getSocketIo().emit('layerEdit', layer.clean());
                     }
                     result.push(resolve);
                 },function(reject){
@@ -93,56 +93,6 @@ class CasparLayer {
         let req = `MIXER ${this.channelId}-${this.layerId} FILL ${this.posX} ${this.posY} ${this.scaleX} ${this.scaleY}`;
         this.tcpPromise(req).then(function(){}, function(){}).catch(function(){});
     }
-
-    // edit(setting, value){
-    //     let response = new Object();
-    //     switch (setting){
-    //         case 'name' : {
-    //             this.setName(value);
-    //             response[setting] = this.getName();
-    //         }
-    //         break;
-    //         case 'layerId' : {
-    //             this.setLayerId(value);
-    //             response[setting] = this.getLayerId();
-    //         }
-    //         break;
-    //         case 'producerId' : {
-    //             this.setProducerId(value);
-    //             response[setting] = this.getProducerId();
-    //         }
-    //         break;
-    //         case 'channelId' : {
-    //             this.setChannelId(value);
-    //             response[setting] = this.getChannelId();
-    //         }
-    //         break;
-    //         case 'posX' : {
-    //             this.setPosX(value);
-    //             response[setting] = this.getPosX();
-    //         }
-    //         break;
-    //         case 'posY' : {
-    //             this.setPosY(value);
-    //             response[setting] = this.getPosY();
-    //         }
-    //         break;
-    //         case 'scaleX' : {
-    //             this.setScaleX(value);
-    //             response[setting] = this.getScaleX();
-    //         }
-    //         break;
-    //         case 'scaleY' : {
-    //             this.setScaleY(value);
-    //             response[setting] = this.getScaleY();
-    //         }
-    //         break;
-    //         default : {
-    //             response[setting] = "not found";
-    //         }
-    //     }
-    //     return response;
-    // }
 
     edit(settings){
 
@@ -197,6 +147,12 @@ class CasparLayer {
             }
         }
         return result;
+    }
+
+    clean () {
+        const copy = Object.assign({}, this);
+        copy.casparCommon = copy.casparCommon.clean();
+        return copy;
     }
 
 

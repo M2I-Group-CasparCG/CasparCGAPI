@@ -40,7 +40,7 @@ module.exports = function(socket) {
      */
     
     let testCasparSettings = new Array();
-    testCasparSettings['ipAddr'] = '192.168.1.204';
+    testCasparSettings['ipAddr'] = '192.168.1.231';
     testCasparSettings['amcpPort'] = '5250';
     testCasparSettings['name'] = 'auto Test';
     testCasparSettings['socketIo'] = socket;
@@ -582,7 +582,7 @@ module.exports = function(socket) {
             caspar.addProducer(producer);
             res.json(cleanObject(producer));
             if (socket) {
-                socket.emit('producerAdd',JSON.stringify(producer.clean()));
+                socket.emit('producerAdd',producer.clean());
             }
         }
     },
@@ -635,7 +635,7 @@ module.exports = function(socket) {
             caspars.get(casparId).removeProducer(producerId);
             res.json(apiReturn.successMessage('producer deleted'));
             if(socket){
-                socket.emit('producerDelete', JSON.stringify(cleanObject(producer)));
+                socket.emit('producerDelete', producer.clean());
             }
         }else{
             res.json(apiReturn.notFoundMessage('producer instance not found'));
@@ -699,7 +699,7 @@ module.exports = function(socket) {
                 .then(
                     function(msg){
                         res.json(apiReturn.successMessage('Channel\'s input switched'));
-                        socket.emit('channelEdit', JSON.stringify(cleanObject(channel)));
+                        socket.emit('channelEdit', cleanObject(channel));
                     },
                     function(msg){
                         res.json(apiReturn.amcpErrorMessage());
@@ -753,7 +753,7 @@ module.exports = function(socket) {
         let layer = caspar.addLayer(settings);
         if (layer){
             res.json(cleanObject(layer));
-            socket.emit('layerAdd',JSON.stringify(cleanObject(layer)))
+            socket.emit('layerAdd',layer.clean());
         }else{
             res.json(apiReturn.notFoundMessage('Channel instance not found'));
         }
@@ -785,7 +785,7 @@ module.exports = function(socket) {
         if (caspars.get(casparId).getProducer(producerId) instanceof Producer){
             layer.setInput(producerId);
             res.json(apiReturn.successMessage('Layer Input Switched'));
-            socket.emit('layerEdit', JSON.stringify(cleanObject(layer)));
+            socket.emit('layerEdit', layer.clean());
         }else{
             res.json(apiReturn.notFoundMessage('producer not found'));
         }
@@ -824,7 +824,7 @@ module.exports = function(socket) {
             let result = caspars.get(casparId).removeLayer(layerId);
             if (result){
                 res.json(apiReturn.successMessage('Layer deleted'));
-                socket.emit('layerDelete', JSON.stringify(cleanObject(layer)));
+                socket.emit('layerDelete', layer.clean());
             }else{
                 res.json(apiReturn.notFoundMessage('Unable to delete layer'));
             }

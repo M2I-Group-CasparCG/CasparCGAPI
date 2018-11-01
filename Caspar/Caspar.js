@@ -65,6 +65,11 @@ class Caspar {
         
     }  
 
+    clean () {
+        const copy = Object.assign({}, this);
+        copy.casparCommon = copy.casparCommon.clean();
+        return copy;
+    }
 
     /** 
      * initialise le serveur
@@ -149,7 +154,7 @@ class Caspar {
                             channel = new Channel(settings);
                         }
                         caspar.addChannel(channel);
-                        caspar.getCasparCommon().getSocketIo().emit('channelAdd',JSON.stringify(channel.clean()));
+                        caspar.getCasparCommon().getSocketIo().emit('channelAdd',channel.clean());
                     });
                     
                 },  
@@ -224,7 +229,7 @@ class Caspar {
             // this.getCasparCommon().sendSocketIo('casparAdd',this);
 
         }else{
-            this.getCasparCommon().sendSocketIo('casparAdd',this);
+            this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
         }        
     }
 
@@ -615,7 +620,7 @@ class Caspar {
         if (! this.getCasparCommon().getOnline()){
             this.getCasparCommon().setOnline(true);
             this.getInfo();
-            this.getCasparCommon().sendSocketIo('casparEdit',this);
+            this.getCasparCommon().getSocketIo().emit('casparEdit',this.clean());
         }
         
         this.startOnlineTimeout();

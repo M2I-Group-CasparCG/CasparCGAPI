@@ -26,7 +26,7 @@ class CasparConsumerSCREEN extends CasparConsumer {
             .then(
                 function(resolve){  
                     consumer.setStarted(true);
-                    consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                    consumer.getCasparCommon().getSocketIo().emit('consumerEdit', consumer.clean());
                    result.push(resolve);
                 },function(reject){
                     result.push(reject);
@@ -45,7 +45,7 @@ class CasparConsumerSCREEN extends CasparConsumer {
                 function(resolve){  
                     consumer.setStarted(false);
                     if(sendSocketIo){
-                        consumer.getCasparCommon().sendSocketIo('consumerEdit', consumer);
+                        consumer.getCasparCommon().getSocketIo().emit('consumerEdit', consumer.clean());
                     }
                     result.push(resolve);
                 },function(reject){
