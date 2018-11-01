@@ -156,7 +156,8 @@ module.exports = function(socket) {
             casparSettings.socketIo = socket;
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
-            res.json(cleanObject(caspar));
+            res.json(caspar.clean());
+            socket.emit('casparAdd', caspar.clean());
             //     })
             //     .catch(error => {
             //         console.log(error);
@@ -276,7 +277,7 @@ module.exports = function(socket) {
         if ( caspar instanceof Caspar){
             caspars.delete(casparId);
             res.json(apiReturn.successMessage('caspar instance deleted'));
-            socket.emit('casparDelete',JSON.stringify(cleanObject(caspar)));
+            socket.emit('casparDelete',caspar.clean());
         } else{
             res.json(apiReturn.notFoundMessage('Caspar instance not found'));
         }
