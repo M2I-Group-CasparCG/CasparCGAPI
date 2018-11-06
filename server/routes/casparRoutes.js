@@ -151,12 +151,13 @@ module.exports = function(socket) {
     /**
      * Create a new caspar object. Try to connect.
      */
-    casparRoutes.add = async function(req, res){
+    casparRoutes.add = function(req, res){
         let casparSettings = req.body;
             casparSettings.socketIo = socket;
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             res.json(caspar.clean());
+            console.log('coucou');
             socket.emit('casparAdd', caspar.clean());
             //     })
             //     .catch(error => {

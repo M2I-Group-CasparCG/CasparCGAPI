@@ -226,7 +226,7 @@ class Caspar {
 
             await this.scanMedias();
             this.ini();
-            // this.getCasparCommon().sendSocketIo('casparAdd',this);
+            // this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
 
         }else{
             this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
