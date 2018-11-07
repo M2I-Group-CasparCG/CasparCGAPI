@@ -35,7 +35,7 @@ class CasparProducerDDR extends CasparProducer{
 
         this.lock = false;                  // lock used to disable osc callback action after a manual action
 
-        this.playlist.setCasparCommon(this.getCasparCommon());
+        // this.playlist.setCasparCommon(this.getCasparCommon());
 
         this.unpauseCount = 0;              // delay in osc count before considering the mediaPlayer is paused
 
@@ -116,7 +116,7 @@ class CasparProducerDDR extends CasparProducer{
                         producer.setStarted(true);
                         producer.setCurrentMedia(producer.getPlaylist().getMedia(producer.getCurrentIndex()));
                         result.push(resolve);
-                        producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                     },function(reject){
                         result.push(reject);
                     }
@@ -146,7 +146,7 @@ class CasparProducerDDR extends CasparProducer{
                 function(resolve){
                     producer.setPaused(true);
                     producer.unpauseCount = 3;
-                    producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                    producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                     result.push(resolve);
                 },function(reject){
                     result.push(reject);
@@ -179,7 +179,7 @@ class CasparProducerDDR extends CasparProducer{
                         producer.setCurrentMedia(media);
                         // producer.autoLoadBg = true;
                         producer.autoUpdate = false;
-                        producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                         producer.unpauseCount = 3;
                         result.push(resolve);
                     },function(reject){
@@ -263,7 +263,7 @@ class CasparProducerDDR extends CasparProducer{
                         producer.setCurrentMedia(media);
                         // producer.autoLoadBg = true;
                         producer.autoUpdate = false;
-                        producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                         producer.unpauseCount = 3;
                         result.push(resolve);
                     },function(reject){
@@ -314,7 +314,7 @@ class CasparProducerDDR extends CasparProducer{
                         producer.unpauseCount = 3;
                         // producer.autoLoadBg = true;
                         producer.autoUpdate = false;
-                        producer.getCasparCommon().sendSocketIo('ddrEdit', producer);
+                        producer.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
                         result.push(resolve);
                     },function(reject){
                         result.push(reject);
@@ -519,9 +519,11 @@ class CasparProducerDDR extends CasparProducer{
 
     getPlaylist(){ return this.playlist;}
     setPlaylist(playlist){ 
+            // playlist.setCasparCommon(this.getCasparCommon());
+            playlist.setCasparCommon(this.getCasparCommon());
         this.playlist = playlist; 
         this.currentMedia = null;
-        this.playlist.setCasparCommon(this.getCasparCommon());}
+    }
 
     getPlaylistLoop() { return this.playlistLoop;}
     setPlaylistLoop(bool) { 
@@ -539,7 +541,7 @@ class CasparProducerDDR extends CasparProducer{
                     }
                 )
         }
-        this.getCasparCommon().sendSocketIo('ddrEdit', this);
+        this.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
     }
 
     getMediaLoop() { return this.mediaLoop;}
@@ -559,7 +561,7 @@ class CasparProducerDDR extends CasparProducer{
                 }
             )
         }
-        this.getCasparCommon().sendSocketIo('ddrEdit', this);
+        this.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
     }
 
     getNextIndex(){return this.nextIndex;}
@@ -673,7 +675,7 @@ class CasparProducerDDR extends CasparProducer{
             this.formattedRemainingTime = this.timeFormat(this.remainingTime);
         }
         
-        this.getCasparCommon().sendSocketIo('ddrEdit', this);   
+        this.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
 
         if( time > 1){                  // limiting the auto update before the first second of the media
             this.autoUpdate = true;

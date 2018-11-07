@@ -308,18 +308,15 @@ class Caspar {
         if (producer instanceof Producer){
             producer.setCasparCommon(this.casparCommon);
             if (producer.getType() == 'DDR'){
-                let settings = new Array();
-                    settings['casparCommon'] = this.getCasparCommon();
-                let playlist = new Playlist(settings);
-                producer.setPlaylist(playlist);
-                this.playlists.set(playlist.getId(), playlist);
-
+                const playlist = this.addPlaylist(new Array());
+                console.log(this.playlists);
             }
+
             this.producers.set(producer.getId(), producer);
             if (this.getCasparCommon().getMvId()){
                 this.channels.get(this.getCasparCommon().getMvId()).ini(this.producers);
             }
-            if (this.getCasparCommon().getOnline()){
+            if (this.getCasparCommon().getOnline() && producer.type != "DDR"){
                 producer.run();
             }
             return true;
@@ -480,9 +477,7 @@ class Caspar {
     addPlaylist (settings) {
         settings['casparCommon'] = this.getCasparCommon();
         let playlist = new Playlist(settings);
-        
         this.playlists.set(playlist.getId(), playlist);
-
         return playlist;
     }
 

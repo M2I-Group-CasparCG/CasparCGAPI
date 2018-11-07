@@ -20,6 +20,7 @@ class CasparPlaylist {
      */
     addMedia (mediaId){
         let matchedMedia = false;
+        console.log(this.getCasparCommon());
         let medias = this.getCasparCommon().getMedia();
         medias.forEach(media => {
             if (media.getId() == mediaId){
@@ -79,33 +80,6 @@ class CasparPlaylist {
         }
     }
 
-    // /**
-    //  * Edit a setting of the playlist 
-    //  * Used for the API
-    //  * @param {*} setting the attribute name to be edited
-    //  * @param {*} value the new value to set
-    //  * @return an object with the attribute edited as key and the new value or "not found" (if the attribute doesn't exists or is not editable) as value
-    //  */
-    // edit(setting, value){
-    //     let response = new Object();
-    //     switch (setting){
-    //         case 'name' : {
-    //             this.setName(value);
-    //             response[setting] = this.getName();
-    //         }
-    //         break;
-    //         case 'list' : {
-    //             this.setList(value);
-    //             response[setting] = this.getList();
-    //         }
-    //         break;
-    //         default : {
-    //             response[setting] = "not found";
-    //         }
-    //     }
-    //     return response;
-    // }
-
     edit(settings){
 
         let result = new Object();
@@ -131,6 +105,12 @@ class CasparPlaylist {
         return result;
     }
 
+    clean(){
+        const copy = Object.assign({}, this);
+        delete copy.casparCommon;
+        return copy;
+    }
+
 
     /**
      * Getters / setters
@@ -145,8 +125,7 @@ class CasparPlaylist {
     setList (list) { this.list = list;}
 
     getCasparCommon() { return this.casparCommon;}
-    setCasparCommon (casparCommon){ this.casparCommon = casparCommon;
-   }
+    setCasparCommon (casparCommon){ this.casparCommon = casparCommon;}
 }
 
 module.exports = CasparPlaylist;

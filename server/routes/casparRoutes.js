@@ -1046,7 +1046,7 @@ module.exports = function(socket) {
 
         if (result instanceof Media){
             res.json(apiReturn.successMessage('Media Added'));
-            socket.emit('playlistEdit',JSON.stringify(cleanObject(playlist)));
+            socket.emit('playlistEdit',playlist.clean());
         }else{
             res.json(apiReturn.notFoundMessage('Media not found'));
         }
