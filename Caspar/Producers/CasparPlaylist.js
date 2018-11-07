@@ -7,9 +7,9 @@ class CasparPlaylist {
     constructor(settings){
         CasparPlaylist.totalInstances = (CasparPlaylist.totalInstances || 0) + 1;
         this.id = CasparPlaylist.totalInstances;
-        this.name = settings['name'] || 'defaultPlaylist'+this.id;
+        this.name = settings['name'] || `defaultPlaylist_${this.id}`;
         this.list = new Array();
-        this.casparCommon = settings['casparCommon'] || null;
+        this.casparCommon = null;
     }
 
 
@@ -20,7 +20,6 @@ class CasparPlaylist {
      */
     addMedia (mediaId){
         let matchedMedia = false;
-        console.log(this.getCasparCommon());
         let medias = this.getCasparCommon().getMedia();
         medias.forEach(media => {
             if (media.getId() == mediaId){
@@ -83,7 +82,7 @@ class CasparPlaylist {
     edit(settings){
 
         let result = new Object();
-            result['consumerId'] = this.getId();
+            result['playlistId'] = this.getId();
             
         for (let [setting, value] of Object.entries(settings)) {
             switch (setting){
@@ -107,7 +106,7 @@ class CasparPlaylist {
 
     clean(){
         const copy = Object.assign({}, this);
-        delete copy.casparCommon;
+        copy.casparCommon = copy.casparCommon.clean();
         return copy;
     }
 

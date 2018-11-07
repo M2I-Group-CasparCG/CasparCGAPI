@@ -122,25 +122,25 @@ module.exports = function(socket) {
     /**playlistCopy
      * Remove socketIO
      */
-   cleanObject  = function(object){
-    const objectCopy = Object.assign({}, object);
-    if (objectCopy.casparCommon){
-        const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
-        delete casparCommonCopy.socketIo;
-        objectCopy.casparCommon = casparCommonCopy;
+//    cleanObject  = function(object){
+//     const objectCopy = Object.assign({}, object);
+//     if (objectCopy.casparCommon){
+//         const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+//         delete casparCommonCopy.socketIo;
+//         objectCopy.casparCommon = casparCommonCopy;
         
-        const playlistCopy =  Object.assign({}, objectCopy.playlist);
-        if (playlistCopy){
-            playlistCopy.casparCommon = casparCommonCopy;
-            objectCopy.playlist = playlistCopy;
-        }
-    }
-    if (objectCopy.pausedTimeout){
-        delete objectCopy.pausedTimeout;
-    }
+//         const playlistCopy =  Object.assign({}, objectCopy.playlist);
+//         if (playlistCopy){
+//             playlistCopy.casparCommon = casparCommonCopy;
+//             objectCopy.playlist = playlistCopy;
+//         }
+//     }
+//     if (objectCopy.pausedTimeout){
+//         delete objectCopy.pausedTimeout;
+//     }
 
-        return objectCopy;
-    }
+//         return objectCopy;
+//     }
 
     /**
      * _____________________________________________________________________________________________________________________________
@@ -174,7 +174,7 @@ module.exports = function(socket) {
         
         let array = [...caspars];
         for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
+            array[n][1] = array[n][1].clean();
         }
         res.json(array);
     },
@@ -200,7 +200,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const caspar = caspars.get(casparId);
         if(caspar instanceof Caspar){
-            res.json(cleanObject(caspars.get(casparId)));
+            res.json(caspars.get(casparId).clean());
         }else{
             res.json(apiReturn.notFoundMessage('caspar instance not found'));
         }
@@ -218,7 +218,7 @@ module.exports = function(socket) {
                 caspar.ini();
                 let array =  [...caspar.getChannels()];
                 for(let n in array){
-                    array[n][1] = cleanObject(array[n][1]);
+                    array[n][1] = array[n][1].clean();
                 }
                 res.json(array);
             }
@@ -228,7 +228,7 @@ module.exports = function(socket) {
         let crtChannels = caspar.getChannels();
         crtChannels.forEach(function (item, key, mapObj) {
             if(socket){
-                socket.emit('channelAdd',JSON.stringify(cleanObject(item)));
+                socket.emit('channelAdd',item.clean());
             }
         });
 
@@ -395,7 +395,7 @@ module.exports = function(socket) {
         }
 
         if (object){
-            res.json(cleanObject(object));
+            res.json(object.clean());
         }else{
             res.json(apiReturn.notFoundMessage(objectType +' instance not found'))
         }
@@ -433,7 +433,7 @@ module.exports = function(socket) {
             }
         }
         for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
+            array[n][1] = array[n][1].clean();
         }
         // console.log(array);
         res.json(array);
@@ -582,7 +582,7 @@ module.exports = function(socket) {
         }
         if (producer instanceof Producer){
             caspar.addProducer(producer);
-            res.json(cleanObject(producer));
+            res.json(producer.clean());
             if (socket) {
                 socket.emit('producerAdd',producer.clean());
             }
@@ -677,16 +677,16 @@ module.exports = function(socket) {
      * To be deleted (remplaced by osc send);
      * Return the audio levels of a channel
      */
-    casparRoutes.channelGetAudioLevels = function(req,res,next){
-        const casparId = parseInt(req.params.casparId);
-        const channelId = parseInt(req.params.channelId);
-        const audioLevels = caspars.get(casparId).getChannel(channelId).getAudioLevels();
-        let array =  [...audioLevels];
-        for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
-        }
-        res.json(array);
-    },
+    // casparRoutes.channelGetAudioLevels = function(req,res,next){
+    //     const casparId = parseInt(req.params.casparId);
+    //     const channelId = parseInt(req.params.channelId);
+    //     const audioLevels = caspars.get(casparId).getChannel(channelId).getAudioLevels();
+    //     let array =  [...audioLevels];
+    //     for(let n in array){
+    //         array[n][1] = cleanObject(array[n][1]);
+    //     }
+    //     res.json(array);
+    // },
 
     /**
      * Set a producer to a channel
@@ -701,7 +701,7 @@ module.exports = function(socket) {
                 .then(
                     function(msg){
                         res.json(apiReturn.successMessage('Channel\'s input switched'));
-                        socket.emit('channelEdit', cleanObject(channel));
+                        socket.emit('channelEdit', channel.clean());
                     },
                     function(msg){
                         res.json(apiReturn.amcpErrorMessage());
@@ -723,7 +723,7 @@ module.exports = function(socket) {
 
         let array = [...channel.getLayers()];
         for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
+            array[n][1] = array[n][1].clean();
         }
         res.json(array);
 
@@ -754,7 +754,7 @@ module.exports = function(socket) {
 
         let layer = caspar.addLayer(settings);
         if (layer){
-            res.json(cleanObject(layer));
+            res.json(layer.clean());
             socket.emit('layerAdd',layer.clean());
         }else{
             res.json(apiReturn.notFoundMessage('Channel instance not found'));
@@ -959,7 +959,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        res.json(cleanObject(ddr.getPlaylist()));
+        res.json(ddr.getPlaylist().clean());
     },
 
     /**
@@ -969,7 +969,7 @@ module.exports = function(socket) {
         const casparId = parseInt(req.params.casparId);
         const ddrId = parseInt(req.params.ddrId);
         let ddr = caspars.get(casparId).getProducer(ddrId);
-        res.json(cleanObject(ddr.getCurrentMedia()));
+        res.json(ddr.getPlaylist().clean());
     },
 
 
@@ -991,7 +991,7 @@ module.exports = function(socket) {
 
         if (playlist instanceof Playlist ){
             // playlists.set(playlist.getId(), playlist);
-            res.json(cleanObject(playlist));
+            res.json(playlist.clean());
         }else{
             res.json(apiReturn.requestErrorMessage('Failed to create Playlist'));
         }
@@ -1065,7 +1065,7 @@ module.exports = function(socket) {
 
         if (result) {
             res.json(apiReturn.successMessage('Media Removed'));
-            socket.emit('playlistEdit',JSON.stringify(cleanObject(playlist)));
+            socket.emit('playlistEdit',playlist.clean());
         }else{
             res.json(apiReturn.notFoundMessage('Media not found'));
         }
@@ -1080,7 +1080,7 @@ module.exports = function(socket) {
         let playlist = caspars.get(casparId).getPlaylist(playlistId);
         let array = [...playlist.getList()];
         for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
+            array[n][1] = array[n][1].clean();
         }
         res.json(array);
     },
@@ -1098,7 +1098,7 @@ module.exports = function(socket) {
         await caspar.scanMedias();
         let array = [...caspar.getMedias()]
         for(let n in array){
-            array[n][1] = cleanObject(array[n][1]);
+            array[n][1] = array[n][1].clean();
         }
         res.json(array);
     }
@@ -1203,7 +1203,7 @@ module.exports = function(socket) {
             if (ipAddr == sourceIpAddr){
                 let result = caspar.oscAnalyzer(msg);
                 if (result){                                                                // envoi de socketIO
-                    socket.emit(result[0],JSON.stringify(cleanObject(result[1])));
+                    socket.emit(result[0],JSON.stringify(result[1].clean()));
                 }
             }
         });

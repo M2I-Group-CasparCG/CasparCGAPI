@@ -357,18 +357,18 @@ class CasparCommon {
     /**
     * Remove socketIO
     */
-    cleanObject(object){
-            const objectCopy = Object.assign({}, object);
-            if (objectCopy.casparCommon){
-                const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
-                delete casparCommonCopy.socketIo;
-                objectCopy.casparCommon = casparCommonCopy;
-                // if (object.playlist){
-                //     object.playlist.casparCommon = casparCommonCopy
-                // }
-            }
-            return objectCopy;
-        }   
+    // cleanObject(object){
+    //         const objectCopy = Object.assign({}, object);
+    //         if (objectCopy.casparCommon){
+    //             const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+    //             delete casparCommonCopy.socketIo;
+    //             objectCopy.casparCommon = casparCommonCopy;
+    //             // if (object.playlist){
+    //             //     object.playlist.casparCommon = casparCommonCopy
+    //             // }
+    //         }
+    //         return objectCopy;
+    //     }   
 
     /**
      *  SETTERS / GETTERS
@@ -448,29 +448,29 @@ class CasparCommon {
         return this.socketIo;
     }
 
-    sendSocketIo(key, object){
+    // sendSocketIo(key, object){
 
-        const objectCopy = Object.assign({}, object);
-        if (objectCopy.casparCommon){
-            const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
-            delete casparCommonCopy.socketIo;
-            objectCopy.casparCommon = casparCommonCopy;
+    //     const objectCopy = Object.assign({}, object);
+    //     if (objectCopy.casparCommon){
+    //         const casparCommonCopy = Object.assign({}, objectCopy.casparCommon);
+    //         delete casparCommonCopy.socketIo;
+    //         objectCopy.casparCommon = casparCommonCopy;
             
-            const playlistCopy =  Object.assign({}, objectCopy.playlist);
-            if (playlistCopy){
-                playlistCopy.casparCommon = casparCommonCopy;
-                objectCopy.playlist = playlistCopy;
-            }
-        }
-        if (objectCopy.pausedTimeout){
-            delete objectCopy.pausedTimeout;
-        }
+    //         const playlistCopy =  Object.assign({}, objectCopy.playlist);
+    //         if (playlistCopy){
+    //             playlistCopy.casparCommon = casparCommonCopy;
+    //             objectCopy.playlist = playlistCopy;
+    //         }
+    //     }
+    //     if (objectCopy.pausedTimeout){
+    //         delete objectCopy.pausedTimeout;
+    //     }
 
-        const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));
-        if(! succes){
-            console.log('error while sending socket.IO : '+key+' - '+object);
-        }
-    }
+    //     const succes = this.socketIo.emit(key,JSON.stringify(objectCopy));
+    //     if(! succes){
+    //         console.log('error while sending socket.IO : '+key+' - '+object);
+    //     }
+    // }
 }
 
 module.exports = CasparCommon;

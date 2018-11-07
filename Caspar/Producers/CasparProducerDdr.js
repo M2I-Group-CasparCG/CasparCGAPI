@@ -502,6 +502,12 @@ class CasparProducerDDR extends CasparProducer{
         return result;
     }
 
+    clean(){
+        const copy = super.clean();
+        copy.playlist = copy.playlist.clean();
+        return copy;
+    }
+
     timeFormat(duration){
       
                 // duration en seconds
@@ -675,7 +681,7 @@ class CasparProducerDDR extends CasparProducer{
             this.formattedRemainingTime = this.timeFormat(this.remainingTime);
         }
         
-        this.getCasparCommon().getSocketIo().emit('producerEdit', producer.clean());
+        this.getCasparCommon().getSocketIo().emit('producerEdit', this.clean());
 
         if( time > 1){                  // limiting the auto update before the first second of the media
             this.autoUpdate = true;

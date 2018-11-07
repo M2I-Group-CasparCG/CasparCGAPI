@@ -57,6 +57,12 @@ class CasparMedia {
         return `${size} ${units[count]}`;
     }
 
+    clean() {
+        const copy = Object.assign({}, this);
+        return copy;
+    
+    }
+
     getId(){ return this.id; }
 
     getName() { return this.name; }
