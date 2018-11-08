@@ -620,7 +620,7 @@ class Caspar {
         if (! this.getCasparCommon().getOnline()){
             this.getCasparCommon().setOnline(true);
             this.getInfo();
-            this.getCasparCommon().getSocketIo().emit('casparEdit',this.clean());
+            this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
         }
         
         this.startOnlineTimeout();
