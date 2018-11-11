@@ -240,14 +240,13 @@ module.exports = function(socket) {
      */
     casparRoutes.edit = function(req, res) {
         const casparId = parseInt(req.params.casparId);
-        let casparSettings = req.body;
-        let casparCommon = caspars.get(parseInt(casparId)).getCasparCommon();
-        let result = new Object();
-            for (let setting in casparSettings){
-                let response = casparCommon.edit(setting,casparSettings[setting]);
-                result[setting] = response[setting];
-            }
-            res.json(apiReturn.successMessage(result));
+        const casparSettings = req.body;
+        const caspar = caspars.get(parseInt(casparId));
+        const casparCommon = caspar.getCasparCommon();
+      
+        const result = casparCommon.edit(casparSettings);
+        res.json(apiReturn.successMessage(result));
+        socket.emit('casparEdit', caspar.clean());
     },
 
     /**

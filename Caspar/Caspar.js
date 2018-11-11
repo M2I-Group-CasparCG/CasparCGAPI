@@ -821,6 +821,7 @@ class Caspar {
         onlineTimeout = setTimeout(
             function(){
                 caspar.getCasparCommon().setOnline(false);
+                caspar.getCasparCommon().getSocketIo().emit('casparEdit', caspar.clean());
                 console.log('lost contact with server '+caspar.getCasparCommon().getIpAddr());
             },
             500);

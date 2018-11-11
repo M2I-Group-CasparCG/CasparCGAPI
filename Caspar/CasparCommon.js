@@ -28,8 +28,8 @@ class CasparCommon {
      */
     constructor(settings) {
         this.socketIo = settings['socketIo'];
-        this.name = settings['name'] || 'Default Caspar';
         this.id = settings['id'] || new Number();
+        this.name = settings['name'] || `caspar_${this.id}`;        
         this.ipAddr = settings['ipAddr'] || '127.0.0.1';
         this.amcpPort = settings['amcpPort'] || 5250;
         this.oscDefaultPort = settings['oscDefaultPort'] || null;
@@ -290,7 +290,7 @@ class CasparCommon {
     edit(settings){
 
         let result = new Object();
-            result['consumerId'] = this.getId();
+            result['casparId'] = this.getId();
             
         for (let [setting, value] of Object.entries(settings)) {
             switch (setting){
