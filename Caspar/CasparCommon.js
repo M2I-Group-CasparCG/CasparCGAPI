@@ -304,6 +304,11 @@ class CasparCommon {
                     result[setting] = this.getIpAddr();
                 }
                 break;
+                case 'amcpPort' : {
+                    this.setAmcpPort(value);
+                    result[setting] = this.getAmcpPort();
+                }
+                break;
                 case 'oscDefaultPort' : {
                     this.setOscDefaultPort(value);
                     result[setting] = this.getOscDefaultPort();
