@@ -157,8 +157,9 @@ module.exports = function(socket) {
         let caspar = new Caspar(casparSettings);
             caspars.set(caspar.getId(),caspar);
             res.json(caspar.clean());
-            console.log('coucou');
-            socket.emit('casparAdd', caspar.clean());
+            // console.log('sending caspar add...');
+            // socket.emit('casparAdd', caspar.clean());
+            // console.log('caspar add sended.');
             //     })
             //     .catch(error => {
             //         console.log(error);

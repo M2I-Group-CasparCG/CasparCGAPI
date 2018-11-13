@@ -64,6 +64,17 @@ class XMLHelper{
         return pathsBlock.getElementsByTagName('decklink')[0].textContent;
     }
 
+    getOsValue(){
+        var pathsBlock = this.openConfigFile().getElementsByTagName('description')[0];
+        return pathsBlock.getElementsByTagName('description')[0].textContent;
+    }
+
+    getCpuValue(){
+        var pathsBlock = this.openConfigFile().getElementsByTagName('system')[0];
+        console.log(pathsBlock.getElementsByTagName('cpu'));
+        return pathsBlock.getElementsByTagName('cpu').textContent;
+    }
+
     setLogPathValue(document, value){
         var pathsBlock = document.getElementsByTagName('paths')[0];
         pathsBlock.getElementsByTagName('log-path')[0].textContent = value;

@@ -39,6 +39,8 @@ class CasparCommon {
         this.logPath = settings['logPath'] || null;
         this.templatePath = settings['templatePath'] || null;
         this.thumbnailsPath = settings['thumbnailsPath'] || null;
+        this.cpuModel = settings['cpuModel'] || null;
+        this.osVersion = settings['osVersion'] || null;
         this.pgmId = null;
         this.pvwId = null;
         this.mvId = null;
@@ -452,6 +454,12 @@ class CasparCommon {
     getSocketIo (){
         return this.socketIo;
     }
+
+    getOsVersion(){return this.osVersion;}
+    setOsVersion(version){this.osVersion = version;}
+
+    getCpuModel(){return this.cpuModel;}
+    setCpuModel(model){this.cpuModel = model;}
 
     // sendSocketIo(key, object){
 

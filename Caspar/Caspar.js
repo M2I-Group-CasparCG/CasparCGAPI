@@ -212,12 +212,10 @@ class Caspar {
                             casparCommon.setDecklinkCard(index, element);
                         }   
                     }   
-                    /**
-                     * Récupération des élements
-                     * name
-                     * os -> description
-                     * 
-                     */
+                    const cpuModel = xmlHandler.getXMLValue('cpu', null);
+                    const osVersion = xmlHandler.getXMLValue('description', null);
+                    casparCommon.setCpuModel(cpuModel);
+                    casparCommon.setOsVersion(osVersion);
                 },  
                 function(rejectResult){
                     console.log(rejectResult);
@@ -226,8 +224,7 @@ class Caspar {
 
             await this.scanMedias();
             this.ini();
-            // this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
-
+            this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());  
         }else{
             this.getCasparCommon().getSocketIo().emit('casparAdd',this.clean());
         }        
